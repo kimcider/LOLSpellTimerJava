@@ -43,7 +43,7 @@ public class Board extends JWindow {
         listNames.add("sup");
 
         for(int i = 0; i < listNames.size(); i++){
-            linerList.put(listNames.get(i), new Liner(listNames.get(i)));
+            //linerList.put(listNames.get(i), new Liner(listNames.get(i)));
 
             Line line = new Line(listNames.get(i), x, y);
             lineList.put(listNames.get(i), line);
@@ -51,6 +51,8 @@ public class Board extends JWindow {
             add(line.flashIcon);
 
             y += imageSize + imageMargin;
+
+            linerList.put(listNames.get(i), line.liner);
         }
         repaint();
 

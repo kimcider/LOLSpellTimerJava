@@ -2,9 +2,7 @@ plugins {
     id 'java'
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
-shadowJar {
-    archiveClassifier.set("all")
-}
+
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
@@ -20,6 +18,15 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation 'org.slf4j:slf4j-log4j12:1.7.32'
+}
+
+shadowJar {
+    archiveClassifier.set("all")
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.Main'
+        )
+    }
 }
 
 test {

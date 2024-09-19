@@ -103,7 +103,6 @@ public class Connector extends WebSocketClient {
             line.liner.flash.on = false;
             line.liner.flash.coolTime = line.liner.flash.flashCoolTime;
 
-            System.out.println(line.liner.flash.coolTime);
             line.flashIcon.repaint();
             if (line.flashIcon.timer != null) {
                 line.flashIcon.timer.stop();

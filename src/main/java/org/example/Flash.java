@@ -21,7 +21,11 @@ public class Flash {
         return on;
     }
 
-    public void setOn(boolean on){
+    public boolean isOn() {
+        return on;
+    }
+
+    public void setOn(boolean on) {
         this.on = on;
     }
 }

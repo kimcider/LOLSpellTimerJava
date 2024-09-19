@@ -19,19 +19,18 @@ public class Line {
         flashIcon = getCounterImage("flash.jpg", x + imageSize + imageMargin, y);
 
         flashIcon.addMouseListener(new MouseAdapter() {
+
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 Connector.startCountFlash(lineList.get(name));
                 try {
-                    //TODO
-                    //Connector.useFlash(liner);
+                    Connector.useFlash(liner);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
     }
-
 
     private JLabel getImage(String path, int x, int y) {
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
