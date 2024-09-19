@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+}
+shadowJar {
+    archiveClassifier.set("all")
+}
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.32'
+}
+
+test {
+    useJUnitPlatform()
+}
