@@ -2,16 +2,17 @@ package org.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.System.exit;
 
 public class Board extends JWindow {
     static final int imageSize = 40;
@@ -30,7 +31,19 @@ public class Board extends JWindow {
         setSize((imageSize + imageMargin) * 2 + imageMargin, (imageSize + imageMargin) * 5 + imageMargin);
         setAlwaysOnTop(true);
         setLocationRelativeTo(null);
-        setVisible(true);
+
+        if (SystemTray.isSupported()) {
+            setVisible(true);
+            SystemTray tray = SystemTray.getSystemTray();
+            TrayIcon trayIcon = getTrayIcon();
+
+            try {
+                tray.add(trayIcon);  // 트레이에 아이콘 추가
+            } catch (AWTException e) {
+                exit(0);
+            }
+        }
+
 
         int x = 10;
         int y = 10;
@@ -78,6 +91,27 @@ public class Board extends JWindow {
                 setLocation(newX, newY);
             }
         });
+    }
+
+    private @NotNull TrayIcon getTrayIcon() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/flash.jpg"));  // 아이콘 경로
+
+        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+
+
+        TrayIcon trayIcon = new TrayIcon(image, "LoLSpellTimer");
+        // 트레이 아이콘의 팝업 메뉴
+        PopupMenu popupMenu = new PopupMenu();
+        MenuItem exitItem = new MenuItem("Exit");
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exit(0);  // 종료 메뉴
+            }
+        });
+        popupMenu.add(exitItem);
+        trayIcon.setPopupMenu(popupMenu);
+        return trayIcon;
     }
 
     public String getJsonLineList() throws JsonProcessingException {

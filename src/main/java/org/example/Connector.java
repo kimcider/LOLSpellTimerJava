@@ -90,7 +90,7 @@ public class Connector extends WebSocketClient {
         String json = mapper.writeValueAsString(liner);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + serverURI + "/flashOn"))
+                .uri(URI.create("http://" + serverURI + "/useFlash"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();

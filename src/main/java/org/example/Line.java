@@ -55,6 +55,4 @@ public class Line {
         result.setSize(imageSize, imageSize);
         return result;
     }
-
-
 }
