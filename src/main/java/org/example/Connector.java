@@ -2,6 +2,8 @@ package org.example;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -12,11 +14,17 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.example.Board.lineList;
 
+@Getter
+@Setter
 public class Connector extends WebSocketClient {
+    Map<String, Liner> linerList;
+    Map<String, Line> lineList;
+
     static ObjectMapper mapper = new ObjectMapper();
     private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
@@ -25,19 +33,31 @@ public class Connector extends WebSocketClient {
         connectBlocking();
     }
 
+    public void setLineList(Map<String, Line> lineList) {
+        this.lineList = lineList;
+    }
+
+    public void setLinerList(Map<String, Liner> linerList) {
+        this.linerList = linerList;
+    }
+
     @Override
     public void onOpen(ServerHandshake handshakedata) {
+        //TODO: open시 서버의 정보를 가져와서 업데이트
         System.out.println("Connected to WebSocket server");
     }
 
     @Override
     public void onMessage(String json) {
         try {
-            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
-            });
+            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
             for (Liner it : liners) {
                 Liner clientLiner = lineList.get(it.name).liner;
                 if (clientLiner.flash.on != it.flash.on) {
+                    // TODO: LinerList와 LineList가 따로 존재하는 문제 해결 요망.
+                    // Liner는 Line의 하위 객체이다.
+                    // 그런데 여기는 Liner의 아래에 Line이 있는 것 처럼 사용하고 있다.
+                    // 두개의 리스트가 따로 있어서 생기는 문제.
                     startCountFlash(lineList.get(it.name));
                 }
             }
@@ -70,7 +90,7 @@ public class Connector extends WebSocketClient {
 
     }
 
-    public static void useFlash(Liner liner) throws Exception {
+    public void useFlash(Liner liner) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
         String json = mapper.writeValueAsString(liner);
@@ -84,7 +104,7 @@ public class Connector extends WebSocketClient {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public static void flashOn(Liner liner) throws Exception {
+    public void flashOn(Liner liner) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
         String json = mapper.writeValueAsString(liner);
@@ -98,7 +118,7 @@ public class Connector extends WebSocketClient {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public static void startCountFlash(Line line) {
+    public void startCountFlash(Line line) {
         if (line.liner.flash.on) {
             line.liner.flash.on = false;
             line.liner.flash.coolTime = line.liner.flash.flashCoolTime;
@@ -115,7 +135,7 @@ public class Connector extends WebSocketClient {
                 if (line.liner.flash.coolTime <= 0) {
                     line.liner.flash.on = true;
                     try {
-                        Connector.flashOn(line.liner);
+                        flashOn(line.liner);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }

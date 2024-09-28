@@ -15,17 +15,20 @@ import java.util.Map;
 import static java.lang.System.exit;
 
 public class Board extends JWindow {
+    public static Connector connector;
+
     static final int imageSize = 40;
     static final int imageMargin = 10;
     private Point initialClick = null;
 
-    Map<String, Liner> linerList = new HashMap<String, Liner>();
     static Map<String, Line> lineList = new HashMap<String, Line>();
+    Map<String, Liner> linerList = new HashMap<String, Liner>();
 
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    public Board(){
+    public Board(Connector connector){
+        this.connector = connector;
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
         setSize((imageSize + imageMargin) * 2 + imageMargin, (imageSize + imageMargin) * 5 + imageMargin);
@@ -44,6 +47,13 @@ public class Board extends JWindow {
             }
         }
 
+//        Toolkit toolkit = Toolkit.getDefaultToolkit();
+//        Image transparentImage = toolkit.createImage(new byte[0]);
+//        Cursor transparentCursor = toolkit.createCustomCursor(transparentImage, new Point(0, 0), "InvisibleCursor");
+//
+//        // 프레임에 투명 커서 적용
+//        setCursor(transparentCursor);
+
 
         int x = 10;
         int y = 10;
@@ -56,8 +66,6 @@ public class Board extends JWindow {
         listNames.add("sup");
 
         for(int i = 0; i < listNames.size(); i++){
-            //linerList.put(listNames.get(i), new Liner(listNames.get(i)));
-
             Line line = new Line(listNames.get(i), x, y);
             lineList.put(listNames.get(i), line);
             add(line.lineIcon);
@@ -67,6 +75,10 @@ public class Board extends JWindow {
 
             linerList.put(listNames.get(i), line.liner);
         }
+        connector.setLineList(lineList);
+        connector.setLinerList(linerList);
+
+
         repaint();
 
         addMouseListener(new MouseAdapter() {
@@ -106,6 +118,7 @@ public class Board extends JWindow {
         exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                connector.close();
                 exit(0);  // 종료 메뉴
             }
         });

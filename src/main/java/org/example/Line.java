@@ -1,5 +1,8 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,8 +12,9 @@ import static org.example.Board.*;
 
 public class Line {
     JLabel lineIcon;
-    CounterLabel flashIcon;
-    Liner liner;
+    @JsonIgnore
+    public CounterLabel flashIcon;
+    public Liner liner;
 
     public Line(String name, int x, int y) {
         liner = new Liner(name);
@@ -22,9 +26,9 @@ public class Line {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                Connector.startCountFlash(lineList.get(name));
+                connector.startCountFlash(lineList.get(name));
                 try {
-                    Connector.useFlash(liner);
+                    connector.useFlash(liner);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }

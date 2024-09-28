@@ -24,6 +24,8 @@ dependencies {
 
     testImplementation('org.projectlombok:lombok:1.18.30')
     testAnnotationProcessor('org.projectlombok:lombok:1.18.30')
+
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.2.4'
 }
 
 shadowJar {
@@ -37,4 +39,5 @@ shadowJar {
 
 test {
     useJUnitPlatform()
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
