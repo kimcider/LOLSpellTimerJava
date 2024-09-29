@@ -61,6 +61,7 @@ public class TestConnector {
 
     @Test
     public void testOnMessage1() throws JsonProcessingException {
+        Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
@@ -70,7 +71,7 @@ public class TestConnector {
 
         connector.onMessage(json);
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
-        Mockito.verify(connector, Mockito.times(1)).startCountFlash(connectorLinerList.get("sup"));
+        Mockito.verify(mockSupLiner, Mockito.times(0)).startCount();
     }
 
     @Test
@@ -89,6 +90,9 @@ public class TestConnector {
 
     @Test
     public void testOnMessage_supF_IsAlreadyUsed() throws JsonProcessingException {
+        // 서폿이 플을 썼는지를 주시하기 위한 spy mock Liner
+        Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
+
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         //서폿 플 이미 사용함
@@ -101,7 +105,8 @@ public class TestConnector {
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
 
         // 서폿 플이 이미 사용되었기 떄문에 서폿 플이 없는 메세지가 와도 서폿에 대한 startCountFlash를 호출하지 않음
-        Mockito.verify(connector, Mockito.times(0)).startCountFlash(connectorLinerList.get("sup"));
+        Mockito.verify(mockSupLiner, Mockito.never()).startCount();
+
     }
 
     @Test
@@ -121,17 +126,17 @@ public class TestConnector {
     }
 
     @Test
-    public void startCountFlashWhenFlashIsAlreadyUsed() throws IOException, InterruptedException {
+    public void startCountFlashWhenIsAlreadyUsed() throws IOException, InterruptedException {
         connectorLinerList.get("sup").getFlash().setOn(false);
-        connector.startCountFlash(connectorLinerList.get("sup"));
+        connectorLinerList.get("sup").startCount();
 
         assertEquals("null", "g");
 
     }
 
     @Test
-    public void startCountFlashWhenFlash() throws IOException, InterruptedException {
-        connector.startCountFlash(connectorLinerList.get("sup"));
+    public void startCountFlashWhen() throws IOException, InterruptedException {
+        connectorLinerList.get("sup").startCount();
         assertEquals("null", "g");
     }
 

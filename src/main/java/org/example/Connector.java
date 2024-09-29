@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.java_websocket.client.WebSocketClient;
+import org.example.connection.AbstractWebSocketConnector;
 import org.java_websocket.handshake.ServerHandshake;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class Connector extends WebSocketClient {
+public class Connector extends AbstractWebSocketConnector {
     HttpClient client = HttpClient.newHttpClient();
     Map<String, Liner> linerList;
 
@@ -45,7 +45,7 @@ public class Connector extends WebSocketClient {
             for (Liner it : liners) {
                 Liner clientLiner = linerList.get(it.name);
                 if (clientLiner.flash.on != it.flash.on) {
-                    startCountFlash(linerList.get(it.name));
+                    linerList.get(it.name).startCount();
                 }
             }
         } catch (IOException e) {
@@ -64,6 +64,7 @@ public class Connector extends WebSocketClient {
         ex.printStackTrace();
     }
 
+    @Override
     public void useFlash(Liner liner) throws IOException, InterruptedException {
         String json = mapper.writeValueAsString(liner);
 
@@ -76,7 +77,8 @@ public class Connector extends WebSocketClient {
         client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public void flashOn(Liner liner) throws Exception {
+    @Override
+    public void flashOn(Liner liner) throws IOException, InterruptedException {
         String json = mapper.writeValueAsString(liner);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -88,40 +90,5 @@ public class Connector extends WebSocketClient {
         client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public void startCountFlash(Liner liner) {
-        if (liner.flash.on) {
-            liner.flash.on = false;
-            liner.flash.coolTime = liner.flash.flashCoolTime;
 
-            liner.flashIcon.repaint();
-            if (liner.flashIcon.timer != null) {
-                liner.flashIcon.timer.stop();
-            }
-
-            liner.flashIcon.timer = new Timer(1000, e -> {
-                liner.flash.coolTime -= 1;
-                liner.flashIcon.repaint();
-
-                if (liner.flash.coolTime <= 0) {
-                    liner.flash.on = true;
-                    try {
-                        flashOn(liner);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-
-                    if (liner.flashIcon.timer != null) {
-                        liner.flashIcon.timer.stop();
-                    }
-                }
-
-            });
-
-            liner.flashIcon.timer.start();
-        } else {
-            liner.flash.on = true;
-            liner.flashIcon.repaint();
-            liner.flashIcon.timer.stop();
-        }
-    }
 }
