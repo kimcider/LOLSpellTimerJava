@@ -23,48 +23,32 @@ public class TestConnector {
 
     private HashMap<String, Liner> connectorLinerList;
 
-    private HashMap<String, Liner> mockLinerList;
-
-    private void initConnectorLists() {
+    private ArrayList<String> getNameList(){
         ArrayList<String> listNames = new ArrayList();
         listNames.add("top");
         listNames.add("jg");
         listNames.add("mid");
         listNames.add("bot");
         listNames.add("sup");
-
-        connectorLinerList = new HashMap<>();
-
-        for (int i = 0; i < listNames.size(); i++) {
-            Liner liner = new Liner(listNames.get(i));
-            connectorLinerList.put(listNames.get(i), liner);
-        }
+        return listNames;
     }
 
-    private void initMockLists() {
-        ArrayList<String> listNames = new ArrayList();
-        listNames.add("top");
-        listNames.add("jg");
-        listNames.add("mid");
-        listNames.add("bot");
-        listNames.add("sup");
+    private HashMap<String, Liner> getLinerList(){
+        ArrayList<String> nameList = getNameList();
 
-        mockLinerList = new HashMap<>();
-
-        for (int i = 0; i < listNames.size(); i++) {
-            Liner liner = new Liner(listNames.get(i));
-            mockLinerList.put(listNames.get(i), liner);
+        HashMap<String, Liner> linerList = new HashMap();
+        for(String name : nameList){
+            linerList.put(name, new Liner(name));
         }
+
+        return linerList;
     }
 
     @BeforeEach
     public void setUp() throws Exception {
         connector = Mockito.spy(new Connector());
-
-        initConnectorLists();
+        connectorLinerList = getLinerList();
         connector.setLinerList(connectorLinerList);
-
-        initMockLists();
     }
 
     @Test
@@ -77,6 +61,8 @@ public class TestConnector {
 
     @Test
     public void testOnMessage1() throws JsonProcessingException {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
         mockLinerList.get("sup").getFlash().setOn(false);
         assertEquals(false, mockLinerList.get("sup").getFlash().isOn());
@@ -89,6 +75,8 @@ public class TestConnector {
 
     @Test
     public void testOnMessage2() throws JsonProcessingException {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
         mockLinerList.get("sup").getFlash().setOn(false);
         mockLinerList.get("jg").getFlash().setOn(false);
@@ -101,6 +89,8 @@ public class TestConnector {
 
     @Test
     public void testOnMessage_supF_IsAlreadyUsed() throws JsonProcessingException {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
         //서폿 플 이미 사용함
         connector.getLinerList().get("sup").getFlash().setOn(false);
 
@@ -116,12 +106,16 @@ public class TestConnector {
 
     @Test
     public void useFlash() throws Exception {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
         connector.useFlash(mockLinerList.get("testliner"));
         Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("fd"));
     }
 
     @Test
     public void flashOn() throws Exception {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
         connector.flashOn(mockLinerList.get("testliner"));
         Mockito.verify(connector, Mockito.times(1)).flashOn(connectorLinerList.get("fd"));
     }

@@ -49,10 +49,6 @@ public class Connector extends WebSocketClient {
             for (Liner it : liners) {
                 Liner clientLiner = linerList.get(it.name);
                 if (clientLiner.flash.on != it.flash.on) {
-                    // TODO: LinerList와 LineList가 따로 존재하는 문제 해결 요망.
-                    // Liner는 Line의 하위 객체이다.
-                    // 그런데 여기는 Liner의 아래에 Line이 있는 것 처럼 사용하고 있다.
-                    // 두개의 리스트가 따로 있어서 생기는 문제.
                     startCountFlash(linerList.get(it.name));
                 }
             }

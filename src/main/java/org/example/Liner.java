@@ -1,6 +1,7 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,21 +14,18 @@ import static org.example.Board.*;
 
 @Setter
 @Getter
+@JsonIgnoreProperties({"lineIcon", "flashIcon"})
 public class Liner {
     private static int positionY = 10;
     String name;
     Flash flash;
 
-    @JsonIgnore
     JLabel lineIcon;
-    @JsonIgnore
     public CounterLabel flashIcon;
-    //public Liner liner;
 
     public Liner(){
         flash = new Flash();
     }
-
     public Liner(String name) {
         this.name = name;
         flash = new Flash();
@@ -61,7 +59,6 @@ public class Liner {
         result.setSize(imageSize, imageSize);
         return result;
     }
-
     private CounterLabel getCounterImage(String path, int x, int y) {
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
         Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
