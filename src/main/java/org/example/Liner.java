@@ -7,16 +7,13 @@ import lombok.Setter;
 @Getter
 public class Liner {
     String name;
-    Flash flash = new Flash();
+    Flash flash;
 
     public Liner(){
-
+        flash = new Flash();
     }
     public Liner(String name){
         this.name = name;
-    }
-    public Liner(String name, Flash flash){
-        this.name = name;
-        this.flash = flash;
+        flash = new Flash();
     }
 }
