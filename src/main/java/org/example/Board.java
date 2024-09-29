@@ -24,7 +24,6 @@ public class Board extends JWindow {
     static final int imageMargin = 10;
     private Point initialClick = null;
 
-    static Map<String, Line> lineList = new HashMap<String, Line>();
     Map<String, Liner> linerList = new HashMap<String, Liner>();
 
 
@@ -58,14 +57,13 @@ public class Board extends JWindow {
         listNames.add("sup");
 
         for (int i = 0; i < listNames.size(); i++) {
-            Line line = new Line(listNames.get(i));
-            lineList.put(listNames.get(i), line);
-            add(line.lineIcon);
-            add(line.flashIcon);
+            Liner liner = new Liner(listNames.get(i));
+            linerList.put(listNames.get(i), liner);
+            add(liner.lineIcon);
+            add(liner.flashIcon);
 
-            linerList.put(listNames.get(i), line.liner);
+            linerList.put(listNames.get(i), liner);
         }
-        connector.setLineList(lineList);
         connector.setLinerList(linerList);
 
 
