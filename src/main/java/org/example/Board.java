@@ -1,7 +1,5 @@
 package org.example;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -12,7 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.exit;
@@ -26,11 +23,8 @@ public class Board extends JWindow {
 
     Map<String, Liner> linerList = new HashMap<String, Liner>();
 
-
-    private ObjectMapper mapper = new ObjectMapper();
-
     public Board(Connector connector) {
-        this.connector = connector;
+        Board.connector = connector;
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
         setSize((imageSize + imageMargin) * 2 + imageMargin, (imageSize + imageMargin) * 5 + imageMargin);
@@ -49,23 +43,20 @@ public class Board extends JWindow {
             }
         }
 
-        ArrayList<String> listNames = new ArrayList();
+        ArrayList<String> listNames = new ArrayList<>();
         listNames.add("top");
         listNames.add("jg");
         listNames.add("mid");
         listNames.add("bot");
         listNames.add("sup");
 
-        for (int i = 0; i < listNames.size(); i++) {
-            Liner liner = new Liner(listNames.get(i));
-            linerList.put(listNames.get(i), liner);
+        for (String name : listNames) {
+            Liner liner = new Liner(name);
+            linerList.put(name, liner);
             add(liner.lineIcon);
             add(liner.flashIcon);
-
-            linerList.put(listNames.get(i), liner);
         }
         connector.setLinerList(linerList);
-
 
         repaint();
 
@@ -113,10 +104,5 @@ public class Board extends JWindow {
         popupMenu.add(exitItem);
         trayIcon.setPopupMenu(popupMenu);
         return trayIcon;
-    }
-
-    public String getJsonLineList() throws JsonProcessingException {
-        List newList = linerList.values().stream().toList();
-        return mapper.writeValueAsString(newList);
     }
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class Connector extends WebSocketClient {
+    HttpClient client = HttpClient.newHttpClient();
     Map<String, Liner> linerList;
 
     static ObjectMapper mapper = new ObjectMapper();
@@ -29,11 +30,6 @@ public class Connector extends WebSocketClient {
     public Connector() throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
         connectBlocking();
-    }
-
-
-    public void setLinerList(Map<String, Liner> linerList) {
-        this.linerList = linerList;
     }
 
     @Override
@@ -68,22 +64,7 @@ public class Connector extends WebSocketClient {
         ex.printStackTrace();
     }
 
-    public static void sendPostRequest(String message) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + serverURI + "/test"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("{\"message\":\"" + message + "\"}"))
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-    }
-
-    public void useFlash(Liner liner) throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-
+    public void useFlash(Liner liner) throws IOException, InterruptedException {
         String json = mapper.writeValueAsString(liner);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -92,12 +73,10 @@ public class Connector extends WebSocketClient {
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     public void flashOn(Liner liner) throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-
         String json = mapper.writeValueAsString(liner);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -106,7 +85,7 @@ public class Connector extends WebSocketClient {
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     public void startCountFlash(Liner liner) {
