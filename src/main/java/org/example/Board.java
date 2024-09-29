@@ -6,7 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +30,7 @@ public class Board extends JWindow {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    public Board(Connector connector){
+    public Board(Connector connector) {
         this.connector = connector;
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
@@ -47,17 +50,6 @@ public class Board extends JWindow {
             }
         }
 
-//        Toolkit toolkit = Toolkit.getDefaultToolkit();
-//        Image transparentImage = toolkit.createImage(new byte[0]);
-//        Cursor transparentCursor = toolkit.createCustomCursor(transparentImage, new Point(0, 0), "InvisibleCursor");
-//
-//        // 프레임에 투명 커서 적용
-//        setCursor(transparentCursor);
-
-
-        int x = 10;
-        int y = 10;
-
         ArrayList<String> listNames = new ArrayList();
         listNames.add("top");
         listNames.add("jg");
@@ -65,13 +57,11 @@ public class Board extends JWindow {
         listNames.add("bot");
         listNames.add("sup");
 
-        for(int i = 0; i < listNames.size(); i++){
-            Line line = new Line(listNames.get(i), x, y);
+        for (int i = 0; i < listNames.size(); i++) {
+            Line line = new Line(listNames.get(i));
             lineList.put(listNames.get(i), line);
             add(line.lineIcon);
             add(line.flashIcon);
-
-            y += imageSize + imageMargin;
 
             linerList.put(listNames.get(i), line.liner);
         }

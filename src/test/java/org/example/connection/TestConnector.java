@@ -40,7 +40,7 @@ public class TestConnector {
         connectorLinerList = new HashMap<>();
 
         for (int i = 0; i < listNames.size(); i++) {
-            Line line = new Line(listNames.get(i), 0, 0);
+            Line line = new Line(listNames.get(i));
             connectorLineList.put(listNames.get(i), line);
             connectorLinerList.put(listNames.get(i), line.liner);
         }
@@ -58,7 +58,7 @@ public class TestConnector {
         mockLinerList = new HashMap<>();
 
         for (int i = 0; i < listNames.size(); i++) {
-            Line line = new Line(listNames.get(i), 1, 1);
+            Line line = new Line(listNames.get(i));
             mockLineList.put(listNames.get(i), line);
             mockLinerList.put(listNames.get(i), line.liner);
         }

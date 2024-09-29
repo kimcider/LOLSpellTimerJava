@@ -1,7 +1,6 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +10,19 @@ import java.awt.event.MouseEvent;
 import static org.example.Board.*;
 
 public class Line {
+    private static int positionY = 10;
+
     JLabel lineIcon;
     @JsonIgnore
     public CounterLabel flashIcon;
     public Liner liner;
 
-    public Line(String name, int x, int y) {
+    public Line(String name) {
         liner = new Liner(name);
 
-        lineIcon = getImage(name + ".jpg", x, y);
-        flashIcon = getCounterImage("flash.jpg", x + imageSize + imageMargin, y);
+        lineIcon = getImage(name + ".jpg", 10, positionY);
+        flashIcon = getCounterImage("flash.jpg", 10 + imageSize + imageMargin, positionY);
+        positionY += imageSize + imageMargin;
 
         flashIcon.addMouseListener(new MouseAdapter() {
 
