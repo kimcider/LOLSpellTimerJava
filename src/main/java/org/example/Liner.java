@@ -37,11 +37,13 @@ public class Liner {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                connector.startCountFlash(Liner.this);
-                try {
-                    connector.useFlash(Liner.this);
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    connector.startCountFlash(Liner.this);
+                    try {
+                        connector.useFlash(Liner.this);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });

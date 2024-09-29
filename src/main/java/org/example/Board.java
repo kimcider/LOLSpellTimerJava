@@ -63,23 +63,28 @@ public class Board extends JWindow {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                initialClick = e.getPoint();
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    initialClick = e.getPoint();
+                }
             }
         });
 
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                int windowX = getLocation().x;
-                int windowY = getLocation().y;
+                // 왼쪽 버튼이 눌린 상태에서만 드래그 동작 실행
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    int windowX = getLocation().x;
+                    int windowY = getLocation().y;
 
-                int xMoved = e.getX() - (initialClick != null ? initialClick.x : 0);
-                int yMoved = e.getY() - (initialClick != null ? initialClick.y : 0);
+                    int xMoved = e.getX() - (initialClick != null ? initialClick.x : 0);
+                    int yMoved = e.getY() - (initialClick != null ? initialClick.y : 0);
 
-                int newX = windowX + xMoved;
-                int newY = windowY + yMoved;
+                    int newX = windowX + xMoved;
+                    int newY = windowY + yMoved;
 
-                setLocation(newX, newY);
+                    setLocation(newX, newY);
+                }
             }
         });
     }
