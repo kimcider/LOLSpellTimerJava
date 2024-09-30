@@ -1,6 +1,7 @@
 package org.example.liner;
 
 import org.example.Connector;
+import org.example.CounterLabel;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
 import org.java_websocket.client.WebSocketClient;
@@ -74,7 +75,7 @@ public class LinerTest {
 
     @Test
     public void startCount() throws URISyntaxException {
-        Liner mockLiner = Mockito.spy(new Liner("top", new AbstractWebSocketConnector(new URI("tempUrl")) {
+        Liner liner = new Liner("top", new AbstractWebSocketConnector(new URI("tempUrl")) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
 
@@ -104,7 +105,18 @@ public class LinerTest {
             public void flashOn(Liner liner) throws IOException, InterruptedException {
 
             }
-        }));
+        });
+        // CounterLabel mock 생성
+        CounterLabel mockCounterLabel = Mockito.spy(liner.getFlashIcon());
+        // liner 객체의 flashIcon 필드를 mockCounterLabel로 교체
+        liner.setFlashIcon(mockCounterLabel);
 
+        Mockito.verify(mockCounterLabel, Mockito.never()).startCount();
+
+        try{
+            liner.startCount();
+        } catch (Exception e){}
+
+        Mockito.verify(mockCounterLabel, Mockito.times(1)).startCount();
     }
 }
