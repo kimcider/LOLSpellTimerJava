@@ -14,9 +14,6 @@ public class CounterLabelTest {
 
     private HashMap<String, Liner> connectorLinerList;
 
-    public CounterLabelTest() throws URISyntaxException, InterruptedException {
-    }
-
     private ArrayList<String> getNameList(){
         ArrayList<String> listNames = new ArrayList();
         listNames.add("top");

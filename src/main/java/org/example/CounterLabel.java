@@ -27,7 +27,13 @@ public class CounterLabel extends JLabel {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     startCount();
                     try {
-                        connector.useFlash(liner);
+                        // TODO: liner.useFlash(); 이렇게 하면안되고, connector.useFlash(liner)로 하면 되네...
+                        // 이거 왜이러지? 이걸 검출할 수 있는 테스트도 작성하기.
+                        // 이거 단순히 liner.useFlash가 구현이 안되어있어서그렇다....
+
+                         liner.useFlash();
+                        //connector.useFlash(liner);
+//                        connector.useFlash(liner);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -53,7 +59,8 @@ public class CounterLabel extends JLabel {
                 if (liner.flash.coolTime <= 0) {
                     liner.flash.on = true;
                     try {
-                        connector.flashOn(liner);
+                        liner.flashOn();
+//                        connector.flashOn(liner);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }

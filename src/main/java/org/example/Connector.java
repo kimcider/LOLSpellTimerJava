@@ -22,16 +22,17 @@ import java.util.Map;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-
+    public static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
     HttpClient client = HttpClient.newHttpClient();
+
     Map<String, Liner> linerList;
 
     static ObjectMapper mapper = new ObjectMapper();
-    private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
     private Connector() throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
-
+        super.setServerURI(serverURI);
+        super.setClient(client);
         connectBlocking();
     }
 
@@ -80,32 +81,4 @@ public class Connector extends AbstractWebSocketConnector {
     public void onError(Exception ex) {
         ex.printStackTrace();
     }
-
-    @Override
-    public void useFlash(Liner liner) throws IOException, InterruptedException {
-        String json = mapper.writeValueAsString(liner);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + serverURI + "/useFlash"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    @Override
-    public void flashOn(Liner liner) throws IOException, InterruptedException {
-        String json = mapper.writeValueAsString(liner);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + serverURI + "/useFlash"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-
 }

@@ -54,16 +54,6 @@ public class LinerTest {
             public void onError(Exception e) {
 
             }
-
-            @Override
-            public void useFlash(Liner liner) throws IOException, InterruptedException {
-
-            }
-
-            @Override
-            public void flashOn(Liner liner) throws IOException, InterruptedException {
-
-            }
         });
         assertNotNull(liner.getConnector());
         assertNotEquals(liner.getConnector(), Connector.getInstance());
@@ -93,16 +83,6 @@ public class LinerTest {
 
             @Override
             public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void useFlash(Liner liner) throws IOException, InterruptedException {
-
-            }
-
-            @Override
-            public void flashOn(Liner liner) throws IOException, InterruptedException {
 
             }
         });

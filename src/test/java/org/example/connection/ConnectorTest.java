@@ -118,23 +118,23 @@ public class ConnectorTest {
     public void useFlash() throws Exception {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
-        connector.useFlash(mockLinerList.get("testliner"));
+        mockLinerList.get("top").useFlash();
         //TODO: 이거 잘 되는건지 확인하기
         // TODO: 얘         Mockito.verify(mockSupLiner, Mockito.never()).startCount(); 이런거로 바꿔야겠네
         //왜 얘도되고
-        Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("testliner"));
+        Mockito.verify(connectorLinerList.get("top"), Mockito.times(1)).useFlash();
         //얘도되지?
         //  이거 혹시 null이라서 되는건가?
-        Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("as"));
+        Mockito.verify(connectorLinerList.get("as"), Mockito.times(1)).useFlash();
 
     }
     @Test
     public void flashOn() throws Exception {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
-        connector.flashOn(mockLinerList.get("testliner"));
+        mockLinerList.get("testliner").flashOn();
         //TODO: 이거 잘 되는건지 확인하기
-        Mockito.verify(connector, Mockito.times(1)).flashOn(connectorLinerList.get("testliner"));
+        Mockito.verify(connectorLinerList.get("testliner"), Mockito.times(1)).flashOn();
     }
 
     @Test
