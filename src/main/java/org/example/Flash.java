@@ -2,14 +2,42 @@ package org.example;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.connection.AbstractWebSocketConnector;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Getter
 @Setter
-@JsonIgnoreProperties({"flashCoolTime"})
+@JsonIgnoreProperties({"mapper", "flashCoolTime"})
 public class Flash {
-    static final int flashCoolTime = 300;
-    int coolTime = flashCoolTime;
-    boolean on = true;
+    private static ObjectMapper mapper = new ObjectMapper();
+    public static final int flashCoolTime = 300;
+    public int coolTime = flashCoolTime;
+    public boolean on = true;
+
+    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector){
+        try{
+            String json = mapper.writeValueAsString(liner);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://" + connector.serverURI + "/useFlash"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            connector.client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

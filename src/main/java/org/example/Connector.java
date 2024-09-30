@@ -22,16 +22,15 @@ import java.util.Map;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
+//    public static String serverURI = "localhost:8080";
     public static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
-    HttpClient client = HttpClient.newHttpClient();
-
-    Map<String, Liner> linerList;
 
     static ObjectMapper mapper = new ObjectMapper();
 
     private Connector() throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
         super.setServerURI(serverURI);
+        client = HttpClient.newHttpClient();
         super.setClient(client);
         connectBlocking();
     }

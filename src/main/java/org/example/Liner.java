@@ -21,9 +21,9 @@ import static org.example.Board.*;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "positionY"})
+@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY"})
 public class Liner {
-    private static ObjectMapper mapper = new ObjectMapper();
+
     private AbstractWebSocketConnector connector;
     public JLabel lineIcon;
     public CounterLabel flashIcon;
@@ -74,41 +74,5 @@ public class Liner {
         return result;
     }
 
-    // TODO: Connector에 있는애들 다 여기로 옮겨야지
-    public void useFlash(){
-        try{
-            String json = mapper.writeValueAsString(this);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://" + connector.serverURI + "/useFlash"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
 
-            connector.client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void flashOn(){
-        try{
-            String json = mapper.writeValueAsString(this);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://" + connector.serverURI + "/useFlash"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            connector.client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

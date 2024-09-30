@@ -111,45 +111,5 @@ public class ConnectorTest {
     }
 
 
-    // TODO: TestableConnector를 새로 만들어야겠다.
-    // 지금 서버에 쏘면 게임하고있는애들한테 방해될까바 가짜테스터로 쏘고있는거자나
-    // 이렇게 하지 말고, 각 Liner가
-    @Test
-    public void useFlash() throws Exception {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-
-        mockLinerList.get("top").useFlash();
-        //TODO: 이거 잘 되는건지 확인하기
-        // TODO: 얘         Mockito.verify(mockSupLiner, Mockito.never()).startCount(); 이런거로 바꿔야겠네
-        //왜 얘도되고
-        Mockito.verify(connectorLinerList.get("top"), Mockito.times(1)).useFlash();
-        //얘도되지?
-        //  이거 혹시 null이라서 되는건가?
-        Mockito.verify(connectorLinerList.get("as"), Mockito.times(1)).useFlash();
-
-    }
-    @Test
-    public void flashOn() throws Exception {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-
-        mockLinerList.get("testliner").flashOn();
-        //TODO: 이거 잘 되는건지 확인하기
-        Mockito.verify(connectorLinerList.get("testliner"), Mockito.times(1)).flashOn();
-    }
-
-    @Test
-    public void startCountFlashWhenIsAlreadyUsed() throws IOException, InterruptedException {
-        connectorLinerList.get("sup").getFlash().setOn(false);
-        connectorLinerList.get("sup").startCount();
-
-        assertEquals("null", "g");
-
-    }
-
-    @Test
-    public void startCountFlashWhen() throws IOException, InterruptedException {
-        connectorLinerList.get("sup").startCount();
-        assertEquals("null", "g");
-    }
 
 }
