@@ -1,8 +1,8 @@
 package org.example.counterLabel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Connector;
 import org.example.Liner;
+import org.example.connection.Connector;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class CounterLabelTest {
 
     private HashMap<String, Liner> connectorLinerList;
 
-    private ArrayList<String> getNameList(){
+    private ArrayList<String> getNameList() {
         ArrayList<String> listNames = new ArrayList();
         listNames.add("top");
         listNames.add("jg");
@@ -28,7 +28,7 @@ public class CounterLabelTest {
         ArrayList<String> nameList = getNameList();
 
         HashMap<String, Liner> linerList = new HashMap();
-        for(String name : nameList){
+        for (String name : nameList) {
             linerList.put(name, new Liner(name, connector));
         }
 

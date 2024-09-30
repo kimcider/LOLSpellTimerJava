@@ -2,7 +2,6 @@ package org.example.connection;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Connector;
 import org.example.Liner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +22,7 @@ public class ConnectorTest {
 
     private HashMap<String, Liner> connectorLinerList;
 
-    private ArrayList<String> getNameList(){
+    private ArrayList<String> getNameList() {
         ArrayList<String> listNames = new ArrayList();
         listNames.add("top");
         listNames.add("jg");
@@ -38,7 +36,7 @@ public class ConnectorTest {
         ArrayList<String> nameList = getNameList();
 
         HashMap<String, Liner> linerList = new HashMap();
-        for(String name : nameList){
+        for (String name : nameList) {
             linerList.put(name, new Liner(name, connector));
         }
 
@@ -66,7 +64,7 @@ public class ConnectorTest {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
-        mockLinerList.get("sup").getFlash().setOn(false);
+        mockLinerList.get("sup").getFlash().off();
         assertEquals(false, mockLinerList.get("sup").getFlash().isOn());
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
 
@@ -80,8 +78,8 @@ public class ConnectorTest {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
-        mockLinerList.get("sup").getFlash().setOn(false);
-        mockLinerList.get("jg").getFlash().setOn(false);
+        mockLinerList.get("sup").getFlash().off();
+        mockLinerList.get("jg").getFlash().off();
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
 
         connector.onMessage(json);
@@ -97,9 +95,9 @@ public class ConnectorTest {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         //서폿 플 이미 사용함
-        connector.getLinerList().get("sup").getFlash().setOn(false);
+        connector.getLinerList().get("sup").getFlash().off();
 
-        mockLinerList.get("sup").getFlash().setOn(false);
+        mockLinerList.get("sup").getFlash().off();
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
 
         connector.onMessage(json);
@@ -109,7 +107,6 @@ public class ConnectorTest {
         Mockito.verify(mockSupLiner, Mockito.never()).startCount();
 
     }
-
 
 
 }

@@ -1,20 +1,16 @@
 package org.example.liner;
 
-import org.example.Connector;
 import org.example.CounterLabel;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
-import org.java_websocket.client.WebSocketClient;
+import org.example.connection.Connector;
 import org.java_websocket.handshake.ServerHandshake;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +19,7 @@ public class LinerTest {
     private AbstractWebSocketConnector mocSocketClient;
 
     @Test
-    public void createLinerTest1(){
+    public void createLinerTest1() {
         Liner liner = new Liner();
         assertNotNull(liner.getConnector());
         assertNull(liner.getLineIcon());
@@ -93,9 +89,10 @@ public class LinerTest {
 
         Mockito.verify(mockCounterLabel, Mockito.never()).startCount();
 
-        try{
+        try {
             liner.startCount();
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
         Mockito.verify(mockCounterLabel, Mockito.times(1)).startCount();
     }

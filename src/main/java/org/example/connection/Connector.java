@@ -1,28 +1,24 @@
-package org.example;
+package org.example.connection;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.connection.AbstractWebSocketConnector;
+import org.example.Liner;
 import org.java_websocket.handshake.ServerHandshake;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Map;
 
 
 @Getter
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-//    private static String serverURI = "localhost:8080";
+    //    private static String serverURI = "localhost:8080";
     private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
     private static ObjectMapper mapper = new ObjectMapper();
@@ -35,7 +31,7 @@ public class Connector extends AbstractWebSocketConnector {
     }
 
     public static Connector getInstance() {
-        if(connector == null){
+        if (connector == null) {
             try {
                 connector = new Connector();
             } catch (InterruptedException e) {
@@ -57,7 +53,8 @@ public class Connector extends AbstractWebSocketConnector {
     @Override
     public void onMessage(String json) {
         try {
-            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
+            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
+            });
             for (Liner it : liners) {
                 Liner clientLiner = linerList.get(it.getName());
                 if (clientLiner.getFlash().isOn() != it.getFlash().isOn()) {

@@ -22,8 +22,8 @@ public class Flash {
     private int coolTime = flashCoolTime;
     private boolean on = true;
 
-    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector){
-        try{
+    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector) {
+        try {
             String json = mapper.writeValueAsString(liner);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://" + connector.getServerURI() + "/useFlash"))
@@ -41,10 +41,11 @@ public class Flash {
         }
     }
 
-    public void on(){
+    public void on() {
         on = true;
     }
-    public void off(){
+
+    public void off() {
         on = false;
     }
 }

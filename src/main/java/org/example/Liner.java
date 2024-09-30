@@ -1,23 +1,16 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
+import org.example.connection.Connector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
-import static org.example.Board.*;
+import static org.example.Board.imageMargin;
+import static org.example.Board.imageSize;
 
 @Setter
 @Getter
@@ -32,12 +25,12 @@ public class Liner {
     private String name;
     private Flash flash;
 
-    public Liner(){
+    public Liner() {
         flash = new Flash();
         connector = Connector.getInstance();
     }
 
-    public Liner(String name, AbstractWebSocketConnector connector){
+    public Liner(String name, AbstractWebSocketConnector connector) {
         this.connector = connector;
         this.name = name;
         flash = new Flash();
@@ -47,7 +40,7 @@ public class Liner {
         positionY += imageSize + imageMargin;
     }
 
-    public void startCount(){
+    public void startCount() {
         flashIcon.startCount();
     }
 
@@ -62,6 +55,7 @@ public class Liner {
         result.setSize(imageSize, imageSize);
         return result;
     }
+
     private CounterLabel getCounterImage(String path, int x, int y) {
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
         Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);

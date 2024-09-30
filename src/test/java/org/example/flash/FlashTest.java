@@ -1,9 +1,9 @@
 package org.example.flash;
 
-import org.example.Connector;
 import org.example.Flash;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
+import org.example.connection.Connector;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -31,25 +31,10 @@ public class FlashTest {
         assertEquals(true, flash.isOn());
     }
 
-    @Test
-    public void useFlash() {
-        //TODO: 얘는 내가 mock을 잘못써서 운영서버에 보내지는 않는듯.... 그래도 잘못되고있는것
-        Liner top = new Liner("top", connector);
-        Flash topFlash = Mockito.spy(top.getFlash());
-        topFlash.sendFlashStatus(top, connector);
-        Mockito.verify(topFlash, Mockito.times(1)).sendFlashStatus(top, connector);
-    }
 
+    //GPT가 짜준 코드. 이거 베이스로 테스트들 진행하면 될듯?
     @Test
-    public void useFlash2() {
-        //TODO: 현재 이 메소드를 수행하면 운영서버에 전송한다... 진정한 의미의 테스트가 되지 못하는것....
-        Liner top = new Liner("top", connector);
-        top.getFlash().setOn(false);
-        top.getFlash().sendFlashStatus(top, connector);
-    }
-
-    @Test
-    public void useFlash3() throws Exception {
+    public void useFlash() throws Exception {
         // Mock HttpClient와 HttpResponse를 생성
         HttpClient mockHttpClient = Mockito.mock(HttpClient.class);
         HttpResponse<String> mockHttpResponse = Mockito.mock(HttpResponse.class);
@@ -65,14 +50,31 @@ public class FlashTest {
 
         // Liner 객체 생성
         Liner top = new Liner("top", mockConnector);
-        top.getFlash().setOn(false);
+        top.getFlash().off();
 
         // Flash 상태 전송
         top.getFlash().sendFlashStatus(top, mockConnector);
 
         // HttpRequest 전송이 호출되었는지 검증
-        verify(mockHttpClient, times(1)).sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+        verify(mockHttpClient, times(1)).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
     }
+
+//    @Test
+//    public void useFlash1() {
+//        //TODO: 얘는 내가 mock을 잘못써서 운영서버에 보내지는 않는듯.... 그래도 잘못되고있는것
+//        Liner top = new Liner("top", connector);
+//        Flash topFlash = Mockito.spy(top.getFlash());
+//        topFlash.sendFlashStatus(top, connector);
+//        Mockito.verify(topFlash, Mockito.times(1)).sendFlashStatus(top, connector);
+//    }
+
+//    @Test
+//    public void useFlash2() {
+//        //TODO: 현재 이 메소드를 수행하면 운영서버에 전송한다... 진정한 의미의 테스트가 되지 못하는것....
+//        Liner top = new Liner("top", connector);
+//        top.getFlash().setOn(false);
+//        top.getFlash().sendFlashStatus(top, connector);
+//    }
 
 //    @Test
 //    public void useFlash() throws Exception {

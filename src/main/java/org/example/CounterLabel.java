@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URISyntaxException;
 
 
 public class CounterLabel extends JLabel {
@@ -27,7 +26,7 @@ public class CounterLabel extends JLabel {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     startCount();
                     try {
-                         liner.getFlash().sendFlashStatus(liner, connector);
+                        liner.getFlash().sendFlashStatus(liner, connector);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -78,13 +77,13 @@ public class CounterLabel extends JLabel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if(!liner.getFlash().isOn()){
-            Graphics2D g2d = (Graphics2D)g;
+        if (!liner.getFlash().isOn()) {
+            Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(0, 0, 0, 150));
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
             int remainingTime = liner.getFlash().getCoolTime();
-            if(remainingTime > 0){
+            if (remainingTime > 0) {
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("Arial", Font.BOLD, 20));
                 FontMetrics metrics = g2d.getFontMetrics();
