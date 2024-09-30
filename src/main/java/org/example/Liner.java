@@ -25,12 +25,12 @@ import static org.example.Board.*;
 public class Liner {
 
     private AbstractWebSocketConnector connector;
-    public JLabel lineIcon;
-    public CounterLabel flashIcon;
+    private JLabel lineIcon;
+    private CounterLabel flashIcon;
     private static int positionY = imageMargin;
 
-    public String name;
-    public Flash flash;
+    private String name;
+    private Flash flash;
 
     public Liner(){
         flash = new Flash();

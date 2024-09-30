@@ -19,19 +19,19 @@ import java.net.http.HttpResponse;
 public class Flash {
     private static ObjectMapper mapper = new ObjectMapper();
     public static final int flashCoolTime = 300;
-    public int coolTime = flashCoolTime;
-    public boolean on = true;
+    private int coolTime = flashCoolTime;
+    private boolean on = true;
 
     public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector){
         try{
             String json = mapper.writeValueAsString(liner);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://" + connector.serverURI + "/useFlash"))
+                    .uri(URI.create("http://" + connector.getServerURI() + "/useFlash"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
-            connector.client.send(request, HttpResponse.BodyHandlers.ofString());
+            connector.getClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -39,5 +39,12 @@ public class Flash {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void on(){
+        on = true;
+    }
+    public void off(){
+        on = false;
     }
 }

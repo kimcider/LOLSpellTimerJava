@@ -26,10 +26,10 @@ public class LinerTest {
     public void createLinerTest1(){
         Liner liner = new Liner();
         assertNotNull(liner.getConnector());
-        assertNull(liner.lineIcon);
-        assertNull(liner.flashIcon);
-        assertNull(liner.name);
-        assertNotNull(liner.flash);
+        assertNull(liner.getLineIcon());
+        assertNull(liner.getFlashIcon());
+        assertNull(liner.getName());
+        assertNotNull(liner.getFlash());
     }
 
     @Test
@@ -57,10 +57,10 @@ public class LinerTest {
         });
         assertNotNull(liner.getConnector());
         assertNotEquals(liner.getConnector(), Connector.getInstance());
-        assertNotNull(liner.lineIcon);
-        assertNotNull(liner.flashIcon);
-        assertNotNull(liner.name);
-        assertNotNull(liner.flash);
+        assertNotNull(liner.getLineIcon());
+        assertNotNull(liner.getFlashIcon());
+        assertNotNull(liner.getName());
+        assertNotNull(liner.getFlash());
     }
 
     @Test

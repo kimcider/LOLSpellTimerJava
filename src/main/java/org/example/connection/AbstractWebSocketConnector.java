@@ -14,9 +14,9 @@ import java.util.Map;
 @Getter
 @Setter
 public abstract class AbstractWebSocketConnector  extends WebSocketClient {
-    public HttpClient client;
-    public String serverURI;
-    public Map<String, Liner> linerList;  //얘가 여기에 있는것도 이상하네..
+    private HttpClient client;
+    private String serverURI;
+    protected Map<String, Liner> linerList;  //얘가 여기에 있는것도 이상하네..
     public AbstractWebSocketConnector (URI serverUri) {
         super(serverUri);
     }

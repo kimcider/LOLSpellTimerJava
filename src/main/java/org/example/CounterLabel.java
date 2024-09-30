@@ -12,8 +12,8 @@ import java.net.URISyntaxException;
 public class CounterLabel extends JLabel {
     private AbstractWebSocketConnector connector;
     ImageIcon icon;
-    Liner liner;
-    Timer timer;
+    private Liner liner;
+    private Timer timer;
 
     public CounterLabel(ImageIcon icon, Liner liner, AbstractWebSocketConnector connector) {
         super(icon);
@@ -27,13 +27,7 @@ public class CounterLabel extends JLabel {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     startCount();
                     try {
-                        // TODO: liner.useFlash(); 이렇게 하면안되고, connector.useFlash(liner)로 하면 되네...
-                        // 이거 왜이러지? 이걸 검출할 수 있는 테스트도 작성하기.
-                        // 이거 단순히 liner.useFlash가 구현이 안되어있어서그렇다....
-
-                         liner.flash.sendFlashStatus(liner, connector);
-                        //connector.useFlash(liner);
-//                        connector.useFlash(liner);
+                         liner.getFlash().sendFlashStatus(liner, connector);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
@@ -43,40 +37,40 @@ public class CounterLabel extends JLabel {
     }
 
     public void startCount() {
-        if (liner.flash.on) {
-            liner.flash.on = false;
-            liner.flash.coolTime = liner.flash.flashCoolTime;
+        if (liner.getFlash().isOn()) {
+            liner.getFlash().off();
+            liner.getFlash().setCoolTime(liner.getFlash().flashCoolTime);
 
-            liner.flashIcon.repaint();
-            if (liner.flashIcon.timer != null) {
-                liner.flashIcon.timer.stop();
+            liner.getFlashIcon().repaint();
+            if (liner.getFlashIcon().timer != null) {
+                liner.getFlashIcon().timer.stop();
             }
 
-            liner.flashIcon.timer = new Timer(1000, e -> {
-                liner.flash.coolTime -= 1;
-                liner.flashIcon.repaint();
+            liner.getFlashIcon().timer = new Timer(1000, e -> {
+                liner.getFlash().setCoolTime(liner.getFlash().getCoolTime() - 1);
+                liner.getFlashIcon().repaint();
 
-                if (liner.flash.coolTime <= 0) {
-                    liner.flash.on = true;
+                if (liner.getFlash().getCoolTime() <= 0) {
+                    liner.getFlash().on();
                     try {
-                        liner.flash.sendFlashStatus(liner, connector);
+                        liner.getFlash().sendFlashStatus(liner, connector);
 //                        connector.flashOn(liner);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
 
-                    if (liner.flashIcon.timer != null) {
-                        liner.flashIcon.timer.stop();
+                    if (liner.getFlashIcon().timer != null) {
+                        liner.getFlashIcon().timer.stop();
                     }
                 }
 
             });
 
-            liner.flashIcon.timer.start();
+            liner.getFlashIcon().timer.start();
         } else {
-            liner.flash.on = true;
-            liner.flashIcon.repaint();
-            liner.flashIcon.timer.stop();
+            liner.getFlash().on();
+            liner.getFlashIcon().repaint();
+            liner.getFlashIcon().timer.stop();
         }
     }
 
@@ -84,12 +78,12 @@ public class CounterLabel extends JLabel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if(!liner.flash.on){
+        if(!liner.getFlash().isOn()){
             Graphics2D g2d = (Graphics2D)g;
             g2d.setColor(new Color(0, 0, 0, 150));
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
-            int remainingTime = liner.flash.coolTime;
+            int remainingTime = liner.getFlash().getCoolTime();
             if(remainingTime > 0){
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("Arial", Font.BOLD, 20));

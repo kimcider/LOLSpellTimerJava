@@ -22,16 +22,15 @@ import java.util.Map;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-//    public static String serverURI = "localhost:8080";
-    public static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
+//    private static String serverURI = "localhost:8080";
+    private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
-    static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper();
 
     private Connector() throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
         super.setServerURI(serverURI);
-        client = HttpClient.newHttpClient();
-        super.setClient(client);
+        super.setClient(HttpClient.newHttpClient());
         connectBlocking();
     }
 
@@ -60,9 +59,9 @@ public class Connector extends AbstractWebSocketConnector {
         try {
             List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
             for (Liner it : liners) {
-                Liner clientLiner = linerList.get(it.name);
-                if (clientLiner.flash.on != it.flash.on) {
-                    linerList.get(it.name).startCount();
+                Liner clientLiner = linerList.get(it.getName());
+                if (clientLiner.getFlash().isOn() != it.getFlash().isOn()) {
+                    linerList.get(it.getName()).startCount();
                 }
             }
         } catch (IOException e) {
