@@ -1,8 +1,15 @@
 
-
 1. 우추/쿨감신
 2. 20초쯤 남았을 때 깜빡이는거
 
 
 
 ??. 오버레이 움직이지 않도록 고정시키는 버튼 추가.
+
+
+DONE: Connector를 싱글톤화
+
+TODO: 테스트할 때 서버와 통신하지 않는 mockConnector를 사용할 수 있도록 Liner가 Connector를 받아서 작업을 수행할 수 있게 리팩토링
+TODO: Liner 테스트코드 작성
+TODO: Connector의 useFlash등의 함수 Liner로 옮기기
+TODO: Flash를 CounterLabel을 extends하게 만들어서 CounterLabel의 startCount의 복잡성 제거하기

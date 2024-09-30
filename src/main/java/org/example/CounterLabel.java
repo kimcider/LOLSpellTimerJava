@@ -1,19 +1,23 @@
 package org.example;
 
+import org.example.connection.AbstractWebSocketConnector;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URISyntaxException;
 
-import static org.example.Board.connector;
 
 public class CounterLabel extends JLabel {
+    private AbstractWebSocketConnector connector;
     ImageIcon icon;
     Liner liner;
     Timer timer;
 
-    public CounterLabel(ImageIcon icon, Liner liner) {
+    public CounterLabel(ImageIcon icon, Liner liner, AbstractWebSocketConnector connector) {
         super(icon);
+        this.connector = connector;
         this.icon = icon;
         this.liner = liner;
 

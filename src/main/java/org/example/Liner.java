@@ -3,30 +3,35 @@ package org.example;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.connection.AbstractWebSocketConnector;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URISyntaxException;
 
 import static org.example.Board.*;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"lineIcon", "flashIcon"})
+@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY"})
 public class Liner {
-    private static int positionY = imageMargin;
-    String name;
-    Flash flash;
-
-    JLabel lineIcon;
+    private AbstractWebSocketConnector connector;
+    public JLabel lineIcon;
     public CounterLabel flashIcon;
+    private static int positionY = imageMargin;
+
+    public String name;
+    public Flash flash;
 
     public Liner(){
         flash = new Flash();
+        connector = Connector.getInstance();
     }
 
-    public Liner(String name) {
+    public Liner(String name, AbstractWebSocketConnector connector){
+        this.connector = connector;
         this.name = name;
         flash = new Flash();
 
@@ -55,10 +60,15 @@ public class Liner {
         Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
-        CounterLabel result = new CounterLabel(scaledIcon, this);
+        CounterLabel result = new CounterLabel(scaledIcon, this, connector);
 
         result.setLocation(x, y);
         result.setSize(imageSize, imageSize);
         return result;
+    }
+
+    // TODO: Connector에 있는애들 다 여기로 옮겨야지
+    public void useFlash(){
+
     }
 }

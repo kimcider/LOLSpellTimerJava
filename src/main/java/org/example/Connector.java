@@ -21,15 +21,32 @@ import java.util.Map;
 @Getter
 @Setter
 public class Connector extends AbstractWebSocketConnector {
+    private static Connector connector;
+
     HttpClient client = HttpClient.newHttpClient();
     Map<String, Liner> linerList;
 
     static ObjectMapper mapper = new ObjectMapper();
     private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
-    public Connector() throws InterruptedException, URISyntaxException {
+    private Connector() throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
+
         connectBlocking();
+    }
+
+    public static Connector getInstance() {
+        if(connector == null){
+            try {
+                connector = new Connector();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return connector;
     }
 
     @Override

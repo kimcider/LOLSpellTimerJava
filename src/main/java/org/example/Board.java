@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
 import static java.lang.System.exit;
 
 public class Board extends JWindow {
-    public static Connector connector;
+    private Connector connector;
 
     static final int imageSize = 40;
     static final int imageMargin = 10;
@@ -23,8 +24,8 @@ public class Board extends JWindow {
 
     Map<String, Liner> linerList = new HashMap<String, Liner>();
 
-    public Board(Connector connector) {
-        Board.connector = connector;
+    public Board() {
+        connector = Connector.getInstance();
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
         setSize((imageSize + imageMargin) * 2 + imageMargin, (imageSize + imageMargin) * 5 + imageMargin);
@@ -51,7 +52,7 @@ public class Board extends JWindow {
         listNames.add("sup");
 
         for (String name : listNames) {
-            Liner liner = new Liner(name);
+            Liner liner = new Liner(name, connector);
             linerList.put(name, liner);
             add(liner.lineIcon);
             add(liner.flashIcon);

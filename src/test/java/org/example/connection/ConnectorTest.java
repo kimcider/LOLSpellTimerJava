@@ -11,15 +11,16 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class TestConnector {
+public class ConnectorTest {
     static ObjectMapper mapper = new ObjectMapper();
-    private Connector connector;
+    private Connector connector = Connector.getInstance();
 
     private HashMap<String, Liner> connectorLinerList;
 
@@ -33,12 +34,12 @@ public class TestConnector {
         return listNames;
     }
 
-    private HashMap<String, Liner> getLinerList(){
+    private HashMap<String, Liner> getLinerList() {
         ArrayList<String> nameList = getNameList();
 
         HashMap<String, Liner> linerList = new HashMap();
         for(String name : nameList){
-            linerList.put(name, new Liner(name));
+            linerList.put(name, new Liner(name, connector));
         }
 
         return linerList;
@@ -46,7 +47,7 @@ public class TestConnector {
 
     @BeforeEach
     public void setUp() throws Exception {
-        connector = Mockito.spy(new Connector());
+        connector = Mockito.spy(connector);
         connectorLinerList = getLinerList();
         connector.setLinerList(connectorLinerList);
     }
@@ -60,7 +61,7 @@ public class TestConnector {
     }
 
     @Test
-    public void testOnMessage1() throws JsonProcessingException {
+    public void testOnMessage1() throws JsonProcessingException, URISyntaxException, InterruptedException {
         Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
         HashMap<String, Liner> mockLinerList = getLinerList();
 
@@ -75,7 +76,7 @@ public class TestConnector {
     }
 
     @Test
-    public void testOnMessage2() throws JsonProcessingException {
+    public void testOnMessage2() throws JsonProcessingException, URISyntaxException, InterruptedException {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
@@ -89,7 +90,7 @@ public class TestConnector {
     }
 
     @Test
-    public void testOnMessage_supF_IsAlreadyUsed() throws JsonProcessingException {
+    public void testOnMessage_supF_IsAlreadyUsed() throws JsonProcessingException, URISyntaxException, InterruptedException {
         // 서폿이 플을 썼는지를 주시하기 위한 spy mock Liner
         Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
 
@@ -109,20 +110,31 @@ public class TestConnector {
 
     }
 
+
+    // TODO: TestableConnector를 새로 만들어야겠다.
+    // 지금 서버에 쏘면 게임하고있는애들한테 방해될까바 가짜테스터로 쏘고있는거자나
+    // 이렇게 하지 말고, 각 Liner가
     @Test
     public void useFlash() throws Exception {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         connector.useFlash(mockLinerList.get("testliner"));
-        Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("fd"));
-    }
+        //TODO: 이거 잘 되는건지 확인하기
+        // TODO: 얘         Mockito.verify(mockSupLiner, Mockito.never()).startCount(); 이런거로 바꿔야겠네
+        //왜 얘도되고
+        Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("testliner"));
+        //얘도되지?
+        //  이거 혹시 null이라서 되는건가?
+        Mockito.verify(connector, Mockito.times(1)).useFlash(connectorLinerList.get("as"));
 
+    }
     @Test
     public void flashOn() throws Exception {
         HashMap<String, Liner> mockLinerList = getLinerList();
 
         connector.flashOn(mockLinerList.get("testliner"));
-        Mockito.verify(connector, Mockito.times(1)).flashOn(connectorLinerList.get("fd"));
+        //TODO: 이거 잘 되는건지 확인하기
+        Mockito.verify(connector, Mockito.times(1)).flashOn(connectorLinerList.get("testliner"));
     }
 
     @Test
