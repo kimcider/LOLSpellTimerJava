@@ -1,75 +1,34 @@
 package org.example;
 
-import org.example.connection.AbstractWebSocketConnector;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-
+@Getter
+@Setter
 public class CounterLabel extends JLabel {
-    private AbstractWebSocketConnector connector;
     ImageIcon icon;
-    private Liner liner;
+    private Flash flash;
     private Timer timer;
 
-    public CounterLabel(ImageIcon icon, Liner liner, AbstractWebSocketConnector connector) {
+    public CounterLabel(ImageIcon icon, Flash flash) {
         super(icon);
-        this.connector = connector;
         this.icon = icon;
-        this.liner = liner;
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    startCount();
-                    try {
-                        liner.getFlash().sendFlashStatus(liner, connector);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
-        });
+        this.flash = flash;
     }
 
-    public void startCount() {
-        if (liner.getFlash().isOn()) {
-            liner.getFlash().off();
-            liner.getFlash().setCoolTime(liner.getFlash().flashCoolTime);
 
-            liner.getFlashIcon().repaint();
-            if (liner.getFlashIcon().timer != null) {
-                liner.getFlashIcon().timer.stop();
-            }
+    public void stopTimer() {
+        if (timer != null) {
+            timer.stop();
+        }
+    }
 
-            liner.getFlashIcon().timer = new Timer(1000, e -> {
-                liner.getFlash().setCoolTime(liner.getFlash().getCoolTime() - 1);
-                liner.getFlashIcon().repaint();
-
-                if (liner.getFlash().getCoolTime() <= 0) {
-                    liner.getFlash().on();
-                    try {
-                        liner.getFlash().sendFlashStatus(liner, connector);
-//                        connector.flashOn(liner);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-
-                    if (liner.getFlashIcon().timer != null) {
-                        liner.getFlashIcon().timer.stop();
-                    }
-                }
-
-            });
-
-            liner.getFlashIcon().timer.start();
-        } else {
-            liner.getFlash().on();
-            liner.getFlashIcon().repaint();
-            liner.getFlashIcon().timer.stop();
+    public void startTimer() {
+        if (timer != null) {
+            timer.start();
         }
     }
 
@@ -77,12 +36,12 @@ public class CounterLabel extends JLabel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (!liner.getFlash().isOn()) {
+        if (!flash.isOn()) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(0, 0, 0, 150));
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
-            int remainingTime = liner.getFlash().getCoolTime();
+            int remainingTime = flash.getCoolTime();
             if (remainingTime > 0) {
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("Arial", Font.BOLD, 20));

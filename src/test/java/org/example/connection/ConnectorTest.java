@@ -14,11 +14,9 @@ import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectorTest {
@@ -75,15 +73,17 @@ public class ConnectorTest {
     public void testJsonToLinerList() throws JsonProcessingException {
         List<Liner> defaultList = new ArrayList<>();
         ArrayList<String> nameList = getNameList();
-        for(String name : nameList) {
+        for (String name : nameList) {
             defaultList.add(new Liner(name, connector));
         }
 
         String json = """
                 [{"name":"top","flash":{"coolTime":300,"on":true}},{"name":"jg","flash":{"coolTime":300,"on":true}},{"name":"mid","flash":{"coolTime":300,"on":true}},{"name":"bot","flash":{"coolTime":300,"on":true}},{"name":"sup","flash":{"coolTime":300,"on":true}}]""";
 
-        List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
-        
+        List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
+        });
+
+        //TODO: 얘들 어떻게 못맞추나?
         assertEquals(defaultList, liners);
     }
 
@@ -99,7 +99,7 @@ public class ConnectorTest {
 
         connector.onMessage(json);
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
-        Mockito.verify(mockSupLiner, Mockito.times(0)).startCount();
+        Mockito.verify(mockSupLiner, Mockito.times(0)).useFlash();
     }
 
     @Test
@@ -133,9 +133,8 @@ public class ConnectorTest {
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
 
         // 서폿 플이 이미 사용되었기 떄문에 서폿 플이 없는 메세지가 와도 서폿에 대한 startCountFlash를 호출하지 않음
-        Mockito.verify(mockSupLiner, Mockito.never()).startCount();
+        Mockito.verify(mockSupLiner, Mockito.never()).useFlash();
 
     }
-
 
 }

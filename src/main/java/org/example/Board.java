@@ -55,7 +55,7 @@ public class Board extends JWindow {
             Liner liner = new Liner(name, connector);
             linerList.put(name, liner);
             add(liner.getLineIcon());
-            add(liner.getFlashIcon());
+            add(liner.getFlash().getFlashIcon());
         }
         connector.setLinerList(linerList);
 
