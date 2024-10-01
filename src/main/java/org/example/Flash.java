@@ -2,20 +2,16 @@ package org.example;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
 @Getter
 @Setter
 @JsonIgnoreProperties({"mapper", "flashCoolTime"})
+@EqualsAndHashCode(exclude = {"mapper", "flashCoolTime"})
 public class Flash {
     private static ObjectMapper mapper = new ObjectMapper();
     public static final int flashCoolTime = 300;

@@ -53,8 +53,7 @@ public class Connector extends AbstractWebSocketConnector {
     @Override
     public void onMessage(String json) {
         try {
-            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
-            });
+            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
             for (Liner it : liners) {
                 Liner clientLiner = linerList.get(it.getName());
                 if (clientLiner.getFlash().isOn() != it.getFlash().isOn()) {

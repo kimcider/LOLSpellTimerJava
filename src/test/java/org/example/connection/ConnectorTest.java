@@ -1,6 +1,7 @@
 package org.example.connection;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Liner;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -66,6 +69,22 @@ public class ConnectorTest {
         assertEquals("""
                         {"top":{"name":"top","flash":{"coolTime":300,"on":true}},"bot":{"name":"bot","flash":{"coolTime":300,"on":true}},"mid":{"name":"mid","flash":{"coolTime":300,"on":true}},"jg":{"name":"jg","flash":{"coolTime":300,"on":true}},"sup":{"name":"sup","flash":{"coolTime":300,"on":true}}}"""
                 , json);
+    }
+
+    @Test
+    public void testJsonToLinerList() throws JsonProcessingException {
+        List<Liner> defaultList = new ArrayList<>();
+        ArrayList<String> nameList = getNameList();
+        for(String name : nameList) {
+            defaultList.add(new Liner(name, connector));
+        }
+
+        String json = """
+                [{"name":"top","flash":{"coolTime":300,"on":true}},{"name":"jg","flash":{"coolTime":300,"on":true}},{"name":"mid","flash":{"coolTime":300,"on":true}},{"name":"bot","flash":{"coolTime":300,"on":true}},{"name":"sup","flash":{"coolTime":300,"on":true}}]""";
+
+        List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {});
+        
+        assertEquals(defaultList, liners);
     }
 
     @Test

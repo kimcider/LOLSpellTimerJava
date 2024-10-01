@@ -1,6 +1,7 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
@@ -15,6 +16,7 @@ import static org.example.Board.imageSize;
 @Setter
 @Getter
 @JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY"})
+@EqualsAndHashCode(exclude={"connector", "lineIcon", "flashIcon", "positionY"})
 public class Liner {
 
     private AbstractWebSocketConnector connector;
