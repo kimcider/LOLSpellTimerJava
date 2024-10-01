@@ -10,10 +10,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URISyntaxException;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectorTest {
@@ -41,6 +43,14 @@ public class ConnectorTest {
         }
 
         return linerList;
+    }
+
+    @Test
+    public void testConnectToServer() throws JsonProcessingException {
+        Connector connector = Connector.getInstance();
+
+        HttpResponse<String> response = connector.sendMessage("anyMessage", "str");
+        assertNotNull(response);
     }
 
     @BeforeEach

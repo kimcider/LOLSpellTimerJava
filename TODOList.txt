@@ -17,4 +17,7 @@ TODO: Flash의 테스트케이스 작성학
     TODO: FlashTest.java의 useFlash를 실행하면 운영서버로 스펠 사용여부를 보낸다.
         이러면 진정한 테스트를 하지 못하는 것.
         서버에 가지 않아도 수행할 수 있는 방법을 생각해보기.
+
+TODO: Flash, Liner, Connector 테스트코드 작성하기
+
 TODO: Flash를 CounterLabel을 extends하게 만들어서 CounterLabel의 startCount의 복잡성 제거하기

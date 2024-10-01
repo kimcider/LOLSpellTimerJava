@@ -1,5 +1,7 @@
 package org.example.liner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.CounterLabel;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
@@ -15,6 +17,8 @@ import java.net.URISyntaxException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LinerTest {
+    static ObjectMapper mapper = new ObjectMapper();
+
     @Mock
     private AbstractWebSocketConnector mocSocketClient;
 
@@ -58,6 +62,17 @@ public class LinerTest {
         assertNotNull(liner.getName());
         assertNotNull(liner.getFlash());
     }
+
+
+    @Test
+    public void writeLinerAsString() throws JsonProcessingException {
+        Connector mockConnector = Mockito.mock(Connector.class);
+        Liner liner = new Liner("top", mockConnector);
+        String json = mapper.writeValueAsString(liner);
+        assertEquals("""
+                {"name":"top","flash":{"coolTime":300,"on":true}}""", json);
+    }
+
 
     @Test
     public void startCount() throws URISyntaxException {

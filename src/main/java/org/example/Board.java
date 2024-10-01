@@ -22,7 +22,7 @@ public class Board extends JWindow {
     static final int imageMargin = 10;
     private Point initialClick = null;
 
-    Map<String, Liner> linerList = new HashMap<String, Liner>();
+    public static Map<String, Liner> linerList = new HashMap<String, Liner>();
 
     public Board() {
         connector = Connector.getInstance();

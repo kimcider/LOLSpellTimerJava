@@ -3,10 +3,13 @@ package org.example.counterLabel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Liner;
 import org.example.connection.Connector;
+import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CounterLabelTest {
     static ObjectMapper mapper = new ObjectMapper();
@@ -33,5 +36,14 @@ public class CounterLabelTest {
         }
 
         return linerList;
+    }
+
+    @Test
+    public void startCount(){
+        assertNotNull(null);
+    }
+    @Test
+    public void startTestCountWhenFlashIsAlreadyUsed(){
+        assertNotNull(null);
     }
 }

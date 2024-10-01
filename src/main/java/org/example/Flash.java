@@ -22,25 +22,6 @@ public class Flash {
     private int coolTime = flashCoolTime;
     private boolean on = true;
 
-    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector) {
-        try {
-            String json = mapper.writeValueAsString(liner);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://" + connector.getServerURI() + "/useFlash"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            connector.getClient().send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void on() {
         on = true;
     }
@@ -48,4 +29,14 @@ public class Flash {
     public void off() {
         on = false;
     }
+
+    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector) {
+        try {
+            String json = mapper.writeValueAsString(liner);
+            connector.sendMessage("useFlash", json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
