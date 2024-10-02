@@ -18,8 +18,8 @@ import java.util.List;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-    //    private static String serverURI = "localhost:8080";
-    private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
+        private static String serverURI = "localhost:8080";
+//    private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
     private static ObjectMapper mapper = new ObjectMapper();
 
@@ -52,6 +52,12 @@ public class Connector extends AbstractWebSocketConnector {
 
     @Override
     public void onMessage(String json) {
+        if("getAllLinerStatus".equals(json)){
+            connector.sendMessage("getAllLinerStatus", "test");
+
+            return;
+        }
+
         try {
             List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
             });

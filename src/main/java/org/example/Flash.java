@@ -16,12 +16,12 @@ import static org.example.Liner.positionY;
 
 @Getter
 @Setter
-@JsonIgnoreProperties({"mapper", "flashCoolTime", "flashIcon"})
+@JsonIgnoreProperties({"mapper", "flashCoolTime", "flashIcon", "on"})
 public class Flash {
     private static ObjectMapper mapper = new ObjectMapper();
-    public static final int flashCoolTime = 300;
-    private int coolTime = flashCoolTime;
-    private boolean on = true;
+    public int flashCoolTime = 300;
+    private int coolTime = 0;
+    //private boolean on = true;
 
     CounterLabel flashIcon;
 
@@ -32,16 +32,20 @@ public class Flash {
         flashIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY, liner, connector);
     }
 
+    public boolean isOn(){
+        return coolTime == 0;
+    }
+
     public void on() {
-        on = true;
+        coolTime = 0;
     }
 
     public void off() {
-        on = false;
+        coolTime = flashCoolTime;
     }
 
     public void startCount(Liner liner) {
-        if (on) {
+        if (isOn()) {
             off();
             setCoolTime(flashCoolTime);
 
@@ -81,7 +85,7 @@ public class Flash {
     @Override
     public boolean equals(Object obj) {
         Flash other = (Flash) obj;
-        if (on == other.on && coolTime == other.coolTime) {
+        if (coolTime == other.coolTime) {
             return true;
         }
         return false;

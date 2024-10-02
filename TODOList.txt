@@ -23,8 +23,12 @@ DONE: 위처럼 할 수 없을꺼같다. 그렇다면, CounterLabel을 FlashIcon
 DONE: sendFlashStatus가 굳이 Flash클래스에 있어야할까? 어차피 liner를 보내고, 나중에 다른 스펠도 추가될텐데
     Liner쪽에 보내는게 좋지않을까?
 
-TODO: requestMapping "userFlash"를 sendLinerStatus로 바꾸기
+TODO: Flash에서 On 제거하기
+TODO: requestMapping "useFlash"를 sendLinerStatus로 바꾸기
+
+
+
+
+
+
 TODO: Liner.useFlahs() 저게 최선인가?
-
-TODO: 서버쪽 테스트코드 작성 및 리펙토링하기
-

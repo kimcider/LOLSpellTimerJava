@@ -74,7 +74,7 @@ public class LinerTest {
         Liner liner = new Liner("top", connector);
         String json = mapper.writeValueAsString(liner);
         assertEquals("""
-                {"name":"top","flash":{"coolTime":300,"on":true}}""", json);
+                {"name":"top","flash":{"coolTime":0}}""", json);
     }
 
     @Test

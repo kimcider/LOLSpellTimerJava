@@ -65,7 +65,7 @@ public class ConnectorTest {
     public void testSetUp() throws JsonProcessingException {
         String json = mapper.writeValueAsString(connectorLinerList);
         assertEquals("""
-                        {"top":{"name":"top","flash":{"coolTime":300,"on":true}},"bot":{"name":"bot","flash":{"coolTime":300,"on":true}},"mid":{"name":"mid","flash":{"coolTime":300,"on":true}},"jg":{"name":"jg","flash":{"coolTime":300,"on":true}},"sup":{"name":"sup","flash":{"coolTime":300,"on":true}}}"""
+                        {"top":{"name":"top","flash":{"coolTime":0}},"bot":{"name":"bot","flash":{"coolTime":0}},"mid":{"name":"mid","flash":{"coolTime":0}},"jg":{"name":"jg","flash":{"coolTime":0}},"sup":{"name":"sup","flash":{"coolTime":0}}}"""
                 , json);
     }
 
@@ -78,7 +78,7 @@ public class ConnectorTest {
         }
 
         String json = """
-                [{"name":"top","flash":{"coolTime":300,"on":true}},{"name":"jg","flash":{"coolTime":300,"on":true}},{"name":"mid","flash":{"coolTime":300,"on":true}},{"name":"bot","flash":{"coolTime":300,"on":true}},{"name":"sup","flash":{"coolTime":300,"on":true}}]""";
+                [{"name":"top","flash":{"coolTime":0}},{"name":"jg","flash":{"coolTime":0}},{"name":"mid","flash":{"coolTime":0}},{"name":"bot","flash":{"coolTime":0}},{"name":"sup","flash":{"coolTime":0}}]""";
 
         List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
         });

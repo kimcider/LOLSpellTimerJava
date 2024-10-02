@@ -28,8 +28,8 @@ public class FlashTest {
     public void createFlash() {
         Flash flash = new Flash();
         assertEquals(300, flash.flashCoolTime);
-        assertEquals(300, flash.getCoolTime());
-        assertEquals(true, flash.isOn());
+        assertEquals(0, flash.getCoolTime());
+        assertTrue(flash.isOn());
         assertNull(flash.getFlashIcon());
     }
 
@@ -38,8 +38,8 @@ public class FlashTest {
         Liner liner = new Liner("top", connector);
         Flash flash = new Flash(liner, connector);
         assertEquals(300, flash.flashCoolTime);
-        assertEquals(300, flash.getCoolTime());
-        assertEquals(true, flash.isOn());
+        assertEquals(0, flash.getCoolTime());
+        assertTrue(flash.isOn());
         assertNotNull(flash.getFlashIcon());
     }
 
