@@ -52,19 +52,16 @@ public class Connector extends AbstractWebSocketConnector {
 
     @Override
     public void onMessage(String json) {
-        if("getAllLinerStatus".equals(json)){
-            connector.sendMessage("getAllLinerStatus", "test");
-
-            return;
-        }
-
+        System.out.println("FromServer: " + json);
         try {
             List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
             });
-            for (Liner it : liners) {
-                Liner clientLiner = linerList.get(it.getName());
-                if (clientLiner.getFlash().isOn() != it.getFlash().isOn()) {
-                    linerList.get(it.getName()).useFlash();
+            for (Liner serverLiner : liners) {
+                Liner clientLiner = linerList.get(serverLiner.getName());
+                if (clientLiner.getFlash().equals(serverLiner.getFlash()) == false) {
+                    clientLiner.getFlash().setCoolTime(serverLiner.getFlash().getCoolTime());
+                    clientLiner.getFlash().setFlashCoolTime(serverLiner.getFlash().getFlashCoolTime());
+                    clientLiner.useFlash();
                 }
             }
         } catch (IOException e) {

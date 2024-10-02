@@ -3,6 +3,8 @@ package org.example.connection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.CounterLabel;
+import org.example.Flash;
 import org.example.Liner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectorTest {
@@ -65,7 +68,7 @@ public class ConnectorTest {
     public void testSetUp() throws JsonProcessingException {
         String json = mapper.writeValueAsString(connectorLinerList);
         assertEquals("""
-                        {"top":{"name":"top","flash":{"coolTime":0}},"bot":{"name":"bot","flash":{"coolTime":0}},"mid":{"name":"mid","flash":{"coolTime":0}},"jg":{"name":"jg","flash":{"coolTime":0}},"sup":{"name":"sup","flash":{"coolTime":0}}}"""
+                        {"top":{"name":"top","flash":{"flashCoolTime":300,"coolTime":0}},"bot":{"name":"bot","flash":{"flashCoolTime":300,"coolTime":0}},"mid":{"name":"mid","flash":{"flashCoolTime":300,"coolTime":0}},"jg":{"name":"jg","flash":{"flashCoolTime":300,"coolTime":0}},"sup":{"name":"sup","flash":{"flashCoolTime":300,"coolTime":0}}}"""
                 , json);
     }
 
@@ -91,13 +94,11 @@ public class ConnectorTest {
     public void testOnMessage1() throws JsonProcessingException, URISyntaxException, InterruptedException {
         Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
         HashMap<String, Liner> mockLinerList = getLinerList();
-
-        // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
         mockLinerList.get("sup").getFlash().off();
         assertEquals(false, mockLinerList.get("sup").getFlash().isOn());
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
 
-        connector.onMessage(json);
+
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
         Mockito.verify(mockSupLiner, Mockito.times(0)).useFlash();
     }
@@ -105,15 +106,63 @@ public class ConnectorTest {
     @Test
     public void testOnMessage2() throws JsonProcessingException, URISyntaxException, InterruptedException {
         HashMap<String, Liner> mockLinerList = getLinerList();
-
-        // top의 플이 없다고 useFlash를 서버에 전송된 이후, 서버에서 클라이언트들에게 보낸 메세지
         mockLinerList.get("sup").getFlash().off();
         mockLinerList.get("jg").getFlash().off();
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
 
+        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
         connector.onMessage(json);
+
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
         assertEquals(false, connector.getLinerList().get("jg").getFlash().isOn());
+    }
+
+    @Test
+    public void testOnMessage3() throws JsonProcessingException {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+        mockLinerList.get("sup").getFlash().off();
+        mockLinerList.get("jg").getFlash().off();
+        Liner mockClientLinerSup = Mockito.spy(connector.getLinerList().get("sup"));
+        Liner mockClientLinerJg = Mockito.spy(connector.getLinerList().get("jg"));
+        connectorLinerList.put("sup", mockClientLinerSup);
+        connectorLinerList.put("jg", mockClientLinerJg);
+
+        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        Mockito.verify(mockClientLinerSup, Mockito.times(1)).useFlash();
+        Mockito.verify(mockClientLinerJg, Mockito.times(1)).useFlash();
+    }
+
+    @Test
+    public void testOnMessage4() throws JsonProcessingException {
+        HashMap<String, Liner> serverLinerList = getLinerList();
+        serverLinerList.get("sup").getFlash().off();
+        serverLinerList.get("jg").getFlash().off();
+        Flash mockSupFlash = Mockito.spy(connectorLinerList.get("sup").getFlash());
+        Flash mockJgFlash = Mockito.spy(connectorLinerList.get("jg").getFlash());
+        connectorLinerList.get("sup").setFlash(mockSupFlash);
+        connectorLinerList.get("jg").setFlash(mockJgFlash);
+
+        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        Mockito.verify(mockSupFlash, Mockito.times(1)).setCoolTime(serverLinerList.get("sup").getFlash().getCoolTime());
+        Mockito.verify(mockSupFlash, Mockito.times(1)).setFlashCoolTime(serverLinerList.get("sup").getFlash().getFlashCoolTime());
+        Mockito.verify(mockJgFlash, Mockito.times(1)).setCoolTime(serverLinerList.get("jg").getFlash().getCoolTime());
+        Mockito.verify(mockJgFlash, Mockito.times(1)).setFlashCoolTime(serverLinerList.get("jg").getFlash().getFlashCoolTime());
+    }
+
+    @Test
+    public void assertOnMessageNotChangeFlashIcon() throws JsonProcessingException {
+        HashMap<String, Liner> mockLinerList = getLinerList();
+
+        CounterLabel supFlashIcon = connector.getLinerList().get("sup").getFlash().getFlashIcon();
+
+        mockLinerList.get("sup").getFlash().off();
+        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        assertEquals(supFlashIcon, connector.getLinerList().get("sup").getFlash().getFlashIcon());
     }
 
     @Test

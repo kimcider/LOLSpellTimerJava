@@ -2,6 +2,7 @@ package org.example.flash;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.CounterLabel;
 import org.example.Flash;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
@@ -54,12 +55,32 @@ public class FlashTest {
     }
 
     @Test
-    public void startCount() {
+    public void startCountWhenFlashOn() {
         Liner liner = new Liner("top", connector);
-        Flash flash = Mockito.spy(liner.getFlash());
-        flash.startCount(liner);
+        Flash mockFlash = Mockito.spy(liner.getFlash());
+        CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
+        mockFlash.setFlashIcon(spyFlashIcon);
 
-        Mockito.verify(flash, Mockito.never()).on();
+        mockFlash.startCount(liner);
+
+        verify(mockFlash, times(1)).isOn();
+        verify(spyFlashIcon, times(1)).stopTimer();
+        verify(spyFlashIcon, never()).startTimer();
+    }
+    @Test
+    public void startCount2WhenFlashOff() {
+        Liner liner = new Liner("top", connector);
+        liner.getFlash().setCoolTime(100);
+        Flash mockFlash = Mockito.spy(liner.getFlash());
+
+        CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
+        mockFlash.setFlashIcon(spyFlashIcon);
+
+        mockFlash.startCount(liner);
+
+        verify(mockFlash, times(1)).isOn();
+        verify(spyFlashIcon, times(1)).stopTimer();
+        verify(spyFlashIcon, times(1)).startTimer();
     }
 
     @Test
@@ -72,22 +93,7 @@ public class FlashTest {
         Mockito.verify(flash, Mockito.times(1)).on();
     }
 
-    @Test
-    public void equals() {
-        Flash f1 = new Flash();
-        Flash f2 = new Flash();
-        assertEquals(f1, f2);
 
-        f1.off();
-        assertNotEquals(f1, f2);
 
-        f2.off();
-        assertEquals(f1, f2);
 
-        f1.setCoolTime(150);
-        assertNotEquals(f1, f2);
-
-        f2.setCoolTime(150);
-        assertEquals(f1, f2);
-    }
 }

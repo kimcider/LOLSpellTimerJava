@@ -16,12 +16,11 @@ import static org.example.Liner.positionY;
 
 @Getter
 @Setter
-@JsonIgnoreProperties({"mapper", "flashCoolTime", "flashIcon", "on"})
+@JsonIgnoreProperties({"mapper", "flashIcon", "on"})
 public class Flash {
     private static ObjectMapper mapper = new ObjectMapper();
-    public int flashCoolTime = 300;
+    public int flashCoolTime = 300; // 이거 200일때도 바뀌는거 테스트함수 만들기
     private int coolTime = 0;
-    //private boolean on = true;
 
     CounterLabel flashIcon;
 
@@ -45,9 +44,8 @@ public class Flash {
     }
 
     public void startCount(Liner liner) {
-        if (isOn()) {
+        if (!isOn()) {
             off();
-            setCoolTime(flashCoolTime);
 
             flashIcon.repaint();
 
@@ -64,7 +62,6 @@ public class Flash {
             }));
             flashIcon.startTimer();
         } else {
-            on();
             flashIcon.repaint();
             flashIcon.stopTimer();
         }
@@ -85,7 +82,7 @@ public class Flash {
     @Override
     public boolean equals(Object obj) {
         Flash other = (Flash) obj;
-        if (coolTime == other.coolTime) {
+        if (flashCoolTime == other.flashCoolTime && isOn() == other.isOn()) {
             return true;
         }
         return false;

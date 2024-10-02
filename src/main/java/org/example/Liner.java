@@ -41,6 +41,11 @@ public class Liner {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
+                    if(flash.isOn()){
+                        flash.off();
+                    }else{
+                        flash.on();
+                    }
                     flash.startCount(Liner.this);
                     sendLinerStatus();
                 }
@@ -54,7 +59,7 @@ public class Liner {
     public void sendLinerStatus() {
         try {
             String json = mapper.writeValueAsString(this);
-            connector.sendMessage("useFlash", json);
+            connector.sendMessage("sendLinerStatus", json);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -22,9 +22,13 @@ DONE: Flash를 CounterLabel을 extends하게 만들어서 CounterLabel의 startC
 DONE: 위처럼 할 수 없을꺼같다. 그렇다면, CounterLabel을 FlashIcon의 속성값으로 두면 되지 않을까?
 DONE: sendFlashStatus가 굳이 Flash클래스에 있어야할까? 어차피 liner를 보내고, 나중에 다른 스펠도 추가될텐데
     Liner쪽에 보내는게 좋지않을까?
+DONE: requestMapping "useFlash"를 sendLinerStatus로 바꾸기
 
-TODO: Flash에서 On 제거하기
-TODO: requestMapping "useFlash"를 sendLinerStatus로 바꾸기
+
+now! TODO: Flash에서 On 제거하기
+        그에 따른 테스트코드들 수정하기
+TODO: Flash안의 StartCounter를 Liner에 못옮기나?  startCounter호출이 서로 조금씩 다른거같은데
+
 
 
 

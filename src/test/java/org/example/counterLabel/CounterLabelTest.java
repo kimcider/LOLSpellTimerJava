@@ -24,7 +24,7 @@ public class CounterLabelTest {
         return listNames;
     }
 
-    private HashMap<String, Liner> getLinerList() throws URISyntaxException, InterruptedException {
+    private HashMap<String, Liner> getLinerList() {
         ArrayList<String> nameList = getNameList();
 
         HashMap<String, Liner> linerList = new HashMap();
