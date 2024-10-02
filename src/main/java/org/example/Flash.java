@@ -9,8 +9,6 @@ import org.example.connection.AbstractWebSocketConnector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import static org.example.Board.imageMargin;
 import static org.example.Board.imageSize;
@@ -32,19 +30,6 @@ public class Flash {
 
     public Flash(Liner liner, AbstractWebSocketConnector connector) {
         flashIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY, liner, connector);
-        flashIcon.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    startCount(liner, connector);
-                    try {
-                        sendFlashStatus(liner, connector);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
-        });
     }
 
     public void on() {
@@ -55,16 +40,7 @@ public class Flash {
         on = false;
     }
 
-    public void sendFlashStatus(Liner liner, AbstractWebSocketConnector connector) {
-        try {
-            String json = mapper.writeValueAsString(liner);
-            connector.sendMessage("useFlash", json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void startCount(Liner liner, AbstractWebSocketConnector connector) {
+    public void startCount(Liner liner) {
         if (on) {
             off();
             setCoolTime(flashCoolTime);
@@ -78,15 +54,9 @@ public class Flash {
 
                 if (getCoolTime() <= 0) {
                     on();
-                    try {
-                        sendFlashStatus(liner, connector);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-
+                    liner.sendLinerStatus();
                     flashIcon.stopTimer();
                 }
-
             }));
             flashIcon.startTimer();
         } else {

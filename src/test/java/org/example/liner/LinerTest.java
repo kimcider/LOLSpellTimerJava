@@ -15,6 +15,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 public class LinerTest {
     static ObjectMapper mapper = new ObjectMapper();
@@ -75,6 +77,20 @@ public class LinerTest {
                 {"name":"top","flash":{"coolTime":300,"on":true}}""", json);
     }
 
+    @Test
+    public void testSendFlashStatus() throws URISyntaxException, JsonProcessingException {
+        AbstractWebSocketConnector mockConnector = Mockito.spy(Mockito.mock(
+                AbstractWebSocketConnector.class,
+                withSettings()
+                        .useConstructor(new URI("testURI"))
+                        .defaultAnswer(CALLS_REAL_METHODS)));
+
+        Liner top = new Liner("top", mockConnector);
+        top.sendLinerStatus();
+
+        String json = mapper.writeValueAsString(top);
+        verify(mockConnector, times(1)).sendMessage("useFlash", json);
+    }
 
     @Test
     public void useFlash() {
@@ -84,14 +100,14 @@ public class LinerTest {
         // liner 객체의 flashIcon 필드를 mockCounterLabel로 교체
         liner.setFlash(mockFlash);
 
-        Mockito.verify(mockFlash, Mockito.never()).startCount(liner, connector);
+        Mockito.verify(mockFlash, Mockito.never()).startCount(liner);
 
         try {
             liner.useFlash();
         } catch (Exception e) {
         }
 
-        Mockito.verify(mockFlash, Mockito.times(1)).startCount(liner, connector);
+        Mockito.verify(mockFlash, Mockito.times(1)).startCount(liner);
     }
 
     @Test

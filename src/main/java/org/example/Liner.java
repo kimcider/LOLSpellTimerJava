@@ -1,6 +1,7 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
@@ -8,6 +9,8 @@ import org.example.connection.Connector;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static org.example.Board.imageMargin;
 import static org.example.Board.imageSize;
@@ -16,6 +19,7 @@ import static org.example.Board.imageSize;
 @Getter
 @JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY"})
 public class Liner {
+    private static ObjectMapper mapper = new ObjectMapper();
     private AbstractWebSocketConnector connector;
     private JLabel lineIcon;
     //private CounterLabel flashIcon;
@@ -33,14 +37,31 @@ public class Liner {
         this.connector = connector;
         this.name = name;
         flash = new Flash(this, connector);
+        flash.getFlashIcon().addMouseListener(new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    flash.startCount(Liner.this);
+                    sendLinerStatus();
+                }
+            }
+        });
 
         lineIcon = getImage(name + ".jpg", imageMargin, positionY);
-        //flashIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY);
         positionY += imageSize + imageMargin;
     }
 
+    public void sendLinerStatus() {
+        try {
+            String json = mapper.writeValueAsString(this);
+            connector.sendMessage("useFlash", json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void useFlash() {
-        flash.startCount(this, connector);
+        flash.startCount(this);
     }
 
     private JLabel getImage(String path, int x, int y) {

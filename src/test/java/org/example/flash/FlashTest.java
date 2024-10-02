@@ -43,21 +43,6 @@ public class FlashTest {
         assertNotNull(flash.getFlashIcon());
     }
 
-    @Test
-    public void testSendFlashStatus() throws URISyntaxException, JsonProcessingException {
-        Flash flash = new Flash();
-        AbstractWebSocketConnector mockConnector = Mockito.spy(Mockito.mock(
-                AbstractWebSocketConnector.class,
-                withSettings()
-                        .useConstructor(new URI("testURI"))
-                        .defaultAnswer(CALLS_REAL_METHODS)));
-
-        Liner top = new Liner("top", mockConnector);
-        flash.sendFlashStatus(top, mockConnector);
-
-        String json = mapper.writeValueAsString(top);
-        verify(mockConnector, times(1)).sendMessage("useFlash", json);
-    }
 
     @Test
     public void testOnOff() {
@@ -72,7 +57,7 @@ public class FlashTest {
     public void startCount() {
         Liner liner = new Liner("top", connector);
         Flash flash = Mockito.spy(liner.getFlash());
-        flash.startCount(liner, connector);
+        flash.startCount(liner);
 
         Mockito.verify(flash, Mockito.never()).on();
     }
@@ -82,7 +67,7 @@ public class FlashTest {
         Liner liner = new Liner("top", connector);
         liner.getFlash().off();
         Flash flash = Mockito.spy(liner.getFlash());
-        flash.startCount(liner, connector);
+        flash.startCount(liner);
 
         Mockito.verify(flash, Mockito.times(1)).on();
     }
