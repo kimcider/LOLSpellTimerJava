@@ -65,7 +65,9 @@ public class Liner {
         }
     }
 
-    public void useFlash() {
+    //이거 이름이 이상하다...
+    // 이제 useFlash가아니자나...
+    public void touchFlash() {
         flash.startCount(this);
     }
 

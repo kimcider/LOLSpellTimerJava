@@ -47,12 +47,12 @@ public class Connector extends AbstractWebSocketConnector {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         //TODO: open시 서버의 정보를 가져와서 업데이트
-        System.out.println("Connected to WebSocket server");
+        //System.out.println("Connected to WebSocket server");
     }
 
     @Override
     public void onMessage(String json) {
-        System.out.println("FromServer: " + json);
+        //System.out.println("FromServer: " + json);
         try {
             List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
             });
@@ -61,7 +61,7 @@ public class Connector extends AbstractWebSocketConnector {
                 if (clientLiner.getFlash().equals(serverLiner.getFlash()) == false) {
                     clientLiner.getFlash().setCoolTime(serverLiner.getFlash().getCoolTime());
                     clientLiner.getFlash().setFlashCoolTime(serverLiner.getFlash().getFlashCoolTime());
-                    clientLiner.useFlash();
+                    clientLiner.touchFlash();
                 }
             }
         } catch (IOException e) {

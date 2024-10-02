@@ -68,7 +68,7 @@ public class FlashTest {
         verify(spyFlashIcon, never()).startTimer();
     }
     @Test
-    public void startCount2WhenFlashOff() {
+    public void testStartCountWhenFlashIsAlreadyUsed() {
         Liner liner = new Liner("top", connector);
         liner.getFlash().setCoolTime(100);
         Flash mockFlash = Mockito.spy(liner.getFlash());
@@ -79,18 +79,20 @@ public class FlashTest {
         mockFlash.startCount(liner);
 
         verify(mockFlash, times(1)).isOn();
+        verify(mockFlash, times(1)).off();
         verify(spyFlashIcon, times(1)).stopTimer();
         verify(spyFlashIcon, times(1)).startTimer();
     }
 
     @Test
-    public void startTestCountWhenFlashIsAlreadyUsed() {
+    public void testStartCountWhenFlashIsAlreadyUsed2() {
+        // testStartCountWhenFlashIsAlreadyUsed와 유사.
         Liner liner = new Liner("top", connector);
-        liner.getFlash().off();
+        liner.getFlash().off(); //여기만 다름 setCoolTime()인지 off()인지.
         Flash flash = Mockito.spy(liner.getFlash());
         flash.startCount(liner);
 
-        Mockito.verify(flash, Mockito.times(1)).on();
+        Mockito.verify(flash, Mockito.times(1)).off();
     }
 
 

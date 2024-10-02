@@ -2,7 +2,6 @@ package org.example.liner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.CounterLabel;
 import org.example.Flash;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
@@ -12,11 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.awt.event.MouseAdapter;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -145,7 +142,7 @@ public class LinerTest {
     }
 
     @Test
-    public void useFlash() {
+    public void touchFlash() {
         Liner liner = new Liner("top", connector);
         // CounterLabel mock 생성
         Flash mockFlash = Mockito.spy(liner.getFlash());
@@ -155,7 +152,7 @@ public class LinerTest {
         Mockito.verify(mockFlash, Mockito.never()).startCount(liner);
 
         try {
-            liner.useFlash();
+            liner.touchFlash();
         } catch (Exception e) {
         }
 
@@ -175,9 +172,14 @@ public class LinerTest {
         l2.setName("jg");
         assertEquals(l1, l2);
 
-        l1.useFlash();
+        l1.getFlash().off();
         assertNotEquals(l1, l2);
-        l2.useFlash();
+        l2.getFlash().off();
+        assertEquals(l1, l2);
+
+        l1.getFlash().setFlashCoolTime(5);
+        assertNotEquals(l1, l2);
+        l2.getFlash().setFlashCoolTime(5);
         assertEquals(l1, l2);
     }
 }

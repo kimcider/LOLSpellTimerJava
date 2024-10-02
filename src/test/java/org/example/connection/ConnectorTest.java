@@ -97,10 +97,10 @@ public class ConnectorTest {
         mockLinerList.get("sup").getFlash().off();
         assertEquals(false, mockLinerList.get("sup").getFlash().isOn());
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
-
+        connector.onMessage(json);
 
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
-        Mockito.verify(mockSupLiner, Mockito.times(0)).useFlash();
+        Mockito.verify(mockSupLiner, Mockito.times(0)).touchFlash();
     }
 
     @Test
@@ -129,8 +129,8 @@ public class ConnectorTest {
         String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
         connector.onMessage(json);
 
-        Mockito.verify(mockClientLinerSup, Mockito.times(1)).useFlash();
-        Mockito.verify(mockClientLinerJg, Mockito.times(1)).useFlash();
+        Mockito.verify(mockClientLinerSup, Mockito.times(1)).touchFlash();
+        Mockito.verify(mockClientLinerJg, Mockito.times(1)).touchFlash();
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ConnectorTest {
         assertEquals(false, connector.getLinerList().get("sup").getFlash().isOn());
 
         // 서폿 플이 이미 사용되었기 떄문에 서폿 플이 없는 메세지가 와도 서폿에 대한 startCountFlash를 호출하지 않음
-        Mockito.verify(mockSupLiner, Mockito.never()).useFlash();
+        Mockito.verify(mockSupLiner, Mockito.never()).touchFlash();
 
     }
 
