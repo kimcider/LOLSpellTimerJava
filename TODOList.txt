@@ -35,3 +35,8 @@ DONE: Connector.java의 아래 부분 (Flash의 값들을 변경해주는부분�
 
 TODO: Liner.java touchFlash를 touchSpell(Spell spell)로 바꾸기.
 TODO: Liner.java touchCosmicInsight, buyIonianBoots 완성하기
+
+
+TODO: CosmicInsight, IonianBoots JLabel, Icon만들기 (Spell아님)
+    클래스명은 CoolTimeReducer정도면 되려나?
+TODO: touchCosmicInsight, buyIonianBoots 얘들도 touchCooltimeReducer(CoolTimeReducer reducer) 이런식으로 바꾸기

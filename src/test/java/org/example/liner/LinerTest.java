@@ -195,6 +195,49 @@ public class LinerTest {
     }
 
     @Test
+    public void testTouchCosmicInsight(){
+        //제대로 상태값 변하나 테스트
+        assertNotNull(null);
+    }
+
+    @Test
+    public void testBuyIonianBoots(){
+        //제대로 상태값 변하나 테스트
+        assertNotNull(null);
+    }
+
+    @Test
+    public void testBothCoolTimeReduce(){
+        //제대로 상태값 변하나 테스트
+        assertNotNull(null);
+    }
+
+    @Test
+    public void testTouchCosmicInsightJSON(){
+        //Json으로 제대로 변환되나 테스트
+        // touch하고, 해당 객체를 json으로 변환할 떄 
+        //SpellTest의 JSON을 가져와서 일치하는지 확인
+        assertNotNull(null);
+    }
+
+    @Test
+    public void testBuyIonianBootsJSON(){
+        //Json으로 제대로 변환되나 테스트
+        assertNotNull(null);
+    }
+
+    @Test
+    public void testBothCoolTimeReduceJSON(){
+        //Json으로 제대로 변환되나 테스트
+        assertNotNull(null);
+    }
+
+
+
+    
+    
+
+    @Test
     public void equals() {
         Liner l1 = new Liner("top", connector);
         Liner l2 = new Liner("top", connector);
