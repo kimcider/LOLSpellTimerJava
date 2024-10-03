@@ -2,6 +2,8 @@ package org.example;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.spell.Flash;
+import org.example.spell.Spell;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +12,13 @@ import java.awt.*;
 @Setter
 public class CounterLabel extends JLabel {
     ImageIcon icon;
-    private Flash flash;
+    private Spell spell;
     private Timer timer;
 
-    public CounterLabel(ImageIcon icon, Flash flash) {
+    public CounterLabel(ImageIcon icon, Spell spell) {
         super(icon);
         this.icon = icon;
-        this.flash = flash;
+        this.spell = spell;
     }
 
 
@@ -36,12 +38,12 @@ public class CounterLabel extends JLabel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (!flash.isOn()) {
+        if (!spell.isOn()) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(0, 0, 0, 150));
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
-            int remainingTime = flash.getCoolTime();
+            int remainingTime = spell.getCoolTime();
             if (remainingTime > 0) {
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("Arial", Font.BOLD, 20));

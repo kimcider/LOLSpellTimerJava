@@ -2,10 +2,11 @@ package org.example.liner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Flash;
+import org.example.spell.Flash;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
+import org.example.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class LinerTest {
         Liner liner = new Liner();
         assertNotNull(liner.getConnector());
         assertNull(liner.getLineIcon());
-        assertNull(liner.getFlash().getFlashIcon());
+        assertNotNull(liner.getFlash().getSpellIcon());
         assertNull(liner.getName());
         assertNotNull(liner.getFlash());
     }
@@ -63,7 +64,7 @@ public class LinerTest {
         assertNotNull(liner.getConnector());
         assertNotEquals(liner.getConnector(), Connector.getInstance());
         assertNotNull(liner.getLineIcon());
-        assertNotNull(liner.getFlash().getFlashIcon());
+        assertNotNull(liner.getFlash().getSpellIcon());
         assertNotNull(liner.getName());
         assertNotNull(liner.getFlash());
     }
@@ -123,7 +124,7 @@ public class LinerTest {
         Liner liner = new Liner("top", connector);
         String json = mapper.writeValueAsString(liner);
         assertEquals("""
-                {"name":"top","flash":{"flashCoolTime":300,"coolTime":0}}""", json);
+                {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}}""", json);
     }
 
     @Test
@@ -145,7 +146,7 @@ public class LinerTest {
     public void touchFlash() {
         Liner liner = new Liner("top", connector);
         // CounterLabel mock 생성
-        Flash mockFlash = Mockito.spy(liner.getFlash());
+        Spell mockFlash = Mockito.spy(liner.getFlash());
         // liner 객체의 flashIcon 필드를 mockCounterLabel로 교체
         liner.setFlash(mockFlash);
 
@@ -163,7 +164,7 @@ public class LinerTest {
     public void touchFlashWhenFlashIsOn() {
         Liner liner = new Liner("top", connector);
         Liner mockLiner = Mockito.spy(liner);
-        Flash mockFlash = Mockito.spy(mockLiner.getFlash());
+        Spell mockFlash = Mockito.spy(mockLiner.getFlash());
         mockLiner.setFlash(mockFlash);
 
         mockLiner.touchFlash();
@@ -181,7 +182,7 @@ public class LinerTest {
         liner.getFlash().off();
 
         Liner mockLiner = Mockito.spy(liner);
-        Flash mockFlash = Mockito.spy(mockLiner.getFlash());
+        Spell mockFlash = Mockito.spy(mockLiner.getFlash());
         mockLiner.setFlash(mockFlash);
 
         mockLiner.touchFlash();
@@ -211,9 +212,9 @@ public class LinerTest {
         l2.getFlash().off();
         assertEquals(l1, l2);
 
-        l1.getFlash().setFlashCoolTime(5);
+        l1.getFlash().setSpellCoolTime(5);
         assertNotEquals(l1, l2);
-        l2.getFlash().setFlashCoolTime(5);
+        l2.getFlash().setSpellCoolTime(5);
         assertEquals(l1, l2);
     }
 }

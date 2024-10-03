@@ -1,37 +1,54 @@
 package org.example.counterLabel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Liner;
-import org.example.connection.Connector;
+import org.example.CounterLabel;
+import org.example.spell.Spell;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.swing.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
 public class CounterLabelTest {
-    static ObjectMapper mapper = new ObjectMapper();
-    private Connector connector = Connector.getInstance();
+    ImageIcon mockIcon;
+    Spell spell;
+    CounterLabel counterLabel;
 
-    private HashMap<String, Liner> connectorLinerList;
-
-    private ArrayList<String> getNameList() {
-        ArrayList<String> listNames = new ArrayList();
-        listNames.add("top");
-        listNames.add("jg");
-        listNames.add("mid");
-        listNames.add("bot");
-        listNames.add("sup");
-        return listNames;
+    @BeforeEach
+    public void setUp() {
+        mockIcon = Mockito.mock(ImageIcon.class);
+        spell = Mockito.mock(Spell.class);
+        counterLabel = new CounterLabel(mockIcon, spell);
     }
 
-    private HashMap<String, Liner> getLinerList() {
-        ArrayList<String> nameList = getNameList();
+    @Test
+    public void createCounterLabel(){
+        assertNotNull(counterLabel.getIcon());
+        assertNotNull(counterLabel.getSpell());
+        assertNull(counterLabel.getTimer());
+    }
 
-        HashMap<String, Liner> linerList = new HashMap();
-        for (String name : nameList) {
-            linerList.put(name, new Liner(name, connector));
-        }
+    @Test
+    public void startTimerWhenTimerIsNotNull(){
+        assertNull(counterLabel.getTimer());
+        Timer mockTimer = Mockito.spy(Mockito.mock(Timer.class));
+        counterLabel.setTimer(mockTimer);
 
-        return linerList;
+        counterLabel.startTimer();
+
+        verify(mockTimer, times(1)).start();
+    }
+
+    @Test
+    public void startTimerWhenTimerIsNull(){
+        assertNull(counterLabel.getTimer());
+        Timer mockTimer = Mockito.spy(Mockito.mock(Timer.class));
+
+        counterLabel.startTimer();
+
+        verify(mockTimer, never()).start();
     }
 }

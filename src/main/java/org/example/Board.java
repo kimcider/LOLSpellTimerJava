@@ -18,8 +18,8 @@ import static java.lang.System.exit;
 public class Board extends JWindow {
     private Connector connector;
 
-    static final int imageSize = 40;
-    static final int imageMargin = 10;
+    public static final int imageSize = 40;
+    public static final int imageMargin = 10;
     private Point initialClick = null;
 
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
@@ -55,7 +55,7 @@ public class Board extends JWindow {
             Liner liner = new Liner(name, connector);
             linerList.put(name, liner);
             add(liner.getLineIcon());
-            add(liner.getFlash().getFlashIcon());
+            add(liner.getFlash().getSpellIcon());
         }
         connector.setLinerList(linerList);
 

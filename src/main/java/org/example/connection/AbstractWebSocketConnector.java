@@ -25,7 +25,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
 
 
     public HttpResponse<String> sendMessage(String api, String json) {
-        System.out.println("toServer: " + json);
+        //System.out.println("toServer: " + json);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://" + getServerURI() + "/" + api))
                 .header("Content-Type", "application/json")

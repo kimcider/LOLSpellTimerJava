@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Flash;
 import org.example.Liner;
+import org.example.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-        private static String serverURI = "localhost:8080";
+    private static String serverURI = "localhost:8080";
 //    private static String serverURI = "ec2-3-36-116-203.ap-northeast-2.compute.amazonaws.com:8080";
 
     private static ObjectMapper mapper = new ObjectMapper();
@@ -53,19 +53,21 @@ public class Connector extends AbstractWebSocketConnector {
 
     @Override
     public void onMessage(String json) {
-        //System.out.println("FromServer: " + json);
         try {
             List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
             });
             for (Liner serverLiner : liners) {
                 Liner clientLiner = linerList.get(serverLiner.getName());
-                Flash clientFlash = clientLiner.getFlash();
+                Spell clientFlash = clientLiner.getFlash();
                 if (clientFlash.equals(serverLiner.getFlash()) == false) {
+                    //TODO: 이거 Flash.setFlash()로 바꾸기
                     clientFlash.setCoolTime(serverLiner.getFlash().getCoolTime());
-                    clientFlash.setFlashCoolTime(serverLiner.getFlash().getFlashCoolTime());
-                    if(clientFlash.isOn()){
+                    clientFlash.setSpellCoolTime(serverLiner.getFlash().getSpellCoolTime());
+                    clientFlash.setCosmicInsight(serverLiner.getFlash().isCosmicInsight());
+                    clientFlash.setIonianBoots(serverLiner.getFlash().isIonianBoots());
+                    if (clientFlash.isOn()) {
                         clientFlash.stopCount();
-                    }else{
+                    } else {
                         clientFlash.startCount(clientLiner);
                     }
                 }

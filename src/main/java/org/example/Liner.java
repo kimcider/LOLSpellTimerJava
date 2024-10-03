@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
+import org.example.spell.Flash;
+import org.example.spell.Spell;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class Liner {
     public static int positionY = imageMargin;
 
     private String name;
-    private Flash flash;
+    private Spell flash;
 
     public Liner() {
         flash = new Flash();
@@ -36,8 +38,8 @@ public class Liner {
     public Liner(String name, AbstractWebSocketConnector connector) {
         this.connector = connector;
         this.name = name;
-        flash = new Flash(this, connector);
-        flash.getFlashIcon().addMouseListener(new MouseAdapter(){
+        flash = new Flash();
+        flash.getSpellIcon().addMouseListener(new MouseAdapter(){
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
@@ -73,6 +75,16 @@ public class Liner {
             flash.on();
             flash.stopCount();
         }
+    }
+    
+    //TODO: 완성하기
+    public void touchCosmicInsight(){
+        //spell1.CosmicInsightOn/Off()
+        //sepll2.CosmicInsightOn/Off()
+    }
+    public void buyIonianBoots(){
+        //spell1.IonianBootsOn/Off();
+        //spell2.IonianBootsOn/Off();
     }
 
     private JLabel getImage(String path, int x, int y) {
