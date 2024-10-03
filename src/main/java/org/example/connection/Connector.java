@@ -59,8 +59,8 @@ public class Connector extends AbstractWebSocketConnector {
             for (Liner serverLiner : liners) {
                 Liner clientLiner = linerList.get(serverLiner.getName());
                 Spell clientFlash = clientLiner.getFlash();
-                if (clientFlash.equals(serverLiner.getFlash()) == false) {
-                    clientFlash.setSpell(serverLiner.getFlash());
+                if (clientLiner.equals(serverLiner) == false) {
+                    clientLiner.setLiner(serverLiner);
                     if (clientFlash.isOn()) {
                         clientFlash.stopCount();
                     } else {

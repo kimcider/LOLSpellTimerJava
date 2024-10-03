@@ -19,7 +19,7 @@ import static org.example.Board.imageSize;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY"})
+@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY", "spell2"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
     private AbstractWebSocketConnector connector;
@@ -29,6 +29,10 @@ public class Liner {
 
     private String name;
     private Spell flash;
+    private Spell spell2;
+
+    private boolean cosmicInsight = false;
+    private boolean ionianBoots = false;
 
     public Liner() {
         flash = new Flash();
@@ -99,10 +103,24 @@ public class Liner {
         return result;
     }
 
+    public void setLiner(Liner model) {
+        if(model == null){
+            return;
+        }
+
+        flash.setSpell(model.getFlash());
+        cosmicInsight = model.isCosmicInsight();
+        ionianBoots = model.isIonianBoots();
+    }
+
     @Override
     public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+
         Liner other = (Liner) obj;
-        if (name.equals(other.name) && flash.equals(other.flash)) {
+        if (name.equals(other.name) && flash.equals(other.flash)  && cosmicInsight == other.cosmicInsight && ionianBoots == other.ionianBoots) {
             return true;
         }
         return false;

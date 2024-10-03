@@ -27,9 +27,6 @@ public abstract class Spell {
     protected int coolTime = 0;
     protected CounterLabel spellIcon = null;
 
-    private boolean cosmicInsight = false;
-    private boolean IonianBoots = false;
-
     public Spell() {
 
     }
@@ -51,8 +48,6 @@ public abstract class Spell {
     public void setSpell(Spell model) {
         coolTime = model.getCoolTime();
         spellCoolTime = model.getSpellCoolTime();
-        cosmicInsight = model.isCosmicInsight();
-        IonianBoots = model.isIonianBoots();
     }
 
     public void startCount(Liner liner) {
@@ -80,7 +75,7 @@ public abstract class Spell {
     @Override
     public boolean equals(Object obj) {
         Spell other = (Spell) obj;
-        if (spellCoolTime == other.spellCoolTime && isOn() == other.isOn() && cosmicInsight == other.cosmicInsight && IonianBoots == other.IonianBoots) {
+        if (spellCoolTime == other.spellCoolTime && isOn() == other.isOn()) {
             return true;
         }
         return false;

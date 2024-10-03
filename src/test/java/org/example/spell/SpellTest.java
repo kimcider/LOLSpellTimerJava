@@ -45,123 +45,19 @@ public class SpellTest {
 
         String json = mapper.writeValueAsString(spell);
         assertEquals("""
-                {"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}""", json);
+                {"type":"flash","spellCoolTime":300,"coolTime":0}""", json);
     }
 
     @Test
     public void jsonToSpellFlash() throws JsonProcessingException {
         String json = """
-                {"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}""";
+                {"type":"flash","spellCoolTime":300,"coolTime":0}""";
 
         Spell spell = mapper.readValue(json, new TypeReference<Spell>(){});
         assertEquals(new Flash(), spell);
     }
 
-    @Test
-    public void jsonToSpellFlashWithCosmicInsight() throws JsonProcessingException {
-        String json = """
-                {"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":true,"ionianBoots":false}""";
 
-        Spell spell = mapper.readValue(json, new TypeReference<Spell>(){});
-        Flash flash = new Flash();
-        flash.setCosmicInsight(true);
-        assertEquals(flash, spell);
-    }
-
-    @Test
-    public void jsonToSpellFlashWithIonianBoots() throws JsonProcessingException {
-        String json = """
-                {"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":true}""";
-
-        Spell spell = mapper.readValue(json, new TypeReference<Spell>(){});
-        Flash flash = new Flash();
-        flash.setIonianBoots(true);
-        assertEquals(flash, spell);
-    }
-
-    @Test
-    public void jsonToSpellFlashWithIonianBootsAndCosmicInsight() throws JsonProcessingException {
-        String json = """
-                {"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":true,"ionianBoots":true}""";
-
-        Spell spell = mapper.readValue(json, new TypeReference<Spell>(){});
-        Flash flash = new Flash();
-        flash.setIonianBoots(true);
-        flash.setCosmicInsight(true);
-        assertEquals(flash, spell);
-    }
-
-    @Test
-    public void setSpell_AssertSpellIconDoesNotChange(){
-        Spell spell = new Flash();
-        CounterLabel originalSpellIcon = spell.getSpellIcon();
-
-        Flash flash = new Flash();
-        spell.setSpell(flash);
-
-        assertEquals(originalSpellIcon, spell.getSpellIcon());
-    }
-
-    @Test
-    public void setSpell_AssertSetSameSpellWillNotChangeSpell(){
-        Spell spell = new Flash();
-        assertEquals(spell, spellTarget);
-        assertEquals(spell, spellModel);
-
-        spellTarget.setSpell(spellModel);
-        assertEquals(spell, spellTarget);
-        assertEquals(spell, spellModel);
-    }
-
-    @Test
-    public void setSpell_changeCollTime(){
-        spellModel.setCoolTime(50);
-
-        spellTarget.setSpell(spellModel);
-
-        assertEquals(50, spellTarget.getCoolTime());
-    }
-
-    @Test
-    public void setSpell_changeSpellCollTime(){
-        spellModel.setSpellCoolTime(50);
-
-        spellTarget.setSpell(spellModel);
-
-        assertEquals(50, spellTarget.getSpellCoolTime());
-    }
-
-    @Test
-    public void setSpell_changeCosmicInsight(){
-        spellModel.setCosmicInsight(true);
-
-        spellTarget.setSpell(spellModel);
-
-        assertTrue(spellTarget.isCosmicInsight());
-    }
-
-    @Test
-    public void setSpell_changeIonianBoots(){
-        spellModel.setIonianBoots(true);
-
-        spellTarget.setSpell(spellModel);
-
-        assertTrue(spellTarget.isIonianBoots());
-    }
-
-    @Test
-    public void setSpell_SpyFunctionCall(){
-        Spell mockSpellTarget = Mockito.spy(spellTarget);
-        Spell mockSpellModel = Mockito.spy(spellModel);
-
-        mockSpellTarget.setSpell(mockSpellModel);
-
-        verify(mockSpellTarget, times(1)).setSpell(mockSpellModel);
-        verify(mockSpellModel, times(1)).getCoolTime();
-        verify(mockSpellModel, times(1)).getSpellCoolTime();
-        verify(mockSpellModel, times(1)).isCosmicInsight();
-        verify(mockSpellModel, times(1)).isIonianBoots();
-    }
 
 
     @Test

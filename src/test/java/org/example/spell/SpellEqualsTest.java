@@ -18,10 +18,6 @@ public class SpellEqualsTest {
         assertEquals(0, f1.getCoolTime());
         assertEquals(0, f2.getCoolTime());
 
-        assertFalse(f1.isCosmicInsight());
-        assertFalse(f2.isCosmicInsight());
-        assertFalse(f1.isIonianBoots());
-        assertFalse(f2.isIonianBoots());
         assertEquals(f1, f2);
     }
 
@@ -78,39 +74,5 @@ public class SpellEqualsTest {
         assertNotEquals(f1, f2);
         f2.setSpellCoolTime(150);
         assertEquals(f1, f2);
-    }
-
-    @Test
-    public void CosmicInsight(){
-        f1.setCosmicInsight(true);
-        assertNotEquals(f1, f2);
-        f2.setCosmicInsight(true);
-        assertEquals(f1, f2);
-    }
-
-    @Test
-    public void IonianBoots(){
-        f1.setIonianBoots(true);
-        assertNotEquals(f1, f2);
-        f2.setIonianBoots(true);
-        assertEquals(f1, f2);
-    }
-
-    @Test
-    public void CosmicAndIonian(){
-        f1.setCosmicInsight(true);
-        assertNotEquals(f1, f2);
-        f2.setCosmicInsight(true);
-        assertEquals(f1, f2);
-        f1.setIonianBoots(true);
-        assertNotEquals(f1, f2);
-        f2.setIonianBoots(true);
-        assertEquals(f1, f2);
-    }
-
-    @Test
-    public void AllTest(){
-        CoolTimeAndSpellCoolTime();
-        CosmicAndIonian();
     }
 }

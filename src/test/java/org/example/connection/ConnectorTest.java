@@ -74,18 +74,18 @@ public class ConnectorTest {
     public void testSetUp() throws JsonProcessingException {
         String json = mapper.writeValueAsString(connectorLinerList);
         assertEquals("""
-                        {"top":{"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},"bot":{"name":"bot","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},"mid":{"name":"mid","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},"jg":{"name":"jg","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},"sup":{"name":"sup","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}}}"""
+                        {"top":{"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},"bot":{"name":"bot","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},"mid":{"name":"mid","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},"jg":{"name":"jg","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},"sup":{"name":"sup","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false}}"""
                 , json);
     }
 
     @Test
     public void testJsonToLinerList() throws JsonProcessingException {
         String json = """
-                [{"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},
-                {"name":"jg","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},
-                {"name":"mid","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},
-                {"name":"bot","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}},
-                {"name":"sup","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}}]""";
+                [{"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},
+                {"name":"bot","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},
+                {"name":"mid","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},
+                {"name":"jg","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false},
+                {"name":"sup","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false}]""";
 
         List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
         });
@@ -241,4 +241,35 @@ public class ConnectorTest {
 
     }
 
+    @Test
+    public void testOnMessage_WithCosmicInsights() throws JsonProcessingException {
+        serverLinerList.get("sup").setCosmicInsight(true);
+
+        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        assertTrue(connector.getLinerList().get("sup").isCosmicInsight());
+    }
+
+    @Test
+    public void testOnMessage_WithIonianBoots() throws JsonProcessingException {
+        serverLinerList.get("sup").setIonianBoots(true);
+
+        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        assertTrue(connector.getLinerList().get("sup").isIonianBoots());
+    }
+
+    @Test
+    public void testOnMessage_WithCoolTimeReducer() throws JsonProcessingException {
+        serverLinerList.get("sup").setCosmicInsight(true);
+        serverLinerList.get("sup").setIonianBoots(true);
+
+        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        assertTrue(connector.getLinerList().get("sup").isCosmicInsight());
+        assertTrue(connector.getLinerList().get("sup").isIonianBoots());
+    }
 }

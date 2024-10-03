@@ -1,8 +1,8 @@
 package org.example.liner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.spell.Flash;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
@@ -17,7 +17,6 @@ import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 public class LinerTest {
     static ObjectMapper mapper = new ObjectMapper();
@@ -36,6 +35,9 @@ public class LinerTest {
         assertNotNull(liner.getFlash().getSpellIcon());
         assertNull(liner.getName());
         assertNotNull(liner.getFlash());
+
+        assertFalse(liner.isCosmicInsight());
+        assertFalse(liner.isIonianBoots());
     }
 
     @Test
@@ -124,7 +126,7 @@ public class LinerTest {
         Liner liner = new Liner("top", connector);
         String json = mapper.writeValueAsString(liner);
         assertEquals("""
-                {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0,"cosmicInsight":false,"ionianBoots":false}}""", json);
+                {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false}""", json);
     }
 
     @Test
@@ -177,7 +179,7 @@ public class LinerTest {
     }
 
     @Test
-    public void touchFlashWhenFlashIsOff(){
+    public void touchFlashWhenFlashIsOff() {
         Liner liner = new Liner("top", connector);
         liner.getFlash().off();
 
@@ -195,25 +197,62 @@ public class LinerTest {
     }
 
     @Test
-    public void testTouchCosmicInsight(){
+    public void jsonToLinerWithCosmicInsight() throws JsonProcessingException {
+        String json = """
+                 {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":true,"ionianBoots":false}""";
+
+        Liner liner = mapper.readValue(json, new TypeReference<Liner>() {
+        });
+        Liner expectedLiner = new Liner("top", connector);
+        expectedLiner.setCosmicInsight(true);
+        assertEquals(expectedLiner, liner);
+    }
+
+    @Test
+    public void jsonToLinerWithIonianBoots() throws JsonProcessingException {
+        String json = """
+                 {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":true}""";
+
+        Liner liner = mapper.readValue(json, new TypeReference<Liner>() {
+        });
+        Liner expectedLiner = new Liner("top", connector);
+        expectedLiner.setIonianBoots(true);
+        assertEquals(expectedLiner, liner);
+    }
+
+    @Test
+    public void jsonToLinerWithIonianBootsAndCosmicInsight() throws JsonProcessingException {
+        String json = """
+                 {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":true,"ionianBoots":true}""";
+
+        Liner liner = mapper.readValue(json, new TypeReference<Liner>() {
+        });
+        Liner expectedLiner = new Liner("top", connector);
+        expectedLiner.setIonianBoots(true);
+        expectedLiner.setCosmicInsight(true);
+        assertEquals(expectedLiner, liner);
+    }
+
+    @Test
+    public void testTouchCosmicInsight() {
         //제대로 상태값 변하나 테스트
         assertNotNull(null);
     }
 
     @Test
-    public void testBuyIonianBoots(){
+    public void testBuyIonianBoots() {
         //제대로 상태값 변하나 테스트
         assertNotNull(null);
     }
 
     @Test
-    public void testBothCoolTimeReduce(){
+    public void testBothCoolTimeReduce() {
         //제대로 상태값 변하나 테스트
         assertNotNull(null);
     }
 
     @Test
-    public void testTouchCosmicInsightJSON(){
+    public void testTouchCosmicInsightJSON() {
         //Json으로 제대로 변환되나 테스트
         // touch하고, 해당 객체를 json으로 변환할 떄 
         //SpellTest의 JSON을 가져와서 일치하는지 확인
@@ -221,21 +260,17 @@ public class LinerTest {
     }
 
     @Test
-    public void testBuyIonianBootsJSON(){
+    public void testBuyIonianBootsJSON() {
         //Json으로 제대로 변환되나 테스트
         assertNotNull(null);
     }
 
     @Test
-    public void testBothCoolTimeReduceJSON(){
+    public void testBothCoolTimeReduceJSON() {
         //Json으로 제대로 변환되나 테스트
         assertNotNull(null);
     }
 
-
-
-    
-    
 
     @Test
     public void equals() {
@@ -259,5 +294,10 @@ public class LinerTest {
         assertNotEquals(l1, l2);
         l2.getFlash().setSpellCoolTime(5);
         assertEquals(l1, l2);
+    }
+
+    @Test
+    public void equalsCoolTimeReducer() {
+        assertNotNull(null);
     }
 }
