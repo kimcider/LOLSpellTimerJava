@@ -135,6 +135,20 @@ public class ConnectorTest {
     }
 
     @Test
+    public void assertOnMessageCallSetSpell() throws JsonProcessingException {
+        serverLinerList.get("sup").getFlash().off();
+
+
+        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
+        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
+
+        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        connector.onMessage(json);
+
+        verify(mockClientFlashSup, times(1)).setSpell(any(Spell.class));
+    }
+
+    @Test
     public void testOnMessageSetCoolTime_WhenServerFlashIsOff() throws JsonProcessingException {
         serverLinerList.get("sup").getFlash().off();
 
@@ -145,20 +159,13 @@ public class ConnectorTest {
         String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
         connector.onMessage(json);
 
-        verify(mockClientFlashSup, times(1)).setCoolTime(serverLinerList.get("sup").getFlash().getCoolTime());
-        verify(mockClientFlashSup, times(1)).setSpellCoolTime(serverLinerList.get("sup").getFlash().getSpellCoolTime());
+        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
     }
     @Test
     public void testOnMessageSetCoolTime_WhenServerFlashIsOn() throws JsonProcessingException {
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
-        connectorLinerList.get("sup").getFlash().off();
-
         String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
         connector.onMessage(json);
-
-        verify(mockClientFlashSup, times(1)).setCoolTime(serverLinerList.get("sup").getFlash().getCoolTime());
-        verify(mockClientFlashSup, times(1)).setSpellCoolTime(serverLinerList.get("sup").getFlash().getSpellCoolTime());
+        assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
     }
 
     @Test
@@ -200,24 +207,6 @@ public class ConnectorTest {
 
         verify(mockClientFlashSup, times(1)).stopCount();
         verify(mockClientFlashJg, times(1)).stopCount();
-    }
-
-    @Test
-    public void testOnMessage4() throws JsonProcessingException {
-        serverLinerList.get("sup").getFlash().off();
-        serverLinerList.get("jg").getFlash().off();
-        Spell mockSupFlash = Mockito.spy(connectorLinerList.get("sup").getFlash());
-        Spell mockJgFlash = Mockito.spy(connectorLinerList.get("jg").getFlash());
-        connectorLinerList.get("sup").setFlash(mockSupFlash);
-        connectorLinerList.get("jg").setFlash(mockJgFlash);
-
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
-        connector.onMessage(json);
-
-        verify(mockSupFlash, times(1)).setCoolTime(serverLinerList.get("sup").getFlash().getCoolTime());
-        verify(mockSupFlash, times(1)).setSpellCoolTime(serverLinerList.get("sup").getFlash().getSpellCoolTime());
-        verify(mockJgFlash, times(1)).setCoolTime(serverLinerList.get("jg").getFlash().getCoolTime());
-        verify(mockJgFlash, times(1)).setSpellCoolTime(serverLinerList.get("jg").getFlash().getSpellCoolTime());
     }
 
     @Test

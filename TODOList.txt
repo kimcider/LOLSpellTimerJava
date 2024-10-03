@@ -26,11 +26,12 @@ DONE: requestMapping "useFlash"를 sendLinerStatus로 바꾸기
 DONE: Flash에서 On 제거하기
         그에 따른 테스트코드들 수정하기
 DONE: Flash안의 StartCounter를 Liner에 못옮기나?  startCounter호출이 서로 조금씩 다른거같은데
-
-TODO: Connector.java의 아래 부분 (Flash의 값들을 변경해주는부분을) Flash.setFlash(Flash model)로 바꾸기
+DONE: Spell class추가 및 테스트코드 수정
+DONE: Connector.java의 아래 부분 (Flash의 값들을 변경해주는부분을) Flash.setFlash(Flash model)로 바꾸기
     clientFlash.setCoolTime(serverLiner.getFlash().getCoolTime());
     clientFlash.setSpellCoolTime(serverLiner.getFlash().getSpellCoolTime());
     clientFlash.setCosmicInsight(serverLiner.getFlash().isCosmicInsight());
     clientFlash.setIonianBoots(serverLiner.getFlash().isIonianBoots());
+
 TODO: Liner.java touchFlash를 touchSpell(Spell spell)로 바꾸기.
 TODO: Liner.java touchCosmicInsight, buyIonianBoots 완성하기

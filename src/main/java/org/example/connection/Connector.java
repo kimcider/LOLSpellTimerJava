@@ -60,11 +60,7 @@ public class Connector extends AbstractWebSocketConnector {
                 Liner clientLiner = linerList.get(serverLiner.getName());
                 Spell clientFlash = clientLiner.getFlash();
                 if (clientFlash.equals(serverLiner.getFlash()) == false) {
-                    //TODO: 이거 Flash.setFlash()로 바꾸기
-                    clientFlash.setCoolTime(serverLiner.getFlash().getCoolTime());
-                    clientFlash.setSpellCoolTime(serverLiner.getFlash().getSpellCoolTime());
-                    clientFlash.setCosmicInsight(serverLiner.getFlash().isCosmicInsight());
-                    clientFlash.setIonianBoots(serverLiner.getFlash().isIonianBoots());
+                    clientFlash.setSpell(serverLiner.getFlash());
                     if (clientFlash.isOn()) {
                         clientFlash.stopCount();
                     } else {

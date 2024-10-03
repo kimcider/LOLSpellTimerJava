@@ -31,11 +31,13 @@ public class SpellTest {
     @Test
     public void createFlash() {
         Flash flash = new Flash();
+        assertNotNull(flash);
         assertEquals(300, flash.getSpellCoolTime());
         assertEquals(0, flash.getCoolTime());
         assertTrue(flash.isOn());
         assertNotNull(flash.getSpellIcon());
     }
+
 
     @Test
     public void spellFlashToJson() throws JsonProcessingException {
