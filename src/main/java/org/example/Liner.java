@@ -65,10 +65,14 @@ public class Liner {
         }
     }
 
-    //이거 이름이 이상하다...
-    // 이제 useFlash가아니자나...
     public void touchFlash() {
-        flash.startCount(this);
+        if(flash.isOn()){
+            flash.off();
+            flash.startCount(this);
+        }else{
+            flash.on();
+            flash.stopCount();
+        }
     }
 
     private JLabel getImage(String path, int x, int y) {

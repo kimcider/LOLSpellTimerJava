@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.Flash;
 import org.example.Liner;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -58,10 +59,15 @@ public class Connector extends AbstractWebSocketConnector {
             });
             for (Liner serverLiner : liners) {
                 Liner clientLiner = linerList.get(serverLiner.getName());
-                if (clientLiner.getFlash().equals(serverLiner.getFlash()) == false) {
-                    clientLiner.getFlash().setCoolTime(serverLiner.getFlash().getCoolTime());
-                    clientLiner.getFlash().setFlashCoolTime(serverLiner.getFlash().getFlashCoolTime());
-                    clientLiner.touchFlash();
+                Flash clientFlash = clientLiner.getFlash();
+                if (clientFlash.equals(serverLiner.getFlash()) == false) {
+                    clientFlash.setCoolTime(serverLiner.getFlash().getCoolTime());
+                    clientFlash.setFlashCoolTime(serverLiner.getFlash().getFlashCoolTime());
+                    if(clientFlash.isOn()){
+                        clientFlash.stopCount();
+                    }else{
+                        clientFlash.startCount(clientLiner);
+                    }
                 }
             }
         } catch (IOException e) {

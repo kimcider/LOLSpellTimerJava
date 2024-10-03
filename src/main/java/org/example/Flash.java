@@ -31,7 +31,7 @@ public class Flash {
         flashIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY, liner, connector);
     }
 
-    public boolean isOn(){
+    public boolean isOn() {
         return coolTime == 0;
     }
 
@@ -40,31 +40,32 @@ public class Flash {
     }
 
     public void off() {
-        coolTime = flashCoolTime;
+        if (coolTime == 0) {
+            coolTime = flashCoolTime;
+        }
     }
 
     public void startCount(Liner liner) {
-        if (!isOn()) {
-            off();
+        flashIcon.repaint();
 
+        flashIcon.stopTimer();
+        flashIcon.setTimer(new Timer(1000, e -> {
+            coolTime--;
             flashIcon.repaint();
 
-            flashIcon.stopTimer();
-            flashIcon.setTimer(new Timer(1000, e -> {
-                coolTime--;
-                flashIcon.repaint();
+            if (getCoolTime() <= 0) {
+                on();
+                liner.sendLinerStatus();
+                flashIcon.stopTimer();
+            }
+        }));
+        flashIcon.startTimer();
+    }
 
-                if (getCoolTime() <= 0) {
-                    on();
-                    liner.sendLinerStatus();
-                    flashIcon.stopTimer();
-                }
-            }));
-            flashIcon.startTimer();
-        } else {
-            flashIcon.repaint();
-            flashIcon.stopTimer();
-        }
+    public void stopCount() {
+        flashIcon.repaint();
+        flashIcon.stopTimer();
+
     }
 
     private CounterLabel getCounterImage(String path, int x, int y, Liner liner, AbstractWebSocketConnector connector) {

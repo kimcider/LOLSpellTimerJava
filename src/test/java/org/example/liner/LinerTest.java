@@ -160,6 +160,40 @@ public class LinerTest {
     }
 
     @Test
+    public void touchFlashWhenFlashIsOn() {
+        Liner liner = new Liner("top", connector);
+        Liner mockLiner = Mockito.spy(liner);
+        Flash mockFlash = Mockito.spy(mockLiner.getFlash());
+        mockLiner.setFlash(mockFlash);
+
+        mockLiner.touchFlash();
+
+        verify(mockFlash, times(1)).isOn();
+        verify(mockFlash, times(1)).off();
+        verify(mockFlash, times(1)).startCount(mockLiner);
+
+        assertFalse(mockLiner.getFlash().isOn());
+    }
+
+    @Test
+    public void touchFlashWhenFlashIsOff(){
+        Liner liner = new Liner("top", connector);
+        liner.getFlash().off();
+
+        Liner mockLiner = Mockito.spy(liner);
+        Flash mockFlash = Mockito.spy(mockLiner.getFlash());
+        mockLiner.setFlash(mockFlash);
+
+        mockLiner.touchFlash();
+
+        verify(mockFlash, times(1)).isOn();
+        verify(mockFlash, times(1)).on();
+        verify(mockFlash, times(1)).stopCount();
+
+        assertTrue(mockLiner.getFlash().isOn());
+    }
+
+    @Test
     public void equals() {
         Liner l1 = new Liner("top", connector);
         Liner l2 = new Liner("top", connector);

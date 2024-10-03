@@ -1,6 +1,6 @@
 
-1. 우추/쿨감신
-2. 20초쯤 남았을 때 깜빡이는거
+TODO: 1. 우추/쿨감신
+TODO: 2. 20초쯤 남았을 때 깜빡이는거
 
 
 
@@ -25,8 +25,6 @@ DONE: sendFlashStatus가 굳이 Flash클래스에 있어야할까? 어차피 lin
 DONE: requestMapping "useFlash"를 sendLinerStatus로 바꾸기
 DONE: Flash에서 On 제거하기
         그에 따른 테스트코드들 수정하기
+DONE: Flash안의 StartCounter를 Liner에 못옮기나?  startCounter호출이 서로 조금씩 다른거같은데
 
-
-TODO: Flash안의 StartCounter를 Liner에 못옮기나?  startCounter호출이 서로 조금씩 다른거같은데
-
-TODO: Liner.useFlahs() 저게 최선인가?
+TODO: touchFlash를 touchSpell(Spell spell)로 바꾸기.

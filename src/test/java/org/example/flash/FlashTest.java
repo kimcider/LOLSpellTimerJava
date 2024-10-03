@@ -55,31 +55,29 @@ public class FlashTest {
     }
 
     @Test
-    public void startCountWhenFlashOn() {
-        Liner liner = new Liner("top", connector);
-        Flash mockFlash = Mockito.spy(liner.getFlash());
-        CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
-        mockFlash.setFlashIcon(spyFlashIcon);
+    public void testOffWhenCoolTimeIsNotZero() {
+        Flash flash = Mockito.spy(new Flash());
 
-        mockFlash.startCount(liner);
-
-        verify(mockFlash, times(1)).isOn();
-        verify(spyFlashIcon, times(1)).stopTimer();
-        verify(spyFlashIcon, never()).startTimer();
+        flash.setCoolTime(flash.getFlashCoolTime() - 15);
+        flash.off();
+        assertNotEquals(flash.getFlashCoolTime(), flash.getCoolTime());
     }
+
     @Test
-    public void testStartCountWhenFlashIsAlreadyUsed() {
+    public void testStartCount() {
         Liner liner = new Liner("top", connector);
         liner.getFlash().setCoolTime(100);
-        Flash mockFlash = Mockito.spy(liner.getFlash());
 
+        Flash mockFlash = Mockito.spy(liner.getFlash());
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setFlashIcon(spyFlashIcon);
 
+        assertFalse(liner.getFlash().isOn());
+
         mockFlash.startCount(liner);
 
-        verify(mockFlash, times(1)).isOn();
-        verify(mockFlash, times(1)).off();
+        verify(mockFlash, never()).isOn();
+        verify(spyFlashIcon, times(1)).repaint();
         verify(spyFlashIcon, times(1)).stopTimer();
         verify(spyFlashIcon, times(1)).startTimer();
     }
@@ -89,13 +87,36 @@ public class FlashTest {
         // testStartCountWhenFlashIsAlreadyUsed와 유사.
         Liner liner = new Liner("top", connector);
         liner.getFlash().off(); //여기만 다름 setCoolTime()인지 off()인지.
-        Flash flash = Mockito.spy(liner.getFlash());
-        flash.startCount(liner);
 
-        Mockito.verify(flash, Mockito.times(1)).off();
+        Flash mockFlash = Mockito.spy(liner.getFlash());
+        CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
+        mockFlash.setFlashIcon(spyFlashIcon);
+
+        assertFalse(liner.getFlash().isOn());
+
+        mockFlash.startCount(liner);
+
+        verify(mockFlash, never()).isOn();
+        verify(spyFlashIcon, times(1)).repaint();
+        verify(spyFlashIcon, times(1)).stopTimer();
+        verify(spyFlashIcon, times(1)).startTimer();
     }
 
+    @Test
+    public void stopCount(){
+        Liner liner = new Liner("top", connector);
 
+        Flash mockFlash = Mockito.spy(liner.getFlash());
+        CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
+        mockFlash.setFlashIcon(spyFlashIcon);
 
+        assertTrue(liner.getFlash().isOn());
+
+        mockFlash.stopCount();
+
+        verify(spyFlashIcon, never()).startTimer();
+        verify(spyFlashIcon, times(1)).repaint();
+        verify(spyFlashIcon, times(1)).stopTimer();
+    }
 
 }
