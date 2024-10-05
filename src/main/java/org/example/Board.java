@@ -20,6 +20,8 @@ public class Board extends JWindow {
 
     public static final int imageSize = 40;
     public static final int imageMargin = 10;
+    public static final int smallImageSize = (imageSize / 2) - (imageMargin / 4);
+    public static final int smallImageMargin = imageMargin / 2;
     private Point initialClick = null;
 
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
@@ -28,7 +30,7 @@ public class Board extends JWindow {
         connector = Connector.getInstance();
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
-        setSize((imageSize + imageMargin) * 2 + imageMargin, (imageSize + imageMargin) * 5 + imageMargin);
+        setSize((imageSize + imageMargin) * 2 + imageMargin + smallImageSize, (imageSize + imageMargin) * 5 + imageMargin);
         setAlwaysOnTop(true);
         setLocationRelativeTo(null);
 
@@ -55,6 +57,8 @@ public class Board extends JWindow {
             Liner liner = new Liner(name, connector);
             linerList.put(name, liner);
             add(liner.getLineIcon());
+            add(liner.getCosmicInsightIcon());
+            add(liner.getIonianBootsIcon());
             add(liner.getFlash().getSpellIcon());
         }
         connector.setLinerList(linerList);

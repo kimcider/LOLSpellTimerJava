@@ -14,8 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static org.example.Board.imageMargin;
-import static org.example.Board.imageSize;
+import static org.example.Board.*;
 
 @Setter
 @Getter
@@ -25,8 +24,8 @@ public class Liner {
     private AbstractWebSocketConnector connector;
     public static int positionY = imageMargin;
     private JLabel lineIcon;
-    private JLabel cosmicInsightIcon;
-    private JLabel ionianBootsIcon;
+    private CoolTimeReducer cosmicInsightIcon;
+    private CoolTimeReducer ionianBootsIcon;
 
     private boolean cosmicInsight = false;
     private boolean ionianBoots = false;
@@ -61,8 +60,35 @@ public class Liner {
             }
         });
 
-        lineIcon = getImage(name + ".jpg", imageMargin, positionY);
+//        lineIcon = getImage(name + ".jpg", imageSize, imageMargin, positionY);
+//        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY);
+//        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY + smallImageSize + smallImageMargin);
+
+        lineIcon = getImage(name + ".jpg", imageSize,  smallImageSize+ imageMargin, positionY);
+        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, smallImageMargin, positionY);
+        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, smallImageMargin, positionY + smallImageSize + smallImageMargin);
+
+        cosmicInsightIcon.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    touchCosmicInsight();
+                    sendLinerStatus();
+                }
+            }
+        });
+
+        ionianBootsIcon.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    touchIonianBoots();
+                    sendLinerStatus();
+                }
+            }
+        });
         positionY += imageSize + imageMargin;
+
     }
 
     public void sendLinerStatus() {
@@ -107,6 +133,8 @@ public class Liner {
         }else{
             cosmicInsight = true;
         }
+        cosmicInsightIcon.setOn(cosmicInsight);
+        cosmicInsightIcon.updateIcon();
     }
     public void touchIonianBoots(){
         if(ionianBoots){
@@ -114,17 +142,21 @@ public class Liner {
         }else{
             ionianBoots = true;
         }
+        ionianBootsIcon.setOn(ionianBoots);
+        ionianBootsIcon.updateIcon();
     }
 
-    private JLabel getImage(String path, int x, int y) {
+    private ImageIcon getImageIcon(String path, int size){
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
-        Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        Image scaledImage = imageIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
+    }
 
-        JLabel result = new JLabel(scaledIcon);
+    private JLabel getImage(String path, int size, int x, int y) {
+        JLabel result = new JLabel(getImageIcon(path, size));
 
         result.setLocation(x, y);
-        result.setSize(imageSize, imageSize);
+        result.setSize(size, size);
         return result;
     }
 
@@ -135,7 +167,9 @@ public class Liner {
 
         flash.setSpell(model.getFlash());
         cosmicInsight = model.isCosmicInsight();
+        cosmicInsightIcon.setOn(cosmicInsight);
         ionianBoots = model.isIonianBoots();
+        ionianBootsIcon.setOn(ionianBoots);
     }
 
     @Override

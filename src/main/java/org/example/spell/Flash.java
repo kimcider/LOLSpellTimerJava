@@ -9,8 +9,7 @@ import org.example.CounterLabel;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.example.Board.imageMargin;
-import static org.example.Board.imageSize;
+import static org.example.Board.*;
 import static org.example.Liner.positionY;
 
 @Getter
@@ -19,7 +18,7 @@ import static org.example.Liner.positionY;
 public class Flash extends Spell {
     public Flash() {
         super(300);
-        spellIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY);
+        spellIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin * 3 , positionY);
     }
 
     private CounterLabel getCounterImage(String path, int x, int y) {
@@ -33,6 +32,4 @@ public class Flash extends Spell {
         result.setSize(imageSize, imageSize);
         return result;
     }
-
-
 }
