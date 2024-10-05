@@ -60,13 +60,9 @@ public class Liner {
             }
         });
 
-//        lineIcon = getImage(name + ".jpg", imageSize, imageMargin, positionY);
-//        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY);
-//        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY + smallImageSize + smallImageMargin);
-
-        lineIcon = getImage(name + ".jpg", imageSize,  smallImageSize+ imageMargin, positionY);
-        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, smallImageMargin, positionY);
-        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, smallImageMargin, positionY + smallImageSize + smallImageMargin);
+        lineIcon = getImage(name + ".jpg", imageSize, imageMargin, positionY);
+        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY);
+        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY + smallImageSize + smallImageMargin);
 
         cosmicInsightIcon.addMouseListener(new MouseAdapter(){
             @Override

@@ -19,9 +19,9 @@ public class Board extends JWindow {
     private Connector connector;
 
     public static final int imageSize = 40;
-    public static final int imageMargin = 10;
-    public static final int smallImageSize = (imageSize / 2) - (imageMargin / 4);
+    public static final int imageMargin = imageSize / 4;
     public static final int smallImageMargin = imageMargin / 2;
+    public static final int smallImageSize = (imageSize / 2) - (smallImageMargin / 2);
     private Point initialClick = null;
 
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();

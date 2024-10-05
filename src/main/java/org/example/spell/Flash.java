@@ -18,7 +18,7 @@ import static org.example.Liner.positionY;
 public class Flash extends Spell {
     public Flash() {
         super(300);
-        spellIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin * 3 , positionY);
+        spellIcon = getCounterImage("flash.jpg",  imageSize  + imageMargin + smallImageSize  + imageMargin, positionY);
     }
 
     private CounterLabel getCounterImage(String path, int x, int y) {
