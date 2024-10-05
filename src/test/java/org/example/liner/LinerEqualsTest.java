@@ -27,30 +27,32 @@ public class LinerEqualsTest {
     public void Diffrentname(){
         l1.setName("mid");
         assertNotEquals(l1, l2);
+        l2.setName("mid");
+        assertEquals(l1, l2);
     }
 
     @Test
     public void DiffentFlashOn(){
-        l1.getFlash().off();
+        l1.offSpell(l1.getFlash());
         assertNotEquals(l1, l2);
-    }
-
-    @Test
-    public void DifferentSpellCoolTime(){
-        l1.getFlash().setSpellCoolTime(1);
-        assertNotEquals(l1, l2);
+        l2.offSpell(l2.getFlash());
+        assertEquals(l1, l2);
     }
 
     @Test
     public void DifferentCosmicInsight(){
         l1.setCosmicInsight(true);
         assertNotEquals(l1, l2);
+        l2.setCosmicInsight(true);
+        assertEquals(l1, l2);
     }
 
     @Test
     public void DifferentIonianBoots(){
         l1.setIonianBoots(true);
         assertNotEquals(l1, l2);
+        l2.setIonianBoots(true);
+        assertEquals(l1, l2);
     }
 
     @Test

@@ -30,22 +30,4 @@ public class FlashTest {
         assertTrue(liner.getFlash().isOn());
         assertNotNull(liner.getFlash().getSpellIcon());
     }
-
-    @Test
-    public void testTouchCosmicInsightCoolTimeOnFlash(){
-        // CoolTime 제대로 적용되나 체크
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBuyIonianBootsCoolTimeOnFlash(){
-        // CoolTime 제대로 적용되나 체크
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBothCoolTimeReduceCoolTimeOnFlash(){
-        // CoolTime 제대로 적용되나 체크
-        assertNotNull(null);
-    }
 }

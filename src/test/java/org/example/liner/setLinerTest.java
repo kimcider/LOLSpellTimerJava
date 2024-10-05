@@ -14,7 +14,7 @@ public class setLinerTest {
         assertTrue(liner1.getFlash().isOn());
 
         Liner liner2 = new Liner();
-        liner2.getFlash().off();
+        liner2.offSpell(liner2.getFlash());
 
         liner1.setLiner(liner2);
 

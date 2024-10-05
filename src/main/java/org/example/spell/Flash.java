@@ -15,10 +15,10 @@ import static org.example.Liner.positionY;
 
 @Getter
 @Setter
-@JsonIgnoreProperties({"spellIcon", "on"})
+@JsonIgnoreProperties({"spellIcon", "spellCoolTime", "on"})
 public class Flash extends Spell {
     public Flash() {
-        spellCoolTime = 300;
+        super(300);
         spellIcon = getCounterImage("flash.jpg", imageMargin + imageSize + imageMargin, positionY);
     }
 

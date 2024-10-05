@@ -19,20 +19,23 @@ import static org.example.Board.imageSize;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "positionY", "spell2"})
+@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "spell2"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
     private AbstractWebSocketConnector connector;
-    private JLabel lineIcon;
-    //private CounterLabel flashIcon;
     public static int positionY = imageMargin;
+    private JLabel lineIcon;
+    private JLabel cosmicInsightIcon;
+    private JLabel ionianBootsIcon;
+
+    private boolean cosmicInsight = false;
+    private boolean ionianBoots = false;
 
     private String name;
     private Spell flash;
     private Spell spell2;
 
-    private boolean cosmicInsight = false;
-    private boolean ionianBoots = false;
+
 
     public Liner() {
         flash = new Flash();
@@ -48,9 +51,9 @@ public class Liner {
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if(flash.isOn()){
-                        flash.off();
+                        offSpell(flash);
                     }else{
-                        flash.on();
+                        onSpell(flash);
                     }
                     flash.startCount(Liner.this);
                     sendLinerStatus();
@@ -71,24 +74,46 @@ public class Liner {
         }
     }
 
-    public void touchFlash() {
-        if(flash.isOn()){
-            flash.off();
-            flash.startCount(this);
+    public void touchSpell(Spell spell) {
+        if(spell.isOn()){
+            offSpell(spell);
+            spell.startCount(this);
         }else{
-            flash.on();
-            flash.stopCount();
+            onSpell(spell);
+            spell.stopCount();
         }
     }
-    
-    //TODO: 완성하기
-    public void touchCosmicInsight(){
-        //spell1.CosmicInsightOn/Off()
-        //sepll2.CosmicInsightOn/Off()
+
+    public void offSpell(Spell spell){
+        double reduction = 0;
+        if(cosmicInsight){
+            reduction += 18;
+        }
+        if(ionianBoots){
+            reduction += 10;
+        }
+
+        int coolTime = (int) (spell.getSpellCoolTime() * (1 - (reduction / (reduction + 100))));
+        spell.setCoolTime(coolTime);
     }
-    public void buyIonianBoots(){
-        //spell1.IonianBootsOn/Off();
-        //spell2.IonianBootsOn/Off();
+
+    public void onSpell(Spell spell){
+        spell.setCoolTime(0);
+    }
+
+    public void touchCosmicInsight(){
+        if(cosmicInsight){
+            cosmicInsight = false;
+        }else{
+            cosmicInsight = true;
+        }
+    }
+    public void touchIonianBoots(){
+        if(ionianBoots){
+            ionianBoots = false;
+        }else{
+            ionianBoots = true;
+        }
     }
 
     private JLabel getImage(String path, int x, int y) {

@@ -45,44 +45,22 @@ public class SpellTest {
 
         String json = mapper.writeValueAsString(spell);
         assertEquals("""
-                {"type":"flash","spellCoolTime":300,"coolTime":0}""", json);
+                {"type":"flash","coolTime":0}""", json);
     }
 
     @Test
     public void jsonToSpellFlash() throws JsonProcessingException {
         String json = """
-                {"type":"flash","spellCoolTime":300,"coolTime":0}""";
+                {"type":"flash","coolTime":0}""";
 
         Spell spell = mapper.readValue(json, new TypeReference<Spell>(){});
         assertEquals(new Flash(), spell);
     }
-
-
-
-
-    @Test
-    public void testOnOff() {
-        spellTarget.off();
-        assertFalse(spellTarget.isOn());
-        spellTarget.on();
-        assertTrue(spellTarget.isOn());
-    }
-
-    @Test
-    public void testOffWhenCoolTimeIsNotZero() {
-        Spell flash = Mockito.spy(spellTarget);
-
-        flash.setCoolTime(flash.getSpellCoolTime() - 15);
-        flash.off();
-        assertNotEquals(flash.getSpellCoolTime(), flash.getCoolTime());
-    }
-
-
-
     @Test
     public void testStartCount() {
         Liner liner = new Liner("top", connector);
-        liner.getFlash().setCoolTime(100);
+        liner.offSpell(liner.getFlash());//여기만 다름 setCoolTime()인지 off()인지.
+
 
         Spell mockFlash = Mockito.spy(liner.getFlash());
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
@@ -102,7 +80,7 @@ public class SpellTest {
     public void testStartCountWhenFlashIsAlreadyUsed2() {
         // testStartCountWhenFlashIsAlreadyUsed와 유사.
         Liner liner = new Liner("top", connector);
-        liner.getFlash().off(); //여기만 다름 setCoolTime()인지 off()인지.
+        liner.getFlash().setCoolTime(100);
 
         Spell mockFlash = Mockito.spy(liner.getFlash());
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));

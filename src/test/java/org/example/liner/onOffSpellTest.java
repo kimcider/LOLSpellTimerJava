@@ -1,0 +1,106 @@
+package org.example.liner;
+
+import org.example.Liner;
+import org.example.spell.Spell;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+public class onOffSpellTest {
+    Liner liner;
+    Spell ghost;
+    @BeforeEach
+    public void setUp() {
+        liner = new Liner();
+        ghost = new Spell(240){};
+    }
+
+    @Test
+    void offFlash_DoesNotReduceCoolTimeWithoutCosmicInsightOrIonianBoots() {
+        liner.offSpell(liner.getFlash());
+
+        assertEquals(300, liner.getFlash().getCoolTime());
+    }
+    @Test
+    void offFlash_ReducesCoolTimeWithCosmicInsight() {
+        liner.setCosmicInsight(true);
+
+        liner.offSpell(liner.getFlash());
+        assertEquals(254, liner.getFlash().getCoolTime());
+    }
+
+    @Test
+    void offFlash_ReducesCoolTimeWithIonianBoots() {
+        liner.setIonianBoots(true);
+
+        liner.offSpell(liner.getFlash());
+        assertEquals(272, liner.getFlash().getCoolTime());
+    }
+
+    @Test
+    void offFlash_ReducesCoolTimeWithBothCosmicInsightAndIonianBoots() {
+        liner.setCosmicInsight(true);
+        liner.setIonianBoots(true);
+
+        liner.offSpell(liner.getFlash());
+        assertEquals(234, liner.getFlash().getCoolTime());
+    }
+
+    @Test
+    void onFlash(){
+        liner.offSpell(liner.getFlash());
+        assertFalse(liner.getFlash().isOn());
+
+        liner.onSpell(liner.getFlash());
+        assertEquals(0, liner.getFlash().getCoolTime());
+    }
+
+
+    @Test
+    void offGhost_DoesNotReduceCoolTimeWithoutCosmicInsightOrIonianBoots() {
+        Liner liner = new Liner();
+
+        liner.offSpell(ghost);
+
+        assertEquals(240, ghost.getCoolTime());
+    }
+    @Test
+    void ooffGhost_ReducesCoolTimeWithCosmicInsight() {
+        Liner liner = new Liner();
+        liner.setCosmicInsight(true);
+
+        liner.offSpell(ghost);
+        assertEquals(203, ghost.getCoolTime());
+    }
+
+    @Test
+    void offGhost_ReducesCoolTimeWithIonianBoots() {
+        Liner liner = new Liner();
+        liner.setIonianBoots(true);
+
+        liner.offSpell(ghost);
+        assertEquals(218, ghost.getCoolTime());
+    }
+
+    @Test
+    void offGhost_ReducesCoolTimeWithBothCosmicInsightAndIonianBoots() {
+        Liner liner = new Liner();
+        liner.setCosmicInsight(true);
+        liner.setIonianBoots(true);
+
+        liner.offSpell(ghost);
+        assertEquals(187, ghost.getCoolTime());
+    }
+
+    @Test
+    void onGhost(){
+        liner.offSpell(ghost);
+        assertFalse(ghost.isOn());
+
+        liner.onSpell(ghost);
+        assertEquals(0, ghost.getCoolTime());
+    }
+
+}

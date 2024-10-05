@@ -54,15 +54,6 @@ public class setSpell {
         assertEquals(50, spellTarget.getCoolTime());
     }
 
-    @Test
-    public void setSpell_changeSpellCollTime(){
-        spellModel.setSpellCoolTime(50);
-
-        spellTarget.setSpell(spellModel);
-
-        assertEquals(50, spellTarget.getSpellCoolTime());
-    }
-
 
     @Test
     public void setSpell_SpyFunctionCall(){
@@ -73,7 +64,6 @@ public class setSpell {
 
         verify(mockSpellTarget, times(1)).setSpell(mockSpellModel);
         verify(mockSpellModel, times(1)).getCoolTime();
-        verify(mockSpellModel, times(1)).getSpellCoolTime();
     }
 
 }

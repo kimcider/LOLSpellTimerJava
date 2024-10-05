@@ -126,7 +126,7 @@ public class LinerTest {
         Liner liner = new Liner("top", connector);
         String json = mapper.writeValueAsString(liner);
         assertEquals("""
-                {"name":"top","flash":{"type":"flash","spellCoolTime":300,"coolTime":0},"cosmicInsight":false,"ionianBoots":false}""", json);
+                {"cosmicInsight":false,"ionianBoots":false,"name":"top","flash":{"type":"flash","coolTime":0}}""", json);
     }
 
     @Test
@@ -144,57 +144,7 @@ public class LinerTest {
         verify(mockConnector, times(1)).sendMessage("sendLinerStatus", json);
     }
 
-    @Test
-    public void touchFlash() {
-        Liner liner = new Liner("top", connector);
-        // CounterLabel mock 생성
-        Spell mockFlash = Mockito.spy(liner.getFlash());
-        // liner 객체의 flashIcon 필드를 mockCounterLabel로 교체
-        liner.setFlash(mockFlash);
 
-        Mockito.verify(mockFlash, Mockito.never()).startCount(liner);
-
-        try {
-            liner.touchFlash();
-        } catch (Exception e) {
-        }
-
-        Mockito.verify(mockFlash, Mockito.times(1)).startCount(liner);
-    }
-
-    @Test
-    public void touchFlashWhenFlashIsOn() {
-        Liner liner = new Liner("top", connector);
-        Liner mockLiner = Mockito.spy(liner);
-        Spell mockFlash = Mockito.spy(mockLiner.getFlash());
-        mockLiner.setFlash(mockFlash);
-
-        mockLiner.touchFlash();
-
-        verify(mockFlash, times(1)).isOn();
-        verify(mockFlash, times(1)).off();
-        verify(mockFlash, times(1)).startCount(mockLiner);
-
-        assertFalse(mockLiner.getFlash().isOn());
-    }
-
-    @Test
-    public void touchFlashWhenFlashIsOff() {
-        Liner liner = new Liner("top", connector);
-        liner.getFlash().off();
-
-        Liner mockLiner = Mockito.spy(liner);
-        Spell mockFlash = Mockito.spy(mockLiner.getFlash());
-        mockLiner.setFlash(mockFlash);
-
-        mockLiner.touchFlash();
-
-        verify(mockFlash, times(1)).isOn();
-        verify(mockFlash, times(1)).on();
-        verify(mockFlash, times(1)).stopCount();
-
-        assertTrue(mockLiner.getFlash().isOn());
-    }
 
     @Test
     public void jsonToLinerWithCosmicInsight() throws JsonProcessingException {
@@ -231,73 +181,5 @@ public class LinerTest {
         expectedLiner.setIonianBoots(true);
         expectedLiner.setCosmicInsight(true);
         assertEquals(expectedLiner, liner);
-    }
-
-    @Test
-    public void testTouchCosmicInsight() {
-        //제대로 상태값 변하나 테스트
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBuyIonianBoots() {
-        //제대로 상태값 변하나 테스트
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBothCoolTimeReduce() {
-        //제대로 상태값 변하나 테스트
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testTouchCosmicInsightJSON() {
-        //Json으로 제대로 변환되나 테스트
-        // touch하고, 해당 객체를 json으로 변환할 떄 
-        //SpellTest의 JSON을 가져와서 일치하는지 확인
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBuyIonianBootsJSON() {
-        //Json으로 제대로 변환되나 테스트
-        assertNotNull(null);
-    }
-
-    @Test
-    public void testBothCoolTimeReduceJSON() {
-        //Json으로 제대로 변환되나 테스트
-        assertNotNull(null);
-    }
-
-
-    @Test
-    public void equals() {
-        Liner l1 = new Liner("top", connector);
-        Liner l2 = new Liner("top", connector);
-
-        assertEquals(l1, l2);
-
-        l1.setName("jg");
-        assertNotEquals(l1, l2);
-
-        l2.setName("jg");
-        assertEquals(l1, l2);
-
-        l1.getFlash().off();
-        assertNotEquals(l1, l2);
-        l2.getFlash().off();
-        assertEquals(l1, l2);
-
-        l1.getFlash().setSpellCoolTime(5);
-        assertNotEquals(l1, l2);
-        l2.getFlash().setSpellCoolTime(5);
-        assertEquals(l1, l2);
-    }
-
-    @Test
-    public void equalsCoolTimeReducer() {
-        assertNotNull(null);
     }
 }

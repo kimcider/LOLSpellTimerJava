@@ -16,38 +16,24 @@ import javax.swing.*;
         @JsonSubTypes.Type(value = Flash.class, name = "flash"),
         //, @JsonSubTypes.Type(value = TP.class, name = "tp")
 })
-@Getter
-@Setter
+
+@Getter@Setter
 @JsonIgnoreProperties({"mapper"})
-/**
- * 우추/쿨감신을 달면 Liner입장에서 TouchFlash()를 할 떄, 우추/쿨감신이 있으면
- * */
 public abstract class Spell {
-    protected int spellCoolTime;
+    private final int spellCoolTime;
     protected int coolTime = 0;
     protected CounterLabel spellIcon = null;
 
-    public Spell() {
-
+    public Spell(int spellCoolTime) {
+        this.spellCoolTime = spellCoolTime;
     }
 
     public boolean isOn() {
         return coolTime == 0;
     }
 
-    public void on() {
-        coolTime = 0;
-    }
-
-    public void off() {
-        if (coolTime == 0) {
-            coolTime = spellCoolTime;
-        }
-    }
-
     public void setSpell(Spell model) {
         coolTime = model.getCoolTime();
-        spellCoolTime = model.getSpellCoolTime();
     }
 
     public void startCount(Liner liner) {
@@ -59,7 +45,7 @@ public abstract class Spell {
             spellIcon.repaint();
 
             if (getCoolTime() <= 0) {
-                on();
+                liner.onSpell(this);
                 liner.sendLinerStatus();
                 spellIcon.stopTimer();
             }
@@ -75,7 +61,7 @@ public abstract class Spell {
     @Override
     public boolean equals(Object obj) {
         Spell other = (Spell) obj;
-        if (spellCoolTime == other.spellCoolTime && isOn() == other.isOn()) {
+        if (isOn() == other.isOn()) {
             return true;
         }
         return false;
