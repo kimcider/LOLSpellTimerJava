@@ -8,7 +8,7 @@ public class Setting {
     public static final int smallImageMargin = imageMargin / 2;
     public static final int smallImageSize = (imageSize / 2) - (smallImageMargin / 2);
 
-    public static int iconPositionY = imageMargin;
+    public static int iconPositionY;
 
     public static final int boardWidth = (imageSize + imageMargin) * 2 + imageMargin + smallImageSize;
     public static final int boardHeight = (imageSize + imageMargin) * 5 + imageMargin;

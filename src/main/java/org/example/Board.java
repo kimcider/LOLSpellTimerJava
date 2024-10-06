@@ -26,6 +26,7 @@ public class Board extends JWindow {
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
 
     private void setIconPosition() {
+        iconPositionY = imageMargin;
         if (!iconReverse) {
             lineIconX = imageMargin;
             cosmicInsightIconX = lineIconX + imageSize + smallImageMargin;

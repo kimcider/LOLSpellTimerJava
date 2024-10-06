@@ -84,6 +84,11 @@ public class Liner {
 
     }
 
+    public void reloadIcon(){
+        lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
+
+    }
+
     public boolean isCosmicInsight(){
         return cosmicInsightIcon.isOn();
     }
