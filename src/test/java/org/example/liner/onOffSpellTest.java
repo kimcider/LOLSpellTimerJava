@@ -1,7 +1,6 @@
 package org.example.liner;
 
-import org.example.Liner;
-import org.example.spell.Spell;
+import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

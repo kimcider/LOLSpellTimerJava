@@ -1,16 +1,14 @@
-package org.example.spell;
+package org.example.liner.spell;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.CounterLabel;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static org.example.Board.*;
-import static org.example.Liner.positionY;
+import static org.example.Setting.*;
 
 @Getter
 @Setter
@@ -18,7 +16,7 @@ import static org.example.Liner.positionY;
 public class Flash extends Spell {
     public Flash() {
         super(300);
-        spellIcon = getCounterImage("flash.jpg",  imageSize  + imageMargin + smallImageSize  + imageMargin, positionY);
+        spellIcon = getCounterImage("flash.jpg",  spellIconX, iconPositionY);
     }
 
     private CounterLabel getCounterImage(String path, int x, int y) {

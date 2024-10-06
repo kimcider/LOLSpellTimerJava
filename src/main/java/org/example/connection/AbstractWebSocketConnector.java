@@ -2,7 +2,7 @@ package org.example.connection;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Liner;
+import org.example.liner.Liner;
 import org.java_websocket.client.WebSocketClient;
 
 import java.io.IOException;

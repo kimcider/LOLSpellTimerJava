@@ -1,8 +1,5 @@
 package org.example.liner;
 
-import org.example.Liner;
-import org.example.spell.Flash;
-import org.example.spell.Spell;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

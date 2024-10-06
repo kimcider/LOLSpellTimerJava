@@ -1,6 +1,5 @@
 package org.example.liner;
 
-import org.example.Liner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,7 @@
-package org.example.spell;
+package org.example.liner.spell;
 
+import org.example.liner.spell.Flash;
+import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

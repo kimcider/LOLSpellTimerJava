@@ -1,9 +1,7 @@
 package org.example.liner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
-import org.example.spell.Spell;
+import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

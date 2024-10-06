@@ -1,9 +1,7 @@
-package org.example;
+package org.example.liner.spell;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.spell.Flash;
-import org.example.spell.Spell;
 
 import javax.swing.*;
 import java.awt.*;

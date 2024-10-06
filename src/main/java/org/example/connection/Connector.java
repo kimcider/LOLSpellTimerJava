@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Liner;
-import org.example.spell.Spell;
+import org.example.liner.Liner;
+import org.example.liner.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;

@@ -1,7 +1,7 @@
-package org.example.counterLabel;
+package org.example.liner.spell.counterLabel;
 
-import org.example.CounterLabel;
-import org.example.spell.Spell;
+import org.example.liner.spell.CounterLabel;
+import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

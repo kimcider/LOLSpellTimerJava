@@ -1,4 +1,4 @@
-package org.example;
+package org.example.liner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -7,15 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
-import org.example.spell.Flash;
-import org.example.spell.Spell;
+import org.example.liner.spell.Flash;
+import org.example.liner.spell.Spell;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static org.example.Board.*;
+import static org.example.Setting.*;
 
 @Setter
 @Getter
@@ -24,7 +24,6 @@ import static org.example.Board.*;
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
     private AbstractWebSocketConnector connector;
-    public static int positionY = imageMargin;
     private JLabel lineIcon;
     private CoolTimeReducer cosmicInsightIcon;
     private CoolTimeReducer ionianBootsIcon;
@@ -58,9 +57,10 @@ public class Liner {
             }
         });
 
-        lineIcon = getImage(name + ".jpg", imageSize, imageMargin, positionY);
-        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY);
-        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, imageSize + imageMargin + smallImageMargin, positionY + smallImageSize + smallImageMargin);
+        lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
+        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, cosmicInsightIconX, iconPositionY);
+        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, ionianBootsIconX, iconPositionY + smallImageSize + smallImageMargin);
+        iconPositionY += imageSize + imageMargin;
 
         cosmicInsightIcon.addMouseListener(new MouseAdapter(){
             @Override
@@ -81,7 +81,6 @@ public class Liner {
                 }
             }
         });
-        positionY += imageSize + imageMargin;
 
     }
 

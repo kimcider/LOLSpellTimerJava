@@ -1,4 +1,5 @@
-import org.example.CoolTimeReducer;
+package org.example.liner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

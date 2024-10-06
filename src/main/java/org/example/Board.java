@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.connection.Connector;
+import org.example.liner.Liner;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,25 +15,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.System.exit;
+import static org.example.Setting.*;
 
 public class Board extends JWindow {
     private Connector connector;
 
-    public static final int imageSize = 40;
-    public static final int imageMargin = imageSize / 4;
-    public static final int smallImageMargin = imageMargin / 2;
-    public static final int smallImageSize = (imageSize / 2) - (smallImageMargin / 2);
+
     private Point initialClick = null;
 
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
+
+    private void setIconPosition() {
+        if (!iconReverse) {
+            lineIconX = imageMargin;
+            cosmicInsightIconX = lineIconX + imageSize + smallImageMargin;
+            ionianBootsIconX = lineIconX + imageSize + smallImageMargin;
+            spellIconX = cosmicInsightIconX + smallImageSize + smallImageMargin;
+        } else {
+            spellIconX = imageMargin;
+            cosmicInsightIconX = spellIconX + imageSize + smallImageMargin;
+            ionianBootsIconX = spellIconX + imageSize + smallImageMargin;
+            lineIconX = cosmicInsightIconX + smallImageSize + smallImageMargin;
+        }
+    }
 
     public Board() {
         connector = Connector.getInstance();
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
-        setSize((imageSize + imageMargin) * 2 + imageMargin + smallImageSize, (imageSize + imageMargin) * 5 + imageMargin);
+        setSize(boardWidth, boardHeight);
         setAlwaysOnTop(true);
         setLocationRelativeTo(null);
+
+        setIconPosition();
 
         if (SystemTray.isSupported()) {
             setVisible(true);

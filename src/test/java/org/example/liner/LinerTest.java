@@ -3,19 +3,13 @@ package org.example.liner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.CounterLabel;
-import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
-import org.example.spell.Flash;
-import org.example.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 

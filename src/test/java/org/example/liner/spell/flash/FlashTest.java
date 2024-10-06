@@ -1,17 +1,13 @@
-package org.example.spell.flash;
+package org.example.liner.spell.flash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.CounterLabel;
-import org.example.Liner;
+import org.example.liner.Liner;
 import org.example.connection.AbstractWebSocketConnector;
-import org.example.spell.Flash;
-import org.example.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class FlashTest {
     private static ObjectMapper mapper = new ObjectMapper();

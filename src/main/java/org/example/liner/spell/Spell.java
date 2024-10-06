@@ -1,13 +1,11 @@
-package org.example.spell;
+package org.example.liner.spell;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.CounterLabel;
-import org.example.Liner;
+import org.example.liner.Liner;
 
 import javax.swing.*;
 
