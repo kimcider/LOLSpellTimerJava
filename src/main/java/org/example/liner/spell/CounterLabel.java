@@ -32,13 +32,27 @@ public class CounterLabel extends JLabel {
         }
     }
 
+    boolean temp = true;
+
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
+        super.paintComponent(g);
         if (!spell.isOn()) {
             Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(new Color(0, 0, 0, 150));
+
+            if(spell.getCoolTime() <= 20){
+                if (temp) {
+                    g2d.setColor(new Color(0, 0, 0, 150));
+                } else {
+                    g2d.setColor(new Color(255, 0, 0, 180));
+                }
+            }else{
+                g2d.setColor(new Color(0, 0, 0, 150));
+            }
+
+            temp = !temp;
+
             g2d.fillRect(0, 0, getWidth(), getHeight());
 
             int remainingTime = spell.getCoolTime();

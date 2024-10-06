@@ -39,4 +39,6 @@ DONE: CosmicInsight, IonianBoots JLabel, Icon만들기 (Spell아님)
     클래스명은 CoolTimeReducer정도면 되려나?
 DONE: touchCosmicInsight, buyIonianBoots 얘들도 touchCooltimeReducer(CoolTimeReducer reducer) 이런식으로 바꾸기
 
-TODO: 트레이에 사이즈/배열 바꿀 수 있는지 확인하기
+TODO: 우추/쿨감신 아이콘 단거 코드정리하기. 테스트 만들 거 있나 확인하기
+TODO: 트레이에 새 기능 추가한거 코드정리하기
+TODO: 트레이에 새 기능 추가한거 테스트 만들거 있나 확인하기 ( 화면사이즈 변하고 좌우반전하는거 테스트코드만들어두면좋을듯. REloadIcon등도)
