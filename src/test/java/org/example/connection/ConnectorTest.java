@@ -74,7 +74,7 @@ public class ConnectorTest {
     public void testSetUp() throws JsonProcessingException {
         String json = mapper.writeValueAsString(connectorLinerList);
         assertEquals("""
-                        {"top":{"cosmicInsight":false,"ionianBoots":false,"name":"top","flash":{"type":"flash","coolTime":0}},"bot":{"cosmicInsight":false,"ionianBoots":false,"name":"bot","flash":{"type":"flash","coolTime":0}},"mid":{"cosmicInsight":false,"ionianBoots":false,"name":"mid","flash":{"type":"flash","coolTime":0}},"jg":{"cosmicInsight":false,"ionianBoots":false,"name":"jg","flash":{"type":"flash","coolTime":0}},"sup":{"cosmicInsight":false,"ionianBoots":false,"name":"sup","flash":{"type":"flash","coolTime":0}}}"""
+                        {"top":{"name":"top","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false},"bot":{"name":"bot","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false},"mid":{"name":"mid","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false},"jg":{"name":"jg","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false},"sup":{"name":"sup","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false}}"""
                 , json);
     }
 

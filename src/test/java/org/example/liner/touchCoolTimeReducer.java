@@ -17,17 +17,17 @@ public class touchCoolTimeReducer {
 
     @Test
     void touchCosmicInsightTogglesState() {
-        liner.touchCosmicInsight();
+        liner.touchCoolTimeReducer(liner.getCosmicInsightIcon());
         assertTrue(liner.isCosmicInsight());
-        liner.touchCosmicInsight();
+        liner.touchCoolTimeReducer(liner.getCosmicInsightIcon());
         assertFalse(liner.isCosmicInsight());
     }
 
     @Test
     void touchIonianBootsTogglesState() {
-        liner.touchIonianBoots();
+        liner.touchCoolTimeReducer(liner.getIonianBootsIcon());
         assertTrue(liner.isIonianBoots());
-        liner.touchIonianBoots();
+        liner.touchCoolTimeReducer(liner.getIonianBootsIcon());
         assertFalse(liner.isIonianBoots());
     }
 }

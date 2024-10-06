@@ -3,15 +3,19 @@ package org.example.liner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.CounterLabel;
 import org.example.Liner;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
+import org.example.spell.Flash;
 import org.example.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -71,62 +75,12 @@ public class LinerTest {
         assertNotNull(liner.getFlash());
     }
 
-
-    //TODO: 얘를 완성하던, mousePressed의 if조건문들을 빼든 둘 중 하나는 해야겄다.
-//    @Test
-//    public void createLinerTest3() throws URISyntaxException {
-//        Liner liner = new Liner("top", new AbstractWebSocketConnector(new URI("tempUrl")) {
-//            @Override
-//            public void onOpen(ServerHandshake serverHandshake) {
-//
-//            }
-//
-//            @Override
-//            public void onMessage(String s) {
-//
-//            }
-//
-//            @Override
-//            public void onClose(int i, String s, boolean b) {
-//
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//
-//            }
-//        });
-//        Flash flash = Mockito.spy(liner.getFlash());
-//        CounterLabel flashIcon = flash.getFlashIcon();
-//
-//        assertTrue(flash.isOn());
-//
-//        MouseEvent mouseEvent = new MouseEvent(
-//                flashIcon, // 이벤트가 발생하는 컴포넌트
-//                MouseEvent.MOUSE_PRESSED, // 이벤트 타입
-//                System.currentTimeMillis(), // 현재 시간
-//                0, // modifier (예: Shift 키)
-//                10, 10, // x, y 좌표
-//                1, // 클릭 횟수
-//                false, // 팝업 트리거 여부 (오른쪽 클릭)
-//                MouseEvent.BUTTON1 // 클릭한 버튼 (왼쪽 버튼)
-//        );
-//
-//        for (MouseListener listener : flashIcon.getMouseListeners()) {
-//            listener.mousePressed(mouseEvent);
-//        }
-//
-//        verify(flash, times(1)).startCount(liner);
-//        verify(flash, times(1)).off();
-//    }
-
-
     @Test
     public void writeLinerAsString() throws JsonProcessingException {
         Liner liner = new Liner("top", connector);
         String json = mapper.writeValueAsString(liner);
         assertEquals("""
-                {"cosmicInsight":false,"ionianBoots":false,"name":"top","flash":{"type":"flash","coolTime":0}}""", json);
+                {"name":"top","flash":{"type":"flash","coolTime":0},"cosmicInsight":false,"ionianBoots":false}""", json);
     }
 
     @Test

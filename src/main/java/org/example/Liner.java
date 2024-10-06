@@ -1,6 +1,7 @@
 package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import static org.example.Board.*;
 @Setter
 @Getter
 @JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "spell2"})
+@JsonPropertyOrder({"name", "flash", "cosmicInsight", "ionianBoots"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
     private AbstractWebSocketConnector connector;
@@ -27,18 +29,14 @@ public class Liner {
     private CoolTimeReducer cosmicInsightIcon;
     private CoolTimeReducer ionianBootsIcon;
 
-    private boolean cosmicInsight = false;
-    private boolean ionianBoots = false;
-
     private String name;
     private Spell flash;
-    private Spell spell2;
-
-
 
     public Liner() {
         flash = new Flash();
         connector = Connector.getInstance();
+        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
+        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
     }
 
     public Liner(String name, AbstractWebSocketConnector connector) {
@@ -68,7 +66,7 @@ public class Liner {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    touchCosmicInsight();
+                    touchCoolTimeReducer(cosmicInsightIcon);
                     sendLinerStatus();
                 }
             }
@@ -78,13 +76,28 @@ public class Liner {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    touchIonianBoots();
+                    touchCoolTimeReducer(ionianBootsIcon);
                     sendLinerStatus();
                 }
             }
         });
         positionY += imageSize + imageMargin;
 
+    }
+
+    public boolean isCosmicInsight(){
+        return cosmicInsightIcon.isOn();
+    }
+    public boolean isIonianBoots(){
+        return ionianBootsIcon.isOn();
+    }
+
+    public void setCosmicInsight(boolean cosmicInsight){
+        cosmicInsightIcon.setOn(cosmicInsight);
+    }
+
+    public void setIonianBoots(boolean ionianBoots){
+        ionianBootsIcon.setOn(ionianBoots);
     }
 
     public void sendLinerStatus() {
@@ -108,10 +121,10 @@ public class Liner {
 
     public void offSpell(Spell spell){
         double reduction = 0;
-        if(cosmicInsight){
+        if(isCosmicInsight()){
             reduction += 18;
         }
-        if(ionianBoots){
+        if(isIonianBoots()){
             reduction += 10;
         }
 
@@ -123,23 +136,12 @@ public class Liner {
         spell.setCoolTime(0);
     }
 
-    public void touchCosmicInsight(){
-        if(cosmicInsight){
-            cosmicInsight = false;
+    public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer){
+        if(coolTimeReducer.isOn()){
+            coolTimeReducer.setOn(false);
         }else{
-            cosmicInsight = true;
+            coolTimeReducer.setOn(true);
         }
-        cosmicInsightIcon.setOn(cosmicInsight);
-        cosmicInsightIcon.updateIcon();
-    }
-    public void touchIonianBoots(){
-        if(ionianBoots){
-            ionianBoots = false;
-        }else{
-            ionianBoots = true;
-        }
-        ionianBootsIcon.setOn(ionianBoots);
-        ionianBootsIcon.updateIcon();
     }
 
     private ImageIcon getImageIcon(String path, int size){
@@ -162,10 +164,8 @@ public class Liner {
         }
 
         flash.setSpell(model.getFlash());
-        cosmicInsight = model.isCosmicInsight();
-        cosmicInsightIcon.setOn(cosmicInsight);
-        ionianBoots = model.isIonianBoots();
-        ionianBootsIcon.setOn(ionianBoots);
+        setCosmicInsight(model.isCosmicInsight());
+        setIonianBoots(model.isIonianBoots());
     }
 
     @Override
@@ -175,7 +175,7 @@ public class Liner {
         }
 
         Liner other = (Liner) obj;
-        if (name.equals(other.name) && flash.equals(other.flash)  && cosmicInsight == other.cosmicInsight && ionianBoots == other.ionianBoots) {
+        if (name.equals(other.name) && flash.equals(other.flash)  && isCosmicInsight() == other.isCosmicInsight() && isIonianBoots() == other.isIonianBoots()) {
             return true;
         }
         return false;
