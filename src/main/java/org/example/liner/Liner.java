@@ -58,9 +58,9 @@ public class Liner {
         });
 
         lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
-        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, cosmicInsightIconX, iconPositionY);
-        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, ionianBootsIconX, iconPositionY + smallImageSize + smallImageMargin);
-        iconPositionY += imageSize + imageMargin;
+        cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY);
+        ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
+
 
         cosmicInsightIcon.addMouseListener(new MouseAdapter(){
             @Override
@@ -85,8 +85,23 @@ public class Liner {
     }
 
     public void reloadIcon(){
-        lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
+        lineIcon.setIcon(getImageIcon(name + ".jpg", imageSize));
+        lineIcon.setSize(imageSize, imageSize);
+        lineIcon.setLocation(lineIconX, iconPositionY);
 
+        cosmicInsightIcon.setIcon(getImageIcon("cosmicInsights.jpg", smallImageSize));
+        cosmicInsightIcon.setSize(smallImageSize, smallImageSize);
+        cosmicInsightIcon.setLocation(coolTimeReducer, iconPositionY);
+        cosmicInsightIcon.updateIcon();
+
+        ionianBootsIcon.setIcon(getImageIcon("ionianBoots.jpg", smallImageSize));
+        ionianBootsIcon.setSize(smallImageSize, smallImageSize);
+        ionianBootsIcon.setLocation(coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
+        ionianBootsIcon.updateIcon();
+
+        flash.getSpellIcon().setIcon(getImageIcon("flash.jpg", imageSize));
+        flash.getSpellIcon().setSize(imageSize, imageSize);
+        flash.getSpellIcon().setLocation(spellIconX, iconPositionY);
     }
 
     public boolean isCosmicInsight(){

@@ -19,6 +19,8 @@ import static org.example.Setting.*;
 
 public class Board extends JWindow {
     private Connector connector;
+    ArrayList<String> listNames = new ArrayList<>();
+    JPanel contentPane = new JPanel();
 
 
     private Point initialClick = null;
@@ -26,21 +28,28 @@ public class Board extends JWindow {
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
 
     private void setIconPosition() {
+        imageMargin = imageSize / 4;
+        smallImageMargin = imageMargin / 2;
+        smallImageSize = (imageSize / 2) - (smallImageMargin / 2);
+
+        boardWidth = (imageSize + imageMargin) * 2 + imageMargin + smallImageSize;
+        boardHeight = (imageSize + imageMargin) * 5 + imageMargin;
+
         iconPositionY = imageMargin;
         if (!iconReverse) {
             lineIconX = imageMargin;
-            cosmicInsightIconX = lineIconX + imageSize + smallImageMargin;
-            ionianBootsIconX = lineIconX + imageSize + smallImageMargin;
-            spellIconX = cosmicInsightIconX + smallImageSize + smallImageMargin;
+            coolTimeReducer = lineIconX + imageSize + smallImageMargin;
+            spellIconX = coolTimeReducer + smallImageSize + smallImageMargin;
         } else {
             spellIconX = imageMargin;
-            cosmicInsightIconX = spellIconX + imageSize + smallImageMargin;
-            ionianBootsIconX = spellIconX + imageSize + smallImageMargin;
-            lineIconX = cosmicInsightIconX + smallImageSize + smallImageMargin;
+            coolTimeReducer = spellIconX + imageSize + smallImageMargin;
+            lineIconX = coolTimeReducer + smallImageSize + smallImageMargin;
         }
     }
 
     public Board() {
+        setIconPosition();
+
         connector = Connector.getInstance();
         setBackground(new Color(0, 0, 0, 100));
         setLayout(null);
@@ -48,7 +57,11 @@ public class Board extends JWindow {
         setAlwaysOnTop(true);
         setLocationRelativeTo(null);
 
-        setIconPosition();
+        contentPane.setLayout(null);
+        contentPane.setSize(boardWidth, boardHeight);
+        contentPane.setBackground(new Color(0, 0, 0, 0));
+        setContentPane(contentPane);
+
 
         if (SystemTray.isSupported()) {
             setVisible(true);
@@ -62,7 +75,7 @@ public class Board extends JWindow {
             }
         }
 
-        ArrayList<String> listNames = new ArrayList<>();
+
         listNames.add("top");
         listNames.add("jg");
         listNames.add("mid");
@@ -72,13 +85,13 @@ public class Board extends JWindow {
         for (String name : listNames) {
             Liner liner = new Liner(name, connector);
             linerList.put(name, liner);
-            add(liner.getLineIcon());
-            add(liner.getCosmicInsightIcon());
-            add(liner.getIonianBootsIcon());
-            add(liner.getFlash().getSpellIcon());
+            contentPane.add(liner.getLineIcon());
+            contentPane.add(liner.getCosmicInsightIcon());
+            contentPane.add(liner.getIonianBootsIcon());
+            contentPane.add(liner.getFlash().getSpellIcon());
+            iconPositionY += imageSize + imageMargin;
         }
         connector.setLinerList(linerList);
-
         repaint();
 
         addMouseListener(new MouseAdapter() {
@@ -119,6 +132,34 @@ public class Board extends JWindow {
         TrayIcon trayIcon = new TrayIcon(image, "LoLSpellTimer");
         // 트레이 아이콘의 팝업 메뉴
         PopupMenu popupMenu = new PopupMenu();
+        
+        MenuItem makeBig = new MenuItem("크게");
+        makeBig.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resizeBoard(50);
+            }
+        });
+        popupMenu.add(makeBig);
+
+        MenuItem makeSmall = new MenuItem("작게");
+        makeSmall.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resizeBoard(40);
+            }
+        });
+        popupMenu.add(makeSmall);
+
+        MenuItem reverse = new MenuItem("좌우반전");
+        reverse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repositionBoard();
+            }
+        });
+        popupMenu.add(reverse);
+        
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
@@ -127,8 +168,41 @@ public class Board extends JWindow {
                 exit(0);  // 종료 메뉴
             }
         });
+
         popupMenu.add(exitItem);
         trayIcon.setPopupMenu(popupMenu);
         return trayIcon;
+    }
+
+    private void repositionBoard(){
+        Setting.iconReverse = !Setting.iconReverse;
+        reloadBoard();
+    }
+    private void resizeBoard(int size){
+        Setting.imageSize = size;
+        reloadBoard();
+    }
+
+    private void reloadBoard(){
+        setIconPosition();
+        setSize(boardWidth, boardHeight);
+
+        contentPane = new JPanel();
+        contentPane.setLayout(null);
+        contentPane.setSize(boardWidth, boardHeight);
+        contentPane.setBackground(new Color(0, 0, 0, 0));
+
+        for (String name : listNames) {
+            Liner liner = linerList.get(name);
+            liner.reloadIcon();
+            contentPane.add(liner.getLineIcon());
+            contentPane.add(liner.getCosmicInsightIcon());
+            contentPane.add(liner.getIonianBootsIcon());
+            contentPane.add(liner.getFlash().getSpellIcon());
+            iconPositionY += imageSize + imageMargin;
+        }
+        setContentPane(contentPane);
+        revalidate();
+        repaint();
     }
 }
