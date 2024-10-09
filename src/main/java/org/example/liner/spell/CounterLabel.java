@@ -32,7 +32,7 @@ public class CounterLabel extends JLabel {
         }
     }
 
-    boolean temp = true;
+    private boolean temp = true;
 
     @Override
     public void paintComponent(Graphics g) {

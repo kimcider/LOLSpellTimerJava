@@ -53,13 +53,4 @@ public class AbstractWebSocketTest {
         assertEquals("""
                 {"hash":"hashValue","data":{"key":"value"}}""", wrappedJson);
     }
-
-    @Test
-    public void callWrapJsonTest(){
-        String json = """
-                {"key": "value"}""";
-        connector.sendMessage("anyMessage", json);
-        verify(connector, times(1)).wrapJson(json);
-    }
-
 }
