@@ -30,7 +30,7 @@ public class AbstractWebSocketTest {
         mockClient = Mockito.spy(Mockito.mock(HttpClient.class));
 
 
-        connector.hashValue = "hashValue";
+        connector.setHashValue("hashValue");
 
         connector.setClient(mockClient);
         connector.setServerURI(Connector.getInstance().getServerURI());
@@ -47,9 +47,10 @@ public class AbstractWebSocketTest {
 
     @Test
     public void wrapJsonTest(){
+        Connector connector = Connector.getInstance();
         String json = """
                 {"key": "value"}""";
-        String wrappedJson = AbstractWebSocketConnector.wrapJson(json);
+        String wrappedJson = connector.wrapJson(json);
         assertEquals("""
                 {"hash":"hashValue","data":{"key":"value"}}""", wrappedJson);
     }

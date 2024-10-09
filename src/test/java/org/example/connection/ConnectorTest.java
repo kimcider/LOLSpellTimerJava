@@ -56,7 +56,8 @@ public class ConnectorTest {
     public void testConnectToServer() throws JsonProcessingException {
         Connector connector = Connector.getInstance();
 
-        HttpResponse<String> response = connector.sendMessage("anyMessage", "str");
+        HttpResponse<String> response = connector.sendMessage("anyMessage", """
+        {"key": "value"}""");
         assertNotNull(response);
     }
 

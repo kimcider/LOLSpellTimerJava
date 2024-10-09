@@ -19,24 +19,25 @@ import java.util.List;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-    private static String serverURI = "localhost:8080";
-//    private static String serverURI = "ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080";
-
+    private static String serverURI;
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    private Connector() throws InterruptedException, URISyntaxException {
+    public Connector(String serverURI, String hashValue) throws InterruptedException, URISyntaxException {
         super(new URI("ws://" + serverURI + "/ws"));
+        this.serverURI = serverURI;
         super.setServerURI(serverURI);
+        super.setHashValue(hashValue);
         super.setClient(HttpClient.newHttpClient());
         connectBlocking();
-        hashValue = "hashValue";
+
+        connector = this;
     }
 
     public static Connector getInstance() {
         if (connector == null) {
             try {
-                connector = new Connector();
+                connector = new Connector("localhost:8080", "hashValue");
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (URISyntaxException e) {

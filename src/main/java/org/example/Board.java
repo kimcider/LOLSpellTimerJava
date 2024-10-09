@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -130,9 +133,23 @@ public class Board extends JWindow {
 
 
         TrayIcon trayIcon = new TrayIcon(image, "LoLSpellTimer");
-        // 트레이 아이콘의 팝업 메뉴
         PopupMenu popupMenu = new PopupMenu();
-        
+
+
+        MenuItem getHashValue = new MenuItem("입장 코드 복사하기");
+        getHashValue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String hashValue = Connector.getInstance().getHashValue();
+
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                Transferable transferable = new StringSelection(hashValue);
+                clipboard.setContents(transferable, null);
+            }
+        });
+
+        popupMenu.add(getHashValue);
+
         MenuItem makeBig = new MenuItem("크게");
         makeBig.addActionListener(new ActionListener() {
             @Override
@@ -159,7 +176,7 @@ public class Board extends JWindow {
             }
         });
         popupMenu.add(reverse);
-        
+
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {
             @Override
@@ -174,16 +191,17 @@ public class Board extends JWindow {
         return trayIcon;
     }
 
-    private void repositionBoard(){
+    private void repositionBoard() {
         Setting.iconReverse = !Setting.iconReverse;
         reloadBoard();
     }
-    private void resizeBoard(int size){
+
+    private void resizeBoard(int size) {
         Setting.imageSize = size;
         reloadBoard();
     }
 
-    private void reloadBoard(){
+    private void reloadBoard() {
         setIconPosition();
         setSize(boardWidth, boardHeight);
 

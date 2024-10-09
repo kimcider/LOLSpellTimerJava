@@ -25,7 +25,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
     private HttpClient client;
     private String serverURI;
     protected Map<String, Liner> linerList;  // 테스트를 위해서 Connector에 linerList를 설정하려고 여기다뒀네... 애매하다
-    static String hashValue;
+    private String hashValue;
 
     public AbstractWebSocketConnector(URI serverUri) {
         super(serverUri);
@@ -50,7 +50,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshake){
-        send("hashValue");
+        send(hashValue);
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
         e.printStackTrace();
     }
 
-    static String wrapJson(String json) {
+    public String wrapJson(String json) {
         ObjectNode wrappedData = mapper.createObjectNode();
         try{
             wrappedData.put("hash", hashValue);
