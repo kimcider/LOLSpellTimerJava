@@ -12,4 +12,3 @@ public class Main extends JFrame {
         mn = new Board();
     }
 }
-

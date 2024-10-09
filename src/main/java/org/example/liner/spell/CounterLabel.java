@@ -36,6 +36,8 @@ public class CounterLabel extends JLabel {
 
     @Override
     public void paintComponent(Graphics g) {
+        Color red = new Color(255, 0, 0, 180);
+        Color black = new Color(0, 0, 0, 150);
 
         super.paintComponent(g);
         if (!spell.isOn()) {
@@ -43,12 +45,12 @@ public class CounterLabel extends JLabel {
 
             if(spell.getCoolTime() <= 20){
                 if (temp) {
-                    g2d.setColor(new Color(0, 0, 0, 150));
+                    g2d.setColor(black);
                 } else {
-                    g2d.setColor(new Color(255, 0, 0, 180));
+                    g2d.setColor(red);
                 }
             }else{
-                g2d.setColor(new Color(0, 0, 0, 150));
+                g2d.setColor(black);
             }
 
             temp = !temp;

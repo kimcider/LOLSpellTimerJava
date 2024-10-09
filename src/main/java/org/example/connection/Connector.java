@@ -19,8 +19,9 @@ import java.util.List;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-//    private static String serverURI = "localhost:8080";
-    private static String serverURI = "ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080";
+    private static String serverURI = "localhost:8080";
+//    private static String serverURI = "ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080";
+
 
     private static ObjectMapper mapper = new ObjectMapper();
 
@@ -29,6 +30,7 @@ public class Connector extends AbstractWebSocketConnector {
         super.setServerURI(serverURI);
         super.setClient(HttpClient.newHttpClient());
         connectBlocking();
+        hashValue = "hashValue";
     }
 
     public static Connector getInstance() {
@@ -43,12 +45,6 @@ public class Connector extends AbstractWebSocketConnector {
         }
 
         return connector;
-    }
-
-    @Override
-    public void onOpen(ServerHandshake handshakedata) {
-        //TODO: open시 서버의 정보를 가져와서 업데이트
-        //System.out.println("Connected to WebSocket server");
     }
 
     @Override
@@ -77,10 +73,5 @@ public class Connector extends AbstractWebSocketConnector {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("Disconnected from WebSocket server");
-    }
-
-    @Override
-    public void onError(Exception ex) {
-        ex.printStackTrace();
     }
 }
