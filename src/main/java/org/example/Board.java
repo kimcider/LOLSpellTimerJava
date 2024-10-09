@@ -150,6 +150,8 @@ public class Board extends JWindow {
 
         popupMenu.add(getHashValue);
 
+        popupMenu.addSeparator();
+
         MenuItem makeBig = new MenuItem("크게");
         makeBig.addActionListener(new ActionListener() {
             @Override
@@ -176,6 +178,8 @@ public class Board extends JWindow {
             }
         });
         popupMenu.add(reverse);
+
+        popupMenu.addSeparator();
 
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(new ActionListener() {

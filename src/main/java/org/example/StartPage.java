@@ -32,6 +32,10 @@ public class StartPage extends JWindow {
         JButton newGameButton = createStyledButton(buttonTitle2);
         JButton codeInputButton = createStyledButton(buttonTitle3);
 
+        soloRankButton.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        newGameButton.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        codeInputButton.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+
         soloRankButton.addActionListener(new ButtonClickListener());
         newGameButton.addActionListener(new ButtonClickListener());
         codeInputButton.addActionListener(new ButtonClickListener());
@@ -42,7 +46,7 @@ public class StartPage extends JWindow {
 
         this.add(panel);
 
-        this.setSize(100, 100);
+        this.setSize(120, 100);
         this.setLocationRelativeTo(null); // 화면 중앙에 배치
         this.setVisible(true);
     }

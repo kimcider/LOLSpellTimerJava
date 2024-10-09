@@ -16,12 +16,30 @@ public class CodeInputWindow extends JDialog {
     private void initUI() {
         // 메인 패널 설정
         JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        panel.setLayout(new BorderLayout(10, 0));
+        panel.setBackground(new Color(0x3C3C3C));
 
-        JLabel instructionLabel = new JLabel("코드를 입력하세요:");
-        JTextField codeInputField = new JTextField(20); // 코드 입력 필드
+        JLabel instructionLabel = new JLabel("코드 입력");
+        instructionLabel.setForeground(Color.WHITE);
+        instructionLabel.setBackground(new Color(0x3C3C3C));
+        instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        instructionLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        instructionLabel.setBorder(BorderFactory.createEmptyBorder(3, 20, 7, 20));
+
+        JTextField codeInputField = new JTextField(20);
+        codeInputField.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        codeInputField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        codeInputField.setBackground(new Color(0x2D2D2D));
+        codeInputField.setForeground(Color.WHITE);
 
         JButton submitButton = new JButton("확인");
+        submitButton.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        submitButton.setFocusPainted(false);
+        submitButton.setBackground(new Color(0x3C3C3C));  // 버튼 배경 색상
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setBorder(BorderFactory.createEmptyBorder(3, 20, 3, 20));
+
+
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,9 +67,11 @@ public class CodeInputWindow extends JDialog {
         this.add(panel);
 
         // JDialog 크기 및 위치 설정
-        this.setModal(true); // 모달로 설정하여 다른 창을 클릭할 수 없게 함
-        this.setSize(300, 150);
-        this.setLocationRelativeTo(null); // 화면 중앙에 배치
+        this.setUndecorated(true);  // 기본 테두리 제거 (더 깔끔하게)
+        this.getRootPane().setBorder(BorderFactory.createLineBorder(new Color(0x3C3C3C), 2));  // 창 테두리 추가
+        this.setSize(138, 130);
+        this.setLocationRelativeTo(null);  // 화면 중앙에 배치
+        this.setModal(true);  // 모달 창으로 설정
         this.setVisible(true);
     }
 
