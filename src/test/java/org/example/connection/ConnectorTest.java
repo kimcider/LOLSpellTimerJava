@@ -27,7 +27,7 @@ public class ConnectorTest {
     private Connector connector = Connector.getInstance();
 
     private HashMap<String, Liner> connectorLinerList;
-    private HashMap<String, Liner> serverLinerList;
+    private Liner serverLiner;
 
     private ArrayList<String> getNameList() {
         ArrayList<String> listNames = new ArrayList();
@@ -67,7 +67,7 @@ public class ConnectorTest {
         connectorLinerList = getLinerList();
         connector.setLinerList(connectorLinerList);
 
-        serverLinerList = getLinerList();
+        serverLiner = new Liner("sup", connector);
     }
 
     @Test
@@ -101,33 +101,18 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessage_OneChange() throws JsonProcessingException {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-        mockLinerList.get("sup").offSpell(mockLinerList.get("sup").getFlash());
-        assertFalse( mockLinerList.get("sup").getFlash().isOn());
+        serverLiner.offSpell(serverLiner.getFlash());
+        assertFalse( serverLiner.getFlash().isOn());
 
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
-    }
-
-    @Test
-    public void testOnMessage_TwoChange() throws JsonProcessingException {
-        serverLinerList.get("sup").offSpell(serverLinerList.get("sup").getFlash());
-        serverLinerList.get("jg").offSpell(serverLinerList.get("jg").getFlash());
-
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
-        connector.onMessage(json);
-
-        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
-        assertFalse(connector.getLinerList().get("jg").getFlash().isOn());
     }
 
     @Test
     public void testOnMessage_NoChange() throws JsonProcessingException {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
@@ -135,27 +120,27 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessageCallTouchSpell() throws JsonProcessingException {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-        mockLinerList.get("sup").offSpell(mockLinerList.get("sup").getFlash());
+        serverLiner.offSpell(serverLiner.getFlash());
 
         Liner mockConnectorLinerSup = Mockito.spy(connector.getLinerList().get("sup"));
+        Spell mockConnectorSpell = Mockito.spy(connector.getLinerList().get("sup").getFlash());
+        mockConnectorLinerSup.setFlash(mockConnectorSpell);
         connectorLinerList.put("sup", mockConnectorLinerSup);
 
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
         Mockito.verify(mockConnectorLinerSup, times(1)).setLiner(any(Liner.class));
+        verify(mockConnectorSpell, times(1)).setSpell(any(Spell.class));
     }
 
     @Test
     public void testOnMessageCallTouchSpell_WhenNothingChanged() throws JsonProcessingException {
-        HashMap<String, Liner> mockLinerList = getLinerList();
-
         Liner mockConnectorLinerSup = Mockito.spy(connector.getLinerList().get("sup"));
         connectorLinerList.put("sup", mockConnectorLinerSup);
 
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
@@ -163,84 +148,40 @@ public class ConnectorTest {
     }
 
     @Test
-    public void assertOnMessageCallSetSpell() throws JsonProcessingException {
-        serverLinerList.get("sup").offSpell(serverLinerList.get("sup").getFlash());
-
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
-
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
-        connector.onMessage(json);
-
-        verify(mockClientFlashSup, times(1)).setSpell(any(Spell.class));
-    }
-
-    @Test
     public void testOnMessageSetCoolTime_WhenServerFlashIsOff() throws JsonProcessingException {
-        serverLinerList.get("sup").offSpell(serverLinerList.get("sup").getFlash());
-
+        serverLiner.offSpell(serverLiner.getFlash());
 
         Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
         connectorLinerList.get("sup").setFlash(mockClientFlashSup);
 
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
+        verify(mockClientFlashSup, times(1)).startCount(connectorLinerList.get("sup"));
     }
     @Test
     public void testOnMessageSetCoolTime_WhenServerFlashIsOn() throws JsonProcessingException {
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        serverLiner.onSpell(serverLiner.getFlash());
+
+        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
+        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
+
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
         assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
-    }
-
-    @Test
-    public void testOnMessageUseFlashsStartCount() throws JsonProcessingException {
-        serverLinerList.get("sup").offSpell(serverLinerList.get("sup").getFlash());
-        serverLinerList.get("jg").offSpell(serverLinerList.get("jg").getFlash());
-
-
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        Spell mockClientFlashJg = Mockito.spy(connector.getLinerList().get("jg").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
-        connectorLinerList.get("jg").setFlash(mockClientFlashJg);
-
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
-        connector.onMessage(json);
-
-        assertFalse(mockClientFlashSup.isOn());
-        verify(mockClientFlashSup, times(1)).startCount(connectorLinerList.get("sup"));
-        verify(mockClientFlashJg, times(1)).startCount(connectorLinerList.get("jg"));
-    }
-
-    @Test
-    public void testOnMessageUseFlashStopCount() throws JsonProcessingException {
-        serverLinerList.get("sup").onSpell(serverLinerList.get("sup").getFlash());
-        serverLinerList.get("jg").onSpell(serverLinerList.get("jg").getFlash());
-
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        Spell mockClientFlashJg = Mockito.spy(connector.getLinerList().get("jg").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
-        connectorLinerList.get("jg").setFlash(mockClientFlashJg);
-
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
-        connector.onMessage(json);
-
         assertTrue(mockClientFlashSup.isOn());
-        assertTrue(mockClientFlashJg.isOn());
 
 
         verify(mockClientFlashSup, times(1)).stopCount();
-        verify(mockClientFlashJg, times(1)).stopCount();
     }
 
     @Test
     public void assertOnMessageNotChangeFlashIcon() throws JsonProcessingException {
         CounterLabel supFlashIcon = connector.getLinerList().get("sup").getFlash().getSpellIcon();
 
-        serverLinerList.get("sup").offSpell(serverLinerList.get("sup").getFlash());
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        serverLiner.offSpell(serverLiner.getFlash());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertEquals(supFlashIcon, connector.getLinerList().get("sup").getFlash().getSpellIcon());
@@ -248,9 +189,7 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessage_supF_IsAlreadyUsed() throws JsonProcessingException, URISyntaxException, InterruptedException {
-
-        HashMap<String, Liner> mockLinerList = getLinerList();
-        mockLinerList.get("sup").offSpell(mockLinerList.get("sup").getFlash());
+        serverLiner.offSpell(serverLiner.getFlash());
 
         // 서폿이 플을 썼는지를 주시하기 위한 spy mock Liner
         //서폿 플 이미 사용함
@@ -259,7 +198,7 @@ public class ConnectorTest {
         connector.getLinerList().get("sup").offSpell(connector.getLinerList().get("sup").getFlash());
 
 
-        String json = mapper.writeValueAsString(mockLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
 
         connector.onMessage(json);
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
@@ -270,9 +209,9 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessage_WithCosmicInsights() throws JsonProcessingException {
-        serverLinerList.get("sup").setCosmicInsight(true);
+        serverLiner.setCosmicInsight(true);
 
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertTrue(connector.getLinerList().get("sup").isCosmicInsight());
@@ -280,9 +219,9 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessage_WithIonianBoots() throws JsonProcessingException {
-        serverLinerList.get("sup").setIonianBoots(true);
+        serverLiner.setIonianBoots(true);
 
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertTrue(connector.getLinerList().get("sup").isIonianBoots());
@@ -290,10 +229,10 @@ public class ConnectorTest {
 
     @Test
     public void testOnMessage_WithCoolTimeReducer() throws JsonProcessingException {
-        serverLinerList.get("sup").setCosmicInsight(true);
-        serverLinerList.get("sup").setIonianBoots(true);
+        serverLiner.setCosmicInsight(true);
+        serverLiner.setIonianBoots(true);
 
-        String json = mapper.writeValueAsString(serverLinerList.values().stream().toList());
+        String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(json);
 
         assertTrue(connector.getLinerList().get("sup").isCosmicInsight());

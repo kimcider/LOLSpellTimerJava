@@ -51,18 +51,16 @@ public class Connector extends AbstractWebSocketConnector {
     @Override
     public void onMessage(String json) {
         try {
-            List<Liner> liners = mapper.readValue(json, new TypeReference<List<Liner>>() {
-            });
-            for (Liner serverLiner : liners) {
-                Liner clientLiner = linerList.get(serverLiner.getName());
-                Spell clientFlash = clientLiner.getFlash();
-                if (clientLiner.equals(serverLiner) == false) {
-                    clientLiner.setLiner(serverLiner);
-                    if (clientFlash.isOn()) {
-                        clientFlash.stopCount();
-                    } else {
-                        clientFlash.startCount(clientLiner);
-                    }
+            Liner serverLiner = mapper.readValue(json, new TypeReference<Liner>() {});
+            Liner clientLiner = linerList.get(serverLiner.getName());
+            Spell clientFlash = clientLiner.getFlash();
+            if (clientLiner.equals(serverLiner) == false) {
+                clientLiner.setLiner(serverLiner);
+                //TODO: 얘가 여기있는게 맞나?
+                if (clientFlash.isOn()) {
+                    clientFlash.stopCount();
+                } else {
+                    clientFlash.startCount(clientLiner);
                 }
             }
         } catch (IOException e) {
