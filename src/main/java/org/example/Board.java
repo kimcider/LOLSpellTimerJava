@@ -102,7 +102,13 @@ public class Board extends JWindow {
         connector.setLinerList(linerList);
         repaint();
 
-        getOthersLinerList();
+        //여기 trycatch없으면 서버와 연결 안됐을때(솔랭모드일때) 오버레이가 움직이지 않음
+        try{
+            connector.getConnection().send(Connector.getInstance().wrapMethodJson("getLinerStatus", ""));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -131,27 +137,6 @@ public class Board extends JWindow {
                 }
             }
         });
-    }
-
-    private void getOthersLinerList(){
-        connector.getConnection().send(Connector.getInstance().wrapMethodJson("getLinerStatus", ""));
-//        HttpResponse<String> response = connector.sendMessage("test", "");
-//        String responseBody = response.body();
-//        System.out.println(responseBody);
-//        try{
-//            java.util.List<Liner> liners = mapper.readValue(responseBody, new TypeReference<List<Liner>>() {
-//            });
-//
-//            for(Liner liner : liners){
-//                System.out.println(liner.getName());
-//                linerList.get(liner.getName()).setLiner(liner);
-//                linerList.get(liner.getName()).getFlash().startCount(linerList.get(liner.getName()));
-//            }
-//            System.out.println(linerList);
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-
     }
 
     private @NotNull TrayIcon getTrayIcon() {

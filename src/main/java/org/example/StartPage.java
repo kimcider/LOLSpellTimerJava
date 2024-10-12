@@ -20,6 +20,7 @@ public class StartPage extends JWindow {
 
     public StartPage(Runnable onStart) {
         this.onStart = onStart;
+        setAlwaysOnTop(true);
         initUI();
     }
 

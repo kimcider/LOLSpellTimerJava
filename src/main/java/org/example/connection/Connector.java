@@ -46,7 +46,6 @@ public class Connector extends AbstractWebSocketConnector {
             String method = rootNode.get("method").asText();
 
             if("sendLinerStatus".equals(method)){
-                System.out.println("sendLinerStatus Start");
                 JsonNode dataNode = rootNode.get("data");
 
                 String dataJson = mapper.writeValueAsString(dataNode);
@@ -65,14 +64,11 @@ public class Connector extends AbstractWebSocketConnector {
                     }
                 }
             }else if("getLinerStatus".equals(method)){
-                System.out.println("getLinerStatus Start");
                 String linerListJson = mapper.writeValueAsString(getLinerList().values().toArray());
                 send(wrapMethodJson("getLinerStatusResponse", linerListJson));
             }else if("getLinerStatusResponse".equals(method)){
-                System.out.println("getLinerStatusResponse Start");
                 JsonNode dataNode = rootNode.get("data");
                 String dataJson = mapper.writeValueAsString(dataNode);
-                System.out.println(dataJson);
                 List<Liner> liners = mapper.readValue(dataJson, new TypeReference<List<Liner>>() {
                 });
                 for(Liner liner : liners){

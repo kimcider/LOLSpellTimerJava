@@ -15,6 +15,7 @@ public class CodeInputWindow extends JDialog {
 
     private void initUI() {
         // 메인 패널 설정
+        setAlwaysOnTop(true);
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 0));
         panel.setBackground(new Color(0x3C3C3C));
