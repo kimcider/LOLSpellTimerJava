@@ -19,7 +19,7 @@ import static org.example.Setting.*;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "spell2"})
+@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "spell2"})
 @JsonPropertyOrder({"name", "flash", "cosmicInsight", "ionianBoots"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();

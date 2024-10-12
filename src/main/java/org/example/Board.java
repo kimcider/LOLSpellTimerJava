@@ -1,5 +1,7 @@
 package org.example;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.connection.Connector;
 import org.example.liner.Liner;
 import org.jetbrains.annotations.NotNull;
@@ -13,14 +15,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.exit;
 import static org.example.Setting.*;
 
 public class Board extends JWindow {
+    private static ObjectMapper mapper = new ObjectMapper();
     private Connector connector;
     ArrayList<String> listNames = new ArrayList<>();
     JPanel contentPane = new JPanel();
@@ -97,6 +102,8 @@ public class Board extends JWindow {
         connector.setLinerList(linerList);
         repaint();
 
+        getOthersLinerList();
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -124,6 +131,27 @@ public class Board extends JWindow {
                 }
             }
         });
+    }
+
+    private void getOthersLinerList(){
+        connector.getConnection().send(Connector.getInstance().wrapMethodJson("getLinerStatus", ""));
+//        HttpResponse<String> response = connector.sendMessage("test", "");
+//        String responseBody = response.body();
+//        System.out.println(responseBody);
+//        try{
+//            java.util.List<Liner> liners = mapper.readValue(responseBody, new TypeReference<List<Liner>>() {
+//            });
+//
+//            for(Liner liner : liners){
+//                System.out.println(liner.getName());
+//                linerList.get(liner.getName()).setLiner(liner);
+//                linerList.get(liner.getName()).getFlash().startCount(linerList.get(liner.getName()));
+//            }
+//            System.out.println(linerList);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+
     }
 
     private @NotNull TrayIcon getTrayIcon() {

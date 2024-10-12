@@ -1,6 +1,7 @@
 package org.example.connection;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -50,7 +52,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshake){
-        send(hashValue);
+        send(wrapMethodJson("open", ""));
     }
 
     @Override
@@ -58,13 +60,34 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
         e.printStackTrace();
     }
 
+    public String wrapMethodJson(String method, String json) {
+        ObjectNode wrappedData = mapper.createObjectNode();
+        try{
+            wrappedData.put("method", method);
+            wrappedData.put("hash", hashValue);
+
+            if(!json.isBlank()){
+                JsonNode jsonNode = mapper.readTree(json);
+                wrappedData.set("data", jsonNode);
+            }
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return wrappedData.toString();
+    }
+
     public String wrapJson(String json) {
         ObjectNode wrappedData = mapper.createObjectNode();
         try{
             wrappedData.put("hash", hashValue);
 
-            JsonNode jsonNode = mapper.readTree(json);
-            wrappedData.set("data", jsonNode);
+            if(!json.isBlank()){
+                JsonNode jsonNode = mapper.readTree(json);
+                wrappedData.set("data", jsonNode);
+            }
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
