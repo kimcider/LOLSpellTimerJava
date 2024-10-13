@@ -1,6 +1,5 @@
 package org.example;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.connection.Connector;
 import org.example.liner.Liner;
@@ -15,10 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.exit;
@@ -102,11 +99,10 @@ public class Board extends JWindow {
         connector.setLinerList(linerList);
         repaint();
 
-        //여기 trycatch없으면 서버와 연결 안됐을때(솔랭모드일때) 오버레이가 움직이지 않음
-        try{
+        try {
+            //여기 try-catch 없으면 서버와 연결 안됐을때(솔랭모드일때) 오버레이가 움직이지 않음
             connector.getConnection().send(Connector.getInstance().wrapMethodJson("getLinerStatus", ""));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -50,34 +50,6 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
         }
     }
 
-    @Override
-    public void onOpen(ServerHandshake handshake){
-        send(wrapMethodJson("open", ""));
-    }
-
-    @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
-
-    public String wrapMethodJson(String method, String json) {
-        ObjectNode wrappedData = mapper.createObjectNode();
-        try{
-            wrappedData.put("method", method);
-            wrappedData.put("hash", hashValue);
-
-            if(!json.isBlank()){
-                JsonNode jsonNode = mapper.readTree(json);
-                wrappedData.set("data", jsonNode);
-            }
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return wrappedData.toString();
-    }
 
     public String wrapJson(String json) {
         ObjectNode wrappedData = mapper.createObjectNode();

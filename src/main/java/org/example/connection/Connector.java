@@ -1,12 +1,16 @@
 package org.example.connection;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.liner.Liner;
 import org.example.liner.spell.Spell;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,8 +38,32 @@ public class Connector extends AbstractWebSocketConnector {
         connector = this;
     }
 
+    public String wrapMethodJson(String method, String json) {
+        ObjectNode wrappedData = mapper.createObjectNode();
+        try{
+            wrappedData.put("method", method);
+            wrappedData.put("hash", getHashValue());
+
+            if(!json.isBlank()){
+                JsonNode jsonNode = mapper.readTree(json);
+                wrappedData.set("data", jsonNode);
+            }
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return wrappedData.toString();
+    }
+
     public static Connector getInstance() {
         return connector;
+    }
+
+    @Override
+    public void onOpen(ServerHandshake handshake){
+        send(wrapMethodJson("open", ""));
     }
 
     @Override
@@ -81,9 +109,14 @@ public class Connector extends AbstractWebSocketConnector {
         }
     }
 
-
     @Override
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("Disconnected from WebSocket server");
     }
+
+    @Override
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+
 }

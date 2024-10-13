@@ -3,17 +3,14 @@ package org.example.connection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.example.liner.Liner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.net.http.HttpClient;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonWrappingTest {
+public class splitJson {
     static ObjectMapper mapper = new ObjectMapper();
     AbstractWebSocketConnector connector;
     Liner liner;
