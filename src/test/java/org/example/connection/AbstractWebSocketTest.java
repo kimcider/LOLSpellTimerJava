@@ -31,7 +31,7 @@ public class AbstractWebSocketTest {
         mockClient = Mockito.spy(Mockito.mock(HttpClient.class));
 
 
-        connector.setHashValue("hashValue");
+        Connector.hashValue = "hashValue";
         connector.setClient(mockClient);
     }
 

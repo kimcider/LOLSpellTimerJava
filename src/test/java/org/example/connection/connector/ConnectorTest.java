@@ -52,7 +52,9 @@ public class ConnectorTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        connector = new Connector("testURI", "hashValue");
+        Connector.serverURI = "testURI";
+        Connector.hashValue = "hashValue";
+        connector = Connector.getInstance();
         connector = Mockito.spy(connector);
         connectorLinerList = getLinerList();
         connector.setLinerList(connectorLinerList);

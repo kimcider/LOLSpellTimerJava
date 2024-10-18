@@ -23,26 +23,30 @@ import java.util.List;
 @Setter
 public class Connector extends AbstractWebSocketConnector {
     private static Connector connector;
-    private static String serverURI;
 
-    private static ObjectMapper mapper = new ObjectMapper();
-
-    public Connector(String serverURI, String hashValue) throws InterruptedException, URISyntaxException {
-        super(new URI("ws://" + serverURI + "/ws"));
-        this.serverURI = serverURI;
-        super.setServerURI(serverURI);
-        super.setHashValue(hashValue);
+    private Connector() throws InterruptedException, URISyntaxException {
+        super(new URI("ws://" + AbstractWebSocketConnector.serverURI + "/ws"));
         super.setClient(HttpClient.newHttpClient());
         connectBlocking();
-
         connector = this;
+    }
+
+    public static Connector getInstance() {
+        if (connector == null) {
+            try {
+                connector = new Connector();
+            } catch (InterruptedException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return connector;
     }
 
     public String wrapMethodJson(String method, String json) {
         ObjectNode wrappedData = mapper.createObjectNode();
         try{
             wrappedData.put("method", method);
-            wrappedData.put("hash", getHashValue());
+            wrappedData.put("hash", Connector.hashValue);
 
             if(!json.isBlank()){
                 JsonNode jsonNode = mapper.readTree(json);
@@ -55,10 +59,6 @@ public class Connector extends AbstractWebSocketConnector {
         }
 
         return wrappedData.toString();
-    }
-
-    public static Connector getInstance() {
-        return connector;
     }
 
     @Override

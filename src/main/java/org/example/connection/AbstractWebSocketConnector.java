@@ -23,11 +23,11 @@ import java.util.Map;
 @Getter
 @Setter
 public abstract class AbstractWebSocketConnector extends WebSocketClient {
-    private static ObjectMapper mapper = new ObjectMapper();
+    protected static ObjectMapper mapper = new ObjectMapper();
     private HttpClient client;
-    private String serverURI;
+    public static String serverURI;
     protected Map<String, Liner> linerList;  // 테스트를 위해서 Connector에 linerList를 설정하려고 여기다뒀네... 애매하다
-    private String hashValue;
+    public static String hashValue;
 
     public AbstractWebSocketConnector(URI serverUri) {
         super(serverUri);
@@ -37,7 +37,7 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
     public HttpResponse<String> sendMessage(String api, String json) {
         String hashedJson = wrapJson(json);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + getServerURI() + "/" + api))
+                .uri(URI.create("http://" + serverURI + "/" + api))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(hashedJson))
                 .build();

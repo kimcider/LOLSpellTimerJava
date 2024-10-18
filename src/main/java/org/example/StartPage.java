@@ -67,33 +67,23 @@ public class StartPage extends JWindow {
         public void actionPerformed(ActionEvent e) {
             JButton source = (JButton) e.getSource();
             String buttonText = source.getText();
-
-            try {
-                if(buttonTitle1.equals(buttonText)) {
-                    new Connector("localhost:8089", "hashValue");
-                    dispose();
-                    onStart.run();
-                } else if(buttonTitle2.equals(buttonText)) {
-                    new Connector("localhost:8080", getHashValue());
-//                    new Connector("ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080", getHashValue());
-                    dispose();
-                    onStart.run();
-                } else if(buttonTitle3.equals(buttonText)) {
-                    CodeInputWindow codeInputWindow = new CodeInputWindow();
-                    String hashValue = codeInputWindow.getCode();
-                    if(hashValue == null || "".equals(hashValue)) {
-                        exit(0);
-                    }
-                    new Connector("localhost:8080", hashValue);
-//                    new Connector("ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080", hashValue);
-                    dispose();
-                    onStart.run();
+            String hashValue = "";
+//            Connector.serverURI = "localhost:8080";
+            Connector.serverURI = "ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080";
+            if(buttonTitle1.equals(buttonText)) {
+                Connector.serverURI = "localhost:8089";
+            } else if(buttonTitle2.equals(buttonText)) {
+                hashValue = getHashValue();
+            } else if(buttonTitle3.equals(buttonText)) {
+                CodeInputWindow codeInputWindow = new CodeInputWindow();
+                hashValue = codeInputWindow.getCode();
+                if(hashValue == null || "".equals(hashValue)) {
+                    exit(0);
                 }
-            } catch (URISyntaxException ex) {
-                throw new RuntimeException(ex);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
             }
+            Connector.hashValue = hashValue;
+            dispose();
+            onStart.run();
         }
     }
 

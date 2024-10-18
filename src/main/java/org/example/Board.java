@@ -149,7 +149,7 @@ public class Board extends JWindow {
         getHashValue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String hashValue = Connector.getInstance().getHashValue();
+                String hashValue = Connector.hashValue;
 
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 Transferable transferable = new StringSelection(hashValue);
