@@ -1,13 +1,20 @@
 package org.example.liner;
 
+import org.example.liner.spell.Flash;
+import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class setLinerTest {
     @Test
     void setLinerUpdatesFlash() {
         Liner liner1 = new Liner();
+        Spell spell = Mockito.spy(new Flash());
+        liner1.setFlash(spell);
         assertTrue(liner1.getFlash().isOn());
 
         Liner liner2 = new Liner();
@@ -16,6 +23,7 @@ public class setLinerTest {
         liner1.setLiner(liner2);
 
         assertFalse(liner1.getFlash().isOn());
+        verify(spell, times(1)).startCount(liner1);
     }
 
     @Test

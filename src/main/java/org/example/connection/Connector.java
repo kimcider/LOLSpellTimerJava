@@ -84,12 +84,6 @@ public class Connector extends AbstractWebSocketConnector {
                 Spell clientFlash = clientLiner.getFlash();
                 if (clientLiner.equals(serverLiner) == false) {
                     clientLiner.setLiner(serverLiner);
-                    //TODO: 얘가 여기있는게 맞나?
-                    if (clientFlash.isOn()) {
-                        clientFlash.stopCount();
-                    } else {
-                        clientFlash.startCount(clientLiner);
-                    }
                 }
             }else if("getLinerStatus".equals(method)){
                 String linerListJson = mapper.writeValueAsString(getLinerList().values().toArray());

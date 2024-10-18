@@ -183,6 +183,11 @@ public class Liner {
         }
 
         flash.setSpell(model.getFlash());
+        if(flash.isOn()){
+            flash.stopCount();
+        }else{
+            flash.startCount(this);
+        }
         setCosmicInsight(model.isCosmicInsight());
         setIonianBoots(model.isIonianBoots());
     }
