@@ -1,12 +1,11 @@
 package org.example.liner;
 
-import org.example.liner.spell.Flash;
+import org.example.liner.spell.impl.Flash;
 import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class setLinerTest {

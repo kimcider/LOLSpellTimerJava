@@ -21,6 +21,7 @@ import static java.lang.System.exit;
 import static org.example.Setting.*;
 
 public class Board extends JWindow {
+    private static Board board = null;
     private Connector connector;
     ArrayList<String> listNames = new ArrayList<>();
     JPanel contentPane = new JPanel();
@@ -50,7 +51,14 @@ public class Board extends JWindow {
         }
     }
 
-    public Board() {
+    public static Board getInstance() {
+        if (board == null) {
+            board = new Board();
+        }
+        return board;
+    }
+
+    private Board() {
         setIconPosition();
 
         connector = Connector.getInstance();
@@ -209,7 +217,7 @@ public class Board extends JWindow {
         reloadBoard();
     }
 
-    private void reloadBoard() {
+    public void reloadBoard() {
         setIconPosition();
         setSize(boardWidth, boardHeight);
 

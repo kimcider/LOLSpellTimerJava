@@ -16,7 +16,7 @@ public class onOffSpellTest {
     public void setUp() {
         liner = new Liner();
 
-        ghost = new Spell(240){};
+        ghost = new Spell(240, "flash.jpg"){};
         CounterLabel spyFlashIcon = Mockito.mock(CounterLabel.class);
         ghost.setSpellIcon(spyFlashIcon);
     }

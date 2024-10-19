@@ -10,7 +10,7 @@ public class Main extends JFrame {
         StartPage startPage = new StartPage(() -> {
             // 버튼 클릭 후 실행될 코드
             Connector.getInstance(); // WebSocket 연결
-            new Board(); // 새로운 게임 보드 생성
+            Board.getInstance(); // 새로운 게임 보드 생성
         });
     }
 }

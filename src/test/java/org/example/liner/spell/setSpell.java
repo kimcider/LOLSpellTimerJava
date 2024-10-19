@@ -1,9 +1,7 @@
 package org.example.liner.spell;
 
-import org.example.liner.spell.CounterLabel;
 import org.example.connection.AbstractWebSocketConnector;
-import org.example.liner.spell.Flash;
-import org.example.liner.spell.Spell;
+import org.example.liner.spell.impl.Flash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

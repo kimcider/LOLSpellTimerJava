@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.Board;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
-import org.example.liner.spell.Flash;
+import org.example.liner.spell.impl.*;
 import org.example.liner.spell.Spell;
 
 import javax.swing.*;
@@ -37,24 +38,18 @@ public class Liner {
         cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
         ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
     }
+    private void test(){
+        flash = new Ghost();
+        flash.getSpellIcon().addMouseListener(new SpellMouseAdapter(flash));
+        Board.getInstance().reloadBoard();
+    }
 
     public Liner(String name, AbstractWebSocketConnector connector) {
         this.connector = connector;
         this.name = name;
         flash = new Flash();
-        flash.getSpellIcon().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    if (flash.isOn()) {
-                        offSpell(flash);
-                    } else {
-                        onSpell(flash);
-                    }
-                    sendLinerStatus();
-                }
-            }
-        });
+        flash.getSpellIcon().addMouseListener(new SpellMouseAdapter(flash));
+
 
         lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
         cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY);
@@ -83,6 +78,27 @@ public class Liner {
 
     }
 
+    class SpellMouseAdapter extends MouseAdapter {
+        Spell spell;
+
+        SpellMouseAdapter(Spell spell) {
+            this.spell = spell;
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (spell.isOn()) {
+                    offSpell(spell);
+                } else {
+                    onSpell(spell);
+                }
+                sendLinerStatus();
+            }else if(SwingUtilities.isRightMouseButton(e)){
+                test();
+            }
+        }
+    }
+
     public void reloadIcon() {
         lineIcon.setIcon(getImageIcon(name + ".jpg", imageSize));
         lineIcon.setSize(imageSize, imageSize);
@@ -98,7 +114,7 @@ public class Liner {
         ionianBootsIcon.setLocation(coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
         ionianBootsIcon.updateIcon();
 
-        flash.getSpellIcon().setIcon(getImageIcon("flash.jpg", imageSize));
+        flash.getSpellIcon().setIcon(getImageIcon(flash.getSpellImagePath(), imageSize));
         flash.getSpellIcon().setSize(imageSize, imageSize);
         flash.getSpellIcon().setLocation(spellIconX, iconPositionY);
     }

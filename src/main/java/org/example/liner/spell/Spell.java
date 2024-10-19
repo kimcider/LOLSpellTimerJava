@@ -1,13 +1,17 @@
 package org.example.liner.spell;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.liner.Liner;
+import org.example.liner.spell.impl.Flash;
 
 import javax.swing.*;
+import java.awt.*;
+
+import static org.example.Setting.*;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -17,16 +21,25 @@ import javax.swing.*;
 
 @Getter
 @Setter
-@JsonIgnoreProperties({"mapper"})
 public abstract class Spell {
+    @JsonIgnore
     private final int spellCoolTime;
-    protected int coolTime = 0;
+    @JsonIgnore
     protected CounterLabel spellIcon = null;
 
-    public Spell(int spellCoolTime) {
+    @JsonIgnore
+    String spellImagePath = null;
+
+    protected int coolTime = 0;
+
+
+    public Spell(int spellCoolTime, String spellImagePath) {
         this.spellCoolTime = spellCoolTime;
+        this.spellImagePath = spellImagePath;
+        spellIcon = getCounterImage(getSpellImagePath(), spellIconX, iconPositionY);
     }
 
+    @JsonIgnore
     public boolean isOn() {
         return coolTime == 0;
     }
@@ -70,5 +83,19 @@ public abstract class Spell {
             return false;
         }
         return true;
+    }
+
+
+
+    protected CounterLabel getCounterImage(String path, int x, int y) {
+        ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
+        Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        CounterLabel result = new CounterLabel(scaledIcon, this);
+
+        result.setLocation(x, y);
+        result.setSize(imageSize, imageSize);
+        return result;
     }
 }
