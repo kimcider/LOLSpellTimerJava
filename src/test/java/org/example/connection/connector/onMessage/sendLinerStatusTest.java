@@ -87,12 +87,12 @@ public class sendLinerStatusTest {
         mockConnectorLinerSup.setFlash(mockConnectorSpell);
         connectorLinerList.put("sup", mockConnectorLinerSup);
 
-        String json = mapper.writeValueAsString(serverLiner);
-        connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
+        String serverSupportJson = mapper.writeValueAsString(serverLiner);
+        connector.onMessage(connector.wrapMethodJson("sendLinerStatus", serverSupportJson));
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
         Mockito.verify(mockConnectorLinerSup, times(1)).setLiner(any(Liner.class));
-        verify(mockConnectorSpell, times(1)).setSpell(any(Spell.class));
+        verify(mockConnectorSpell, times(1)).setSpell(any(Liner.class),any(Spell.class));
     }
 
     @Test
@@ -104,7 +104,6 @@ public class sendLinerStatusTest {
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
         assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
-        Mockito.verify(mockConnectorLinerSup, never()).touchSpell(any(Spell.class));
     }
 
     @Test
@@ -118,7 +117,6 @@ public class sendLinerStatusTest {
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
-        verify(mockClientFlashSup, times(1)).startCount(connectorLinerList.get("sup"));
     }
     @Test
     public void SetCoolTime_WhenServerFlashIsOn() throws JsonProcessingException {
@@ -131,9 +129,6 @@ public class sendLinerStatusTest {
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
         assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
         assertTrue(mockClientFlashSup.isOn());
-
-
-        verify(mockClientFlashSup, times(1)).stopCount();
     }
 
     @Test
@@ -162,9 +157,6 @@ public class sendLinerStatusTest {
 
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
-
-        verify(mockSupLiner, never()).touchSpell(any(Spell.class));
-
     }
 
     @Test

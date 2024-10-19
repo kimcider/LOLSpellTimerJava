@@ -42,16 +42,15 @@ public class Liner {
         this.connector = connector;
         this.name = name;
         flash = new Flash();
-        flash.getSpellIcon().addMouseListener(new MouseAdapter(){
+        flash.getSpellIcon().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    if(flash.isOn()){
+                    if (flash.isOn()) {
                         offSpell(flash);
-                    }else{
+                    } else {
                         onSpell(flash);
                     }
-                    flash.startCount(Liner.this);
                     sendLinerStatus();
                 }
             }
@@ -62,7 +61,7 @@ public class Liner {
         ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
 
 
-        cosmicInsightIcon.addMouseListener(new MouseAdapter(){
+        cosmicInsightIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
@@ -72,7 +71,7 @@ public class Liner {
             }
         });
 
-        ionianBootsIcon.addMouseListener(new MouseAdapter(){
+        ionianBootsIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
@@ -84,7 +83,7 @@ public class Liner {
 
     }
 
-    public void reloadIcon(){
+    public void reloadIcon() {
         lineIcon.setIcon(getImageIcon(name + ".jpg", imageSize));
         lineIcon.setSize(imageSize, imageSize);
         lineIcon.setLocation(lineIconX, iconPositionY);
@@ -104,18 +103,19 @@ public class Liner {
         flash.getSpellIcon().setLocation(spellIconX, iconPositionY);
     }
 
-    public boolean isCosmicInsight(){
+    public boolean isCosmicInsight() {
         return cosmicInsightIcon.isOn();
     }
-    public boolean isIonianBoots(){
+
+    public boolean isIonianBoots() {
         return ionianBootsIcon.isOn();
     }
 
-    public void setCosmicInsight(boolean cosmicInsight){
+    public void setCosmicInsight(boolean cosmicInsight) {
         cosmicInsightIcon.setOn(cosmicInsight);
     }
 
-    public void setIonianBoots(boolean ionianBoots){
+    public void setIonianBoots(boolean ionianBoots) {
         ionianBootsIcon.setOn(ionianBoots);
     }
 
@@ -128,42 +128,28 @@ public class Liner {
         }
     }
 
-    public void touchSpell(Spell spell) {
-        if(spell.isOn()){
-            offSpell(spell);
-            spell.startCount(this);
-        }else{
-            onSpell(spell);
-            spell.stopCount();
-        }
-    }
-
-    public void offSpell(Spell spell){
+    public void offSpell(Spell spell) {
         double reduction = 0;
-        if(isCosmicInsight()){
+        if (isCosmicInsight()) {
             reduction += 18;
         }
-        if(isIonianBoots()){
+        if (isIonianBoots()) {
             reduction += 10;
         }
 
         int coolTime = (int) (spell.getSpellCoolTime() * (1 - (reduction / (reduction + 100))));
-        spell.setCoolTime(coolTime);
+        spell.setCoolTime(this, coolTime);
     }
 
-    public void onSpell(Spell spell){
-        spell.setCoolTime(0);
+    public void onSpell(Spell spell) {
+        spell.setCoolTime(this, 0);
     }
 
-    public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer){
-        if(coolTimeReducer.isOn()){
-            coolTimeReducer.setOn(false);
-        }else{
-            coolTimeReducer.setOn(true);
-        }
+    public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer) {
+        coolTimeReducer.setOn(!coolTimeReducer.isOn());
     }
 
-    private ImageIcon getImageIcon(String path, int size){
+    private ImageIcon getImageIcon(String path, int size) {
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
         Image scaledImage = imageIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
@@ -178,30 +164,35 @@ public class Liner {
     }
 
     public void setLiner(Liner model) {
-        if(model == null){
+        if (model == null) {
             return;
         }
 
-        flash.setSpell(model.getFlash());
-        if(flash.isOn()){
-            flash.stopCount();
-        }else{
-            flash.startCount(this);
-        }
+        flash.setSpell(this, model.getFlash());
         setCosmicInsight(model.isCosmicInsight());
         setIonianBoots(model.isIonianBoots());
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null){
+        if (obj == null) {
             return false;
         }
 
         Liner other = (Liner) obj;
-        if (name.equals(other.name) && flash.equals(other.flash)  && isCosmicInsight() == other.isCosmicInsight() && isIonianBoots() == other.isIonianBoots()) {
-            return true;
+
+        if (!name.equals(other.name)) {
+            return false;
         }
-        return false;
+        if (!flash.equals(other.flash)) {
+            return false;
+        }
+        if (isCosmicInsight() != other.isCosmicInsight()) {
+            return false;
+        }
+        if (isIonianBoots() != other.isIonianBoots()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -29,7 +29,7 @@ public class setSpell {
         CounterLabel originalSpellIcon = spell.getSpellIcon();
 
         Flash flash = new Flash();
-        spell.setSpell(flash);
+        spell.setSpell(null, flash);
 
         assertEquals(originalSpellIcon, spell.getSpellIcon());
     }
@@ -40,7 +40,7 @@ public class setSpell {
         assertEquals(spell, spellTarget);
         assertEquals(spell, spellModel);
 
-        spellTarget.setSpell(spellModel);
+        spellTarget.setSpell(null, spellModel);
         assertEquals(spell, spellTarget);
         assertEquals(spell, spellModel);
     }
@@ -49,7 +49,7 @@ public class setSpell {
     public void setSpell_changeCollTime(){
         spellModel.setCoolTime(50);
 
-        spellTarget.setSpell(spellModel);
+        spellTarget.setSpell(null, spellModel);
 
         assertEquals(50, spellTarget.getCoolTime());
     }
@@ -60,9 +60,9 @@ public class setSpell {
         Spell mockSpellTarget = Mockito.spy(spellTarget);
         Spell mockSpellModel = Mockito.spy(spellModel);
 
-        mockSpellTarget.setSpell(mockSpellModel);
+        mockSpellTarget.setSpell(null, mockSpellModel);
 
-        verify(mockSpellTarget, times(1)).setSpell(mockSpellModel);
+        verify(mockSpellTarget, times(1)).setSpell(null, mockSpellModel);
         verify(mockSpellModel, times(1)).getCoolTime();
     }
 

@@ -61,18 +61,18 @@ public class SpellTest {
     @Test
     public void testStartCount() {
         Liner liner = new Liner("top", connector);
-        liner.offSpell(liner.getFlash());//여기만 다름 setCoolTime()인지 off()인지.
+        liner.offSpell(liner.getFlash());
 
 
         Spell mockFlash = Mockito.spy(liner.getFlash());
+        liner.setFlash(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
         assertFalse(liner.getFlash().isOn());
 
-        mockFlash.startCount(liner);
+        liner.offSpell(mockFlash);
 
-        verify(mockFlash, never()).isOn();
         verify(spyFlashIcon, times(1)).repaint();
         verify(spyFlashIcon, times(1)).stopTimer();
         verify(spyFlashIcon, times(1)).startTimer();
@@ -80,19 +80,18 @@ public class SpellTest {
 
     @Test
     public void testStartCountWhenFlashIsAlreadyUsed2() {
-        // testStartCountWhenFlashIsAlreadyUsed와 유사.
         Liner liner = new Liner("top", connector);
         liner.getFlash().setCoolTime(100);
 
         Spell mockFlash = Mockito.spy(liner.getFlash());
+        liner.setFlash(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
         assertFalse(liner.getFlash().isOn());
 
-        mockFlash.startCount(liner);
+        liner.offSpell(mockFlash);
 
-        verify(mockFlash, never()).isOn();
         verify(spyFlashIcon, times(1)).repaint();
         verify(spyFlashIcon, times(1)).stopTimer();
         verify(spyFlashIcon, times(1)).startTimer();
@@ -103,12 +102,13 @@ public class SpellTest {
         Liner liner = new Liner("top", connector);
 
         Spell mockFlash = Mockito.spy(liner.getFlash());
+        liner.setFlash(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
         assertTrue(liner.getFlash().isOn());
 
-        mockFlash.stopCount();
+        liner.onSpell(mockFlash);
 
         verify(spyFlashIcon, never()).startTimer();
         verify(spyFlashIcon, times(1)).repaint();

@@ -43,13 +43,13 @@ public class CounterLabel extends JLabel {
         if (!spell.isOn()) {
             Graphics2D g2d = (Graphics2D) g;
 
-            if(spell.getCoolTime() <= 20){
+            if (spell.getCoolTime() <= 20) {
                 if (temp) {
                     g2d.setColor(black);
                 } else {
                     g2d.setColor(red);
                 }
-            }else{
+            } else {
                 g2d.setColor(black);
             }
 

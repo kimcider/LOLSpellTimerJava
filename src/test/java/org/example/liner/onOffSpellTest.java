@@ -1,8 +1,10 @@
 package org.example.liner;
 
+import org.example.liner.spell.CounterLabel;
 import org.example.liner.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,7 +15,10 @@ public class onOffSpellTest {
     @BeforeEach
     public void setUp() {
         liner = new Liner();
+
         ghost = new Spell(240){};
+        CounterLabel spyFlashIcon = Mockito.mock(CounterLabel.class);
+        ghost.setSpellIcon(spyFlashIcon);
     }
 
     @Test

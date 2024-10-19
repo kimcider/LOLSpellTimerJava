@@ -4,12 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.liner.Liner;
-import org.example.liner.spell.Spell;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
@@ -44,11 +42,11 @@ public class Connector extends AbstractWebSocketConnector {
 
     public String wrapMethodJson(String method, String json) {
         ObjectNode wrappedData = mapper.createObjectNode();
-        try{
+        try {
             wrappedData.put("method", method);
             wrappedData.put("hash", Connector.hashValue);
 
-            if(!json.isBlank()){
+            if (!json.isBlank()) {
                 JsonNode jsonNode = mapper.readTree(json);
                 wrappedData.set("data", jsonNode);
             }
@@ -62,7 +60,7 @@ public class Connector extends AbstractWebSocketConnector {
     }
 
     @Override
-    public void onOpen(ServerHandshake handshake){
+    public void onOpen(ServerHandshake handshake) {
         send(wrapMethodJson("open", ""));
     }
 
@@ -73,7 +71,7 @@ public class Connector extends AbstractWebSocketConnector {
 
             String method = rootNode.get("method").asText();
 
-            if("sendLinerStatus".equals(method)){
+            if ("sendLinerStatus".equals(method)) {
                 JsonNode dataNode = rootNode.get("data");
 
                 String dataJson = mapper.writeValueAsString(dataNode);
@@ -81,25 +79,23 @@ public class Connector extends AbstractWebSocketConnector {
                 Liner serverLiner = mapper.readValue(dataJson, new TypeReference<Liner>() {
                 });
                 Liner clientLiner = linerList.get(serverLiner.getName());
-                Spell clientFlash = clientLiner.getFlash();
-                if (clientLiner.equals(serverLiner) == false) {
+                if (!clientLiner.equals(serverLiner)) {
                     clientLiner.setLiner(serverLiner);
                 }
-            }else if("getLinerStatus".equals(method)){
+            } else if ("getLinerStatus".equals(method)) {
                 String linerListJson = mapper.writeValueAsString(getLinerList().values().toArray());
                 send(wrapMethodJson("getLinerStatusResponse", linerListJson));
-            }else if("getLinerStatusResponse".equals(method)){
+            } else if ("getLinerStatusResponse".equals(method)) {
                 JsonNode dataNode = rootNode.get("data");
                 String dataJson = mapper.writeValueAsString(dataNode);
                 List<Liner> liners = mapper.readValue(dataJson, new TypeReference<List<Liner>>() {
                 });
-                for(Liner liner : liners){
+                for (Liner liner : liners) {
                     linerList.get(liner.getName()).setLiner(liner);
-                    linerList.get(liner.getName()).getFlash().startCount(linerList.get(liner.getName()));
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();  // 예외 처리
+            e.printStackTrace();
         }
     }
 

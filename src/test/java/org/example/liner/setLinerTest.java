@@ -23,7 +23,6 @@ public class setLinerTest {
         liner1.setLiner(liner2);
 
         assertFalse(liner1.getFlash().isOn());
-        verify(spell, times(1)).startCount(liner1);
     }
 
     @Test

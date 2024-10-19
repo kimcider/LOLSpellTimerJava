@@ -1,7 +1,6 @@
 package org.example.connection;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,14 +9,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.liner.Liner;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -53,10 +50,10 @@ public abstract class AbstractWebSocketConnector extends WebSocketClient {
 
     public String wrapJson(String json) {
         ObjectNode wrappedData = mapper.createObjectNode();
-        try{
+        try {
             wrappedData.put("hash", hashValue);
 
-            if(!json.isBlank()){
+            if (!json.isBlank()) {
                 JsonNode jsonNode = mapper.readTree(json);
                 wrappedData.set("data", jsonNode);
             }

@@ -15,7 +15,8 @@ import javax.swing.*;
         //, @JsonSubTypes.Type(value = TP.class, name = "tp")
 })
 
-@Getter@Setter
+@Getter
+@Setter
 @JsonIgnoreProperties({"mapper"})
 public abstract class Spell {
     private final int spellCoolTime;
@@ -30,11 +31,20 @@ public abstract class Spell {
         return coolTime == 0;
     }
 
-    public void setSpell(Spell model) {
-        coolTime = model.getCoolTime();
+    public void setCoolTime(Liner liner, int coolTime) {
+        setCoolTime(coolTime);
+        if (isOn()) {
+            stopCount();
+        } else {
+            startCount(liner);
+        }
     }
 
-    public void startCount(Liner liner) {
+    public void setSpell(Liner liner, Spell model) {
+        setCoolTime(liner, model.getCoolTime());
+    }
+
+    private void startCount(Liner liner) {
         spellIcon.repaint();
 
         spellIcon.stopTimer();
@@ -43,7 +53,7 @@ public abstract class Spell {
             spellIcon.repaint();
 
             if (getCoolTime() <= 0) {
-                liner.onSpell(this);
+                setCoolTime(liner, 0);
                 liner.sendLinerStatus();
                 spellIcon.stopTimer();
             }
@@ -51,7 +61,7 @@ public abstract class Spell {
         spellIcon.startTimer();
     }
 
-    public void stopCount() {
+    private void stopCount() {
         spellIcon.repaint();
         spellIcon.stopTimer();
     }
@@ -59,9 +69,9 @@ public abstract class Spell {
     @Override
     public boolean equals(Object obj) {
         Spell other = (Spell) obj;
-        if (isOn() == other.isOn()) {
-            return true;
+        if (isOn() != other.isOn()) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

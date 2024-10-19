@@ -1,8 +1,11 @@
 package org.example.liner;
 
+import lombok.Getter;
+
 import javax.swing.*;
 
 public class CoolTimeReducer extends JLabel {
+    @Getter
     boolean on = false;
     ImageIcon baseIcon;
     ImageIcon checkMark;
@@ -10,10 +13,6 @@ public class CoolTimeReducer extends JLabel {
     public void setOn(boolean on) {
         this.on = on;
         updateIcon();
-    }
-
-    public boolean isOn() {
-        return on;
     }
 
     public CoolTimeReducer(ImageIcon icon, ImageIcon checkMark, int size, int x, int y) {

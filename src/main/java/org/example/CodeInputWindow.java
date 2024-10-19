@@ -45,19 +45,19 @@ public class CodeInputWindow extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputCode = codeInputField.getText();
-                
-                if(inputCode.isEmpty()) {
+
+                if (inputCode.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "코드를 입력하세요.", "오류", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if(inputCode.length() != 20) {
+                if (inputCode.length() != 20) {
                     JOptionPane.showMessageDialog(null, "잘못된 입장코드.", "오류", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 code = inputCode; // 입력된 코드를 저장
                 dispose(); // 창 닫기
-            
+
             }
         });
 

@@ -6,13 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URISyntaxException;
 import java.security.SecureRandom;
 
 import static java.lang.System.exit;
 
 public class StartPage extends JWindow {
-    private Runnable onStart;
+    private final Runnable onStart;
 
     String buttonTitle1 = "솔로 랭크";
     String buttonTitle2 = "방 생성";
@@ -70,14 +69,15 @@ public class StartPage extends JWindow {
             String hashValue = "";
 //            Connector.serverURI = "localhost:8080";
             Connector.serverURI = "ec2-13-124-87-54.ap-northeast-2.compute.amazonaws.com:8080";
-            if(buttonTitle1.equals(buttonText)) {
+            if (buttonTitle1.equals(buttonText)) {
                 Connector.serverURI = "localhost:8089";
-            } else if(buttonTitle2.equals(buttonText)) {
+            } else if (buttonTitle2.equals(buttonText)) {
                 hashValue = getHashValue();
-            } else if(buttonTitle3.equals(buttonText)) {
+            } else if (buttonTitle3.equals(buttonText)) {
                 CodeInputWindow codeInputWindow = new CodeInputWindow();
                 hashValue = codeInputWindow.getCode();
-                if(hashValue == null || "".equals(hashValue)) {
+
+                if (hashValue == null || hashValue.isEmpty()) {
                     exit(0);
                 }
             }

@@ -1,6 +1,5 @@
 package org.example;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.connection.Connector;
 import org.example.liner.Liner;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +21,6 @@ import static java.lang.System.exit;
 import static org.example.Setting.*;
 
 public class Board extends JWindow {
-    private static ObjectMapper mapper = new ObjectMapper();
     private Connector connector;
     ArrayList<String> listNames = new ArrayList<>();
     JPanel contentPane = new JPanel();
@@ -191,12 +189,9 @@ public class Board extends JWindow {
         popupMenu.addSeparator();
 
         MenuItem exitItem = new MenuItem("Exit");
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                connector.close();
-                exit(0);  // 종료 메뉴
-            }
+        exitItem.addActionListener(e -> {
+            connector.close();
+            exit(0);  // 종료 메뉴
         });
 
         popupMenu.add(exitItem);

@@ -16,7 +16,7 @@ import static org.example.Setting.*;
 public class Flash extends Spell {
     public Flash() {
         super(300);
-        spellIcon = getCounterImage("flash.jpg",  spellIconX, iconPositionY);
+        spellIcon = getCounterImage("flash.jpg", spellIconX, iconPositionY);
     }
 
     private CounterLabel getCounterImage(String path, int x, int y) {
