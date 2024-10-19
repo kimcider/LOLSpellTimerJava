@@ -138,11 +138,11 @@ public class Liner {
         }
 
         int coolTime = (int) (spell.getSpellCoolTime() * (1 - (reduction / (reduction + 100))));
-        spell.setCoolTime(this, coolTime);
+        spell.setCoolTime(coolTime);
     }
 
     public void onSpell(Spell spell) {
-        spell.setCoolTime(this, 0);
+        spell.setCoolTime(0);
     }
 
     public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer) {
@@ -168,7 +168,7 @@ public class Liner {
             return;
         }
 
-        flash.setSpell(this, model.getFlash());
+        flash.setSpell(model.getFlash());
         setCosmicInsight(model.isCosmicInsight());
         setIonianBoots(model.isIonianBoots());
     }

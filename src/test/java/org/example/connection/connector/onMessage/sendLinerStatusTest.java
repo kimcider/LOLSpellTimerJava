@@ -92,7 +92,7 @@ public class sendLinerStatusTest {
 
         assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
         Mockito.verify(mockConnectorLinerSup, times(1)).setLiner(any(Liner.class));
-        verify(mockConnectorSpell, times(1)).setSpell(any(Liner.class),any(Spell.class));
+        verify(mockConnectorSpell, times(1)).setSpell(any(Spell.class));
     }
 
     @Test

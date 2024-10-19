@@ -31,30 +31,27 @@ public abstract class Spell {
         return coolTime == 0;
     }
 
-    public void setCoolTime(Liner liner, int coolTime) {
-        setCoolTime(coolTime);
+    public void setCoolTime(int coolTime) {
+        this.coolTime = coolTime;
         if (isOn()) {
             stopCount();
         } else {
-            startCount(liner);
+            startCount();
         }
     }
 
-    public void setSpell(Liner liner, Spell model) {
-        setCoolTime(liner, model.getCoolTime());
+    public void setSpell(Spell model) {
+        setCoolTime(model.getCoolTime());
     }
 
-    private void startCount(Liner liner) {
+    private void startCount() {
         spellIcon.repaint();
-
         spellIcon.stopTimer();
         spellIcon.setTimer(new Timer(1000, e -> {
             coolTime--;
             spellIcon.repaint();
 
             if (getCoolTime() <= 0) {
-                setCoolTime(liner, 0);
-                liner.sendLinerStatus();
                 spellIcon.stopTimer();
             }
         }));
