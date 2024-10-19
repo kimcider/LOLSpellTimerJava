@@ -6,8 +6,8 @@ import org.example.liner.spell.Spell;
 
 @Getter
 @Setter
-public class Ignight extends Spell {
-    public Ignight() {
+public class Ignite extends Spell {
+    public Ignite() {
         super(180, "ignite.jpg");
     }
 }
