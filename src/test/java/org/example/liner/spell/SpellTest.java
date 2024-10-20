@@ -38,7 +38,6 @@ public class SpellTest {
         assertNotNull(flash.getSpellIcon());
     }
 
-
     @Test
     public void spellFlashToJson() throws JsonProcessingException {
         Spell spell = new Flash();
@@ -46,6 +45,11 @@ public class SpellTest {
         String json = mapper.writeValueAsString(spell);
         assertEquals("""
                 {"type":"flash","coolTime":0}""", json);
+    }
+
+    @Test
+    public void setBarrierToJson(){
+        assertFalse(true);
     }
 
     @Test
@@ -59,15 +63,15 @@ public class SpellTest {
     @Test
     public void testStartCount() {
         Liner liner = new Liner("top", connector);
-        liner.offSpell(liner.getFlash());
+        liner.offSpell(liner.getSpell1());
 
 
-        Spell mockFlash = Mockito.spy(liner.getFlash());
-        liner.setFlash(mockFlash);
+        Spell mockFlash = Mockito.spy(liner.getSpell1());
+        liner.setSpell1(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
-        assertFalse(liner.getFlash().isOn());
+        assertFalse(liner.getSpell1().isOn());
 
         liner.offSpell(mockFlash);
 
@@ -79,14 +83,14 @@ public class SpellTest {
     @Test
     public void testStartCountWhenFlashIsAlreadyUsed2() {
         Liner liner = new Liner("top", connector);
-        liner.getFlash().setCoolTime(100);
+        liner.getSpell1().setCoolTime(100);
 
-        Spell mockFlash = Mockito.spy(liner.getFlash());
-        liner.setFlash(mockFlash);
+        Spell mockFlash = Mockito.spy(liner.getSpell1());
+        liner.setSpell1(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
-        assertFalse(liner.getFlash().isOn());
+        assertFalse(liner.getSpell1().isOn());
 
         liner.offSpell(mockFlash);
 
@@ -99,12 +103,12 @@ public class SpellTest {
     public void stopCount(){
         Liner liner = new Liner("top", connector);
 
-        Spell mockFlash = Mockito.spy(liner.getFlash());
-        liner.setFlash(mockFlash);
+        Spell mockFlash = Mockito.spy(liner.getSpell1());
+        liner.setSpell1(mockFlash);
         CounterLabel spyFlashIcon = Mockito.spy(Mockito.mock(CounterLabel.class));
         mockFlash.setSpellIcon(spyFlashIcon);
 
-        assertTrue(liner.getFlash().isOn());
+        assertTrue(liner.getSpell1().isOn());
 
         liner.onSpell(mockFlash);
 

@@ -30,9 +30,9 @@ public class LinerTest {
         Liner liner = new Liner();
         assertNotNull(liner.getConnector());
         assertNull(liner.getLineIcon());
-        assertNotNull(liner.getFlash().getSpellIcon());
+        assertNotNull(liner.getSpell1().getSpellIcon());
         assertNull(liner.getName());
-        assertNotNull(liner.getFlash());
+        assertNotNull(liner.getSpell1());
 
         assertFalse(liner.isCosmicInsight());
         assertFalse(liner.isIonianBoots());
@@ -64,9 +64,9 @@ public class LinerTest {
         assertNotNull(liner.getConnector());
         assertNotEquals(liner.getConnector(), Connector.getInstance());
         assertNotNull(liner.getLineIcon());
-        assertNotNull(liner.getFlash().getSpellIcon());
+        assertNotNull(liner.getSpell1().getSpellIcon());
         assertNotNull(liner.getName());
-        assertNotNull(liner.getFlash());
+        assertNotNull(liner.getSpell1());
     }
 
     @Test

@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class getLinerStatusResponseTest {
@@ -60,7 +59,7 @@ public class getLinerStatusResponseTest {
     public void getLinerStatusResponse() throws JsonProcessingException {
         Liner serverTop = serverLinerList.get("top");
         serverTop.setIonianBoots(true);
-        serverTop.offSpell(serverTop.getFlash());
+        serverTop.offSpell(serverTop.getSpell1());
 
         String json = mapper.writeValueAsString(serverLinerList.values().toArray());
         String wrappedJson = connector.wrapMethodJson("getLinerStatusResponse", json);
@@ -68,6 +67,6 @@ public class getLinerStatusResponseTest {
         connector.onMessage(wrappedJson);
 
         assertTrue(connector.getLinerList().get("top").isIonianBoots());
-        assertEquals(272, connector.getLinerList().get("top").getFlash().getCoolTime());
+        assertEquals(272, connector.getLinerList().get("top").getSpell1().getCoolTime());
     }
 }

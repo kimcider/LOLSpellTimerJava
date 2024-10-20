@@ -61,13 +61,13 @@ public class sendLinerStatusTest {
 
     @Test
     public void OneChange() throws JsonProcessingException {
-        serverLiner.offSpell(serverLiner.getFlash());
-        assertFalse( serverLiner.getFlash().isOn());
+        serverLiner.offSpell(serverLiner.getSpell1());
+        assertFalse( serverLiner.getSpell1().isOn());
 
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
-        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
+        assertFalse(connector.getLinerList().get("sup").getSpell1().isOn());
     }
 
     @Test
@@ -75,22 +75,22 @@ public class sendLinerStatusTest {
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
-        assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
+        assertTrue(connector.getLinerList().get("sup").getSpell1().isOn());
     }
 
     @Test
     public void CallTouchSpell() throws JsonProcessingException {
-        serverLiner.offSpell(serverLiner.getFlash());
+        serverLiner.offSpell(serverLiner.getSpell1());
 
         Liner mockConnectorLinerSup = Mockito.spy(connector.getLinerList().get("sup"));
-        Spell mockConnectorSpell = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        mockConnectorLinerSup.setFlash(mockConnectorSpell);
+        Spell mockConnectorSpell = Mockito.spy(connector.getLinerList().get("sup").getSpell1());
+        mockConnectorLinerSup.setSpell1(mockConnectorSpell);
         connectorLinerList.put("sup", mockConnectorLinerSup);
 
         String serverSupportJson = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", serverSupportJson));
 
-        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
+        assertFalse(connector.getLinerList().get("sup").getSpell1().isOn());
         Mockito.verify(mockConnectorLinerSup, times(1)).setLiner(any(Liner.class));
         verify(mockConnectorSpell, times(1)).setSpell(any(Spell.class));
     }
@@ -103,60 +103,60 @@ public class sendLinerStatusTest {
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
-        assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
+        assertTrue(connector.getLinerList().get("sup").getSpell1().isOn());
     }
 
     @Test
     public void SetCoolTime_WhenServerFlashIsOff() throws JsonProcessingException {
-        serverLiner.offSpell(serverLiner.getFlash());
+        serverLiner.offSpell(serverLiner.getSpell1());
 
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
+        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getSpell1());
+        connectorLinerList.get("sup").setSpell1(mockClientFlashSup);
 
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
-        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
+        assertFalse(connector.getLinerList().get("sup").getSpell1().isOn());
     }
     @Test
     public void SetCoolTime_WhenServerFlashIsOn() throws JsonProcessingException {
-        serverLiner.onSpell(serverLiner.getFlash());
+        serverLiner.onSpell(serverLiner.getSpell1());
 
-        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getFlash());
-        connectorLinerList.get("sup").setFlash(mockClientFlashSup);
+        Spell mockClientFlashSup = Mockito.spy(connector.getLinerList().get("sup").getSpell1());
+        connectorLinerList.get("sup").setSpell1(mockClientFlashSup);
 
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
-        assertTrue(connector.getLinerList().get("sup").getFlash().isOn());
+        assertTrue(connector.getLinerList().get("sup").getSpell1().isOn());
         assertTrue(mockClientFlashSup.isOn());
     }
 
     @Test
     public void NotChangeFlashIcon() throws JsonProcessingException {
-        CounterLabel supFlashIcon = connector.getLinerList().get("sup").getFlash().getSpellIcon();
+        CounterLabel supFlashIcon = connector.getLinerList().get("sup").getSpell1().getSpellIcon();
 
-        serverLiner.offSpell(serverLiner.getFlash());
+        serverLiner.offSpell(serverLiner.getSpell1());
         String json = mapper.writeValueAsString(serverLiner);
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
 
-        assertEquals(supFlashIcon, connector.getLinerList().get("sup").getFlash().getSpellIcon());
+        assertEquals(supFlashIcon, connector.getLinerList().get("sup").getSpell1().getSpellIcon());
     }
 
     @Test
     public void supF_IsAlreadyUsed() throws JsonProcessingException, URISyntaxException, InterruptedException {
-        serverLiner.offSpell(serverLiner.getFlash());
+        serverLiner.offSpell(serverLiner.getSpell1());
 
         // 서폿이 플을 썼는지를 주시하기 위한 spy mock Liner
         //서폿 플 이미 사용함
         Liner mockSupLiner = Mockito.spy(connector.getLinerList().get("sup"));
         connector.getLinerList().put("sup", mockSupLiner);
-        connector.getLinerList().get("sup").offSpell(connector.getLinerList().get("sup").getFlash());
+        connector.getLinerList().get("sup").offSpell(connector.getLinerList().get("sup").getSpell1());
 
 
         String json = mapper.writeValueAsString(serverLiner);
 
         connector.onMessage(connector.wrapMethodJson("sendLinerStatus", json));
-        assertFalse(connector.getLinerList().get("sup").getFlash().isOn());
+        assertFalse(connector.getLinerList().get("sup").getSpell1().isOn());
     }
 
     @Test

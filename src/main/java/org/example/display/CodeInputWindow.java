@@ -1,4 +1,4 @@
-package org.example;
+package org.example.display;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,8 +55,8 @@ public class CodeInputWindow extends JDialog {
                     return;
                 }
 
-                code = inputCode; // 입력된 코드를 저장
-                dispose(); // 창 닫기
+                code = inputCode;
+                dispose();
 
             }
         });

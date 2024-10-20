@@ -1,7 +1,8 @@
 package org.example;
 
-import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
+import org.example.display.Board;
+import org.example.display.StartPage;
 
 import javax.swing.*;
 

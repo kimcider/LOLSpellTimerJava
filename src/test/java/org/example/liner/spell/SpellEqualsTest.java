@@ -49,4 +49,10 @@ public class SpellEqualsTest {
         f2.setCoolTime(150);
         assertEquals(f1, f2);
     }
+
+
+    @Test
+    public void spellClassNameTest(){
+        assertFalse(true);
+    }
 }

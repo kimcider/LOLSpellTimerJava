@@ -84,10 +84,12 @@ public class Connector extends AbstractWebSocketConnector {
                 }
             } else if ("getLinerStatus".equals(method)) {
                 String linerListJson = mapper.writeValueAsString(getLinerList().values().toArray());
+                System.out.println(linerListJson);
                 send(wrapMethodJson("getLinerStatusResponse", linerListJson));
             } else if ("getLinerStatusResponse".equals(method)) {
                 JsonNode dataNode = rootNode.get("data");
                 String dataJson = mapper.writeValueAsString(dataNode);
+                System.out.println(dataJson);
                 List<Liner> liners = mapper.readValue(dataJson, new TypeReference<List<Liner>>() {
                 });
                 for (Liner liner : liners) {

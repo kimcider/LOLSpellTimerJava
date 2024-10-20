@@ -32,9 +32,9 @@ public class LinerEqualsTest {
 
     @Test
     public void DiffentFlashOn(){
-        l1.offSpell(l1.getFlash());
+        l1.offSpell(l1.getSpell1());
         assertNotEquals(l1, l2);
-        l2.offSpell(l2.getFlash());
+        l2.offSpell(l2.getSpell1());
         assertEquals(l1, l2);
     }
 

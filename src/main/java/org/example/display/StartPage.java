@@ -1,4 +1,4 @@
-package org.example;
+package org.example.display;
 
 import org.example.connection.Connector;
 

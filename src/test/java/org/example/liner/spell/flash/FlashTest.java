@@ -21,9 +21,9 @@ public class FlashTest {
     @Test
     public void createFlashWithName() {
         Liner liner = new Liner("top", connector);
-        assertEquals(300, liner.getFlash().getSpellCoolTime());
-        assertEquals(0, liner.getFlash().getCoolTime());
-        assertTrue(liner.getFlash().isOn());
-        assertNotNull(liner.getFlash().getSpellIcon());
+        assertEquals(300, liner.getSpell1().getSpellCoolTime());
+        assertEquals(0, liner.getSpell1().getCoolTime());
+        assertTrue(liner.getSpell1().isOn());
+        assertNotNull(liner.getSpell1().getSpellIcon());
     }
 }

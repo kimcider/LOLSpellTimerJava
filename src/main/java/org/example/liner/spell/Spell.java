@@ -1,12 +1,11 @@
 package org.example.liner.spell;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.liner.spell.impl.Flash;
+import org.example.liner.spell.impl.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +14,17 @@ import static org.example.Setting.*;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
+        @JsonSubTypes.Type(value = Barrier.class, name = "barrier"),
+        @JsonSubTypes.Type(value = Cleanse.class, name = "cleanse"),
+        @JsonSubTypes.Type(value = Exhaustion.class, name = "exhaustion"),
         @JsonSubTypes.Type(value = Flash.class, name = "flash"),
-        //, @JsonSubTypes.Type(value = TP.class, name = "tp")
+        @JsonSubTypes.Type(value = Ghost.class, name = "ghost"),
+        @JsonSubTypes.Type(value = Heal.class, name = "heal"),
+        @JsonSubTypes.Type(value = Ignite.class, name = "ignite"),
+        @JsonSubTypes.Type(value = Smite.class, name = "smite"),
+        @JsonSubTypes.Type(value = Teleport.class, name = "teleport"),
+        @JsonSubTypes.Type(value = UpgradeTeleport.class, name = "upgradeTeleport"),
+        @JsonSubTypes.Type(value = NoSpell.class, name = "noSpell"),
 })
 
 @Getter
@@ -36,7 +44,7 @@ public abstract class Spell {
     public Spell(int spellCoolTime, String spellImagePath) {
         this.spellCoolTime = spellCoolTime;
         this.spellImagePath = spellImagePath;
-        spellIcon = getCounterImage(getSpellImagePath(), spellIconX, iconPositionY);
+        spellIcon = getCounterImage(getSpellImagePath());
     }
 
     @JsonIgnore
@@ -82,19 +90,23 @@ public abstract class Spell {
         if (isOn() != other.isOn()) {
             return false;
         }
+
+        if(getClass() != other.getClass()){
+            return false;
+        }
+
         return true;
     }
 
 
 
-    protected CounterLabel getCounterImage(String path, int x, int y) {
+    protected CounterLabel getCounterImage(String path) {
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource(path));
         Image scaledImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
         CounterLabel result = new CounterLabel(scaledIcon, this);
 
-        result.setLocation(x, y);
         result.setSize(imageSize, imageSize);
         return result;
     }

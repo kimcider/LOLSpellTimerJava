@@ -13,15 +13,15 @@ public class setLinerTest {
     void setLinerUpdatesFlash() {
         Liner liner1 = new Liner();
         Spell spell = Mockito.spy(new Flash());
-        liner1.setFlash(spell);
-        assertTrue(liner1.getFlash().isOn());
+        liner1.setSpell1(spell);
+        assertTrue(liner1.getSpell1().isOn());
 
         Liner liner2 = new Liner();
-        liner2.offSpell(liner2.getFlash());
+        liner2.offSpell(liner2.getSpell1());
 
         liner1.setLiner(liner2);
 
-        assertFalse(liner1.getFlash().isOn());
+        assertFalse(liner1.getSpell1().isOn());
     }
 
     @Test

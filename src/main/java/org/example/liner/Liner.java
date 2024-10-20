@@ -5,22 +5,25 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Board;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
-import org.example.liner.spell.impl.*;
+import org.example.display.Board;
+import org.example.display.ReloadSpellPage;
 import org.example.liner.spell.Spell;
+import org.example.liner.spell.impl.Flash;
+import org.example.liner.spell.impl.NoSpell;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 
 import static org.example.Setting.*;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "spell2"})
+@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY"})
 @JsonPropertyOrder({"name", "flash", "cosmicInsight", "ionianBoots"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
@@ -30,28 +33,27 @@ public class Liner {
     private CoolTimeReducer ionianBootsIcon;
 
     private String name;
-    private Spell flash;
+    private Spell spell1;
+    private Spell spell2;
 
     public Liner() {
-        flash = new Flash();
+        spell1 = new Flash();
         connector = Connector.getInstance();
         cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
         ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", 1), getImageIcon("check-mark.jpg", 1), 0, 0, 0);
-    }
-    private void test(){
-        flash = new Ghost();
-        flash.getSpellIcon().addMouseListener(new SpellMouseAdapter(flash));
-        Board.getInstance().reloadBoard();
     }
 
     public Liner(String name, AbstractWebSocketConnector connector) {
         this.connector = connector;
         this.name = name;
-        flash = new Flash();
-        flash.getSpellIcon().addMouseListener(new SpellMouseAdapter(flash));
+        spell1 = new Flash();
+        spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
+        spell1.getSpellIcon().setLocation(spell1IconX, iconPositionY);
+        spell2 = new NoSpell();
+        spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
+        spell2.getSpellIcon().setLocation(spell2IconX, iconPositionY);
 
-
-        lineIcon = getImage(name + ".jpg", imageSize, lineIconX, iconPositionY);
+        lineIcon = getImage(name + ".jpg", imageSize, iconPositionX, iconPositionY);
         cosmicInsightIcon = new CoolTimeReducer(getImageIcon("cosmicInsights.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY);
         ionianBootsIcon = new CoolTimeReducer(getImageIcon("ionianBoots.jpg", smallImageSize), getImageIcon("check-mark.jpg", smallImageSize), smallImageSize, coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
 
@@ -80,10 +82,13 @@ public class Liner {
 
     class SpellMouseAdapter extends MouseAdapter {
         Spell spell;
+        int spellNumber;
 
-        SpellMouseAdapter(Spell spell) {
+        SpellMouseAdapter(Spell spell, int spellNumber) {
             this.spell = spell;
+            this.spellNumber = spellNumber;
         }
+
         @Override
         public void mousePressed(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e)) {
@@ -93,30 +98,43 @@ public class Liner {
                     onSpell(spell);
                 }
                 sendLinerStatus();
-            }else if(SwingUtilities.isRightMouseButton(e)){
-                test();
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                reloadSpell(spellNumber);
             }
         }
     }
 
-    public void reloadIcon() {
-        lineIcon.setIcon(getImageIcon(name + ".jpg", imageSize));
-        lineIcon.setSize(imageSize, imageSize);
-        lineIcon.setLocation(lineIconX, iconPositionY);
+    private void reloadSpell(int spellNumber) {
+        ReloadSpellPage spellReloadWindow = ReloadSpellPage.getInstance();
 
-        cosmicInsightIcon.setIcon(getImageIcon("cosmicInsights.jpg", smallImageSize));
-        cosmicInsightIcon.setSize(smallImageSize, smallImageSize);
-        cosmicInsightIcon.setLocation(coolTimeReducer, iconPositionY);
-        cosmicInsightIcon.updateIcon();
+        spellReloadWindow.setRunnable(() -> {
+            String className = "org.example.liner.spell.impl." + spellReloadWindow.getSpellName();
 
-        ionianBootsIcon.setIcon(getImageIcon("ionianBoots.jpg", smallImageSize));
-        ionianBootsIcon.setSize(smallImageSize, smallImageSize);
-        ionianBootsIcon.setLocation(coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
-        ionianBootsIcon.updateIcon();
+            if(spellNumber == 1){
+                spell1 = changeSpell(className);
+                spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
+            }else{
+                spell2 = changeSpell(className);
+                spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
+            }
+            Board.getInstance().reloadBoard();
+            sendLinerStatus();
+        });
 
-        flash.getSpellIcon().setIcon(getImageIcon(flash.getSpellImagePath(), imageSize));
-        flash.getSpellIcon().setSize(imageSize, imageSize);
-        flash.getSpellIcon().setLocation(spellIconX, iconPositionY);
+        Point boardLocation = Board.getInstance().getLocationOnScreen();
+        int dialogX = boardLocation.x - (reloadBoardWidth - boardWidth) / 2;
+        int dialogY = boardLocation.y + boardHeight;
+        spellReloadWindow.setLocation(dialogX, dialogY);
+    }
+
+    public Spell changeSpell(String spellName) {
+        try {
+            Class<?> clazz = Class.forName(spellName);
+            return (Spell) clazz.getConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isCosmicInsight() {
@@ -138,6 +156,7 @@ public class Liner {
     public void sendLinerStatus() {
         try {
             String json = mapper.writeValueAsString(this);
+            System.out.println(json);
             connector.sendMessage("sendLinerStatus", json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,7 +203,21 @@ public class Liner {
             return;
         }
 
-        flash.setSpell(model.getFlash());
+        if (spell1.getClass() != model.getSpell1().getClass()) {
+            spell1 = model.getSpell1();
+            Board.getInstance().reloadBoard();
+            spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
+        } else {
+            spell1.setSpell(model.getSpell1());
+        }
+
+        if (spell2.getClass() != model.getSpell2().getClass()) {
+            spell2 = model.getSpell2();
+            Board.getInstance().reloadBoard();
+            spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
+        } else {
+            spell2.setSpell(model.getSpell2());
+        }
         setCosmicInsight(model.isCosmicInsight());
         setIonianBoots(model.isIonianBoots());
     }
@@ -200,7 +233,10 @@ public class Liner {
         if (!name.equals(other.name)) {
             return false;
         }
-        if (!flash.equals(other.flash)) {
+        if (!spell1.equals(other.spell1)) {
+            return false;
+        }
+        if (!spell2.equals(other.spell2)) {
             return false;
         }
         if (isCosmicInsight() != other.isCosmicInsight()) {
@@ -211,4 +247,30 @@ public class Liner {
         }
         return true;
     }
+
+
+    public void reloadIcon() {
+        lineIcon.setIcon(getImageIcon(name + ".jpg", imageSize));
+        lineIcon.setSize(imageSize, imageSize);
+        lineIcon.setLocation(iconPositionX, iconPositionY);
+
+        cosmicInsightIcon.setIcon(getImageIcon("cosmicInsights.jpg", smallImageSize));
+        cosmicInsightIcon.setSize(smallImageSize, smallImageSize);
+        cosmicInsightIcon.setLocation(coolTimeReducer, iconPositionY);
+        cosmicInsightIcon.updateIcon();
+
+        ionianBootsIcon.setIcon(getImageIcon("ionianBoots.jpg", smallImageSize));
+        ionianBootsIcon.setSize(smallImageSize, smallImageSize);
+        ionianBootsIcon.setLocation(coolTimeReducer, iconPositionY + smallImageSize + smallImageMargin);
+        ionianBootsIcon.updateIcon();
+
+        spell1.getSpellIcon().setIcon(getImageIcon(spell1.getSpellImagePath(), imageSize));
+        spell1.getSpellIcon().setSize(imageSize, imageSize);
+        spell1.getSpellIcon().setLocation(spell1IconX, iconPositionY);
+
+        spell2.getSpellIcon().setIcon(getImageIcon(spell2.getSpellImagePath(), imageSize));
+        spell2.getSpellIcon().setSize(imageSize, imageSize);
+        spell2.getSpellIcon().setLocation(spell2IconX, iconPositionY);
+    }
+
 }

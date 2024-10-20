@@ -23,24 +23,24 @@ public class onOffSpellTest {
 
     @Test
     void offFlash_DoesNotReduceCoolTimeWithoutCosmicInsightOrIonianBoots() {
-        liner.offSpell(liner.getFlash());
+        liner.offSpell(liner.getSpell1());
 
-        assertEquals(300, liner.getFlash().getCoolTime());
+        assertEquals(300, liner.getSpell1().getCoolTime());
     }
     @Test
     void offFlash_ReducesCoolTimeWithCosmicInsight() {
         liner.setCosmicInsight(true);
 
-        liner.offSpell(liner.getFlash());
-        assertEquals(254, liner.getFlash().getCoolTime());
+        liner.offSpell(liner.getSpell1());
+        assertEquals(254, liner.getSpell1().getCoolTime());
     }
 
     @Test
     void offFlash_ReducesCoolTimeWithIonianBoots() {
         liner.setIonianBoots(true);
 
-        liner.offSpell(liner.getFlash());
-        assertEquals(272, liner.getFlash().getCoolTime());
+        liner.offSpell(liner.getSpell1());
+        assertEquals(272, liner.getSpell1().getCoolTime());
     }
 
     @Test
@@ -48,17 +48,17 @@ public class onOffSpellTest {
         liner.setCosmicInsight(true);
         liner.setIonianBoots(true);
 
-        liner.offSpell(liner.getFlash());
-        assertEquals(234, liner.getFlash().getCoolTime());
+        liner.offSpell(liner.getSpell1());
+        assertEquals(234, liner.getSpell1().getCoolTime());
     }
 
     @Test
     void onFlash(){
-        liner.offSpell(liner.getFlash());
-        assertFalse(liner.getFlash().isOn());
+        liner.offSpell(liner.getSpell1());
+        assertFalse(liner.getSpell1().isOn());
 
-        liner.onSpell(liner.getFlash());
-        assertEquals(0, liner.getFlash().getCoolTime());
+        liner.onSpell(liner.getSpell1());
+        assertEquals(0, liner.getSpell1().getCoolTime());
     }
 
 

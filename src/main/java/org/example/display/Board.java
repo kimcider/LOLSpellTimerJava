@@ -1,5 +1,6 @@
-package org.example;
+package org.example.display;
 
+import org.example.Setting;
 import org.example.connection.Connector;
 import org.example.liner.Liner;
 import org.jetbrains.annotations.NotNull;
@@ -30,26 +31,6 @@ public class Board extends JWindow {
     private Point initialClick = null;
 
     public static Map<String, Liner> linerList = new HashMap<String, Liner>();
-
-    private void setIconPosition() {
-        imageMargin = imageSize / 4;
-        smallImageMargin = imageMargin / 2;
-        smallImageSize = (imageSize / 2) - (smallImageMargin / 2);
-
-        boardWidth = (imageSize + imageMargin) * 2 + imageMargin + smallImageSize;
-        boardHeight = (imageSize + imageMargin) * 5 + imageMargin;
-
-        iconPositionY = imageMargin;
-        if (!iconReverse) {
-            lineIconX = imageMargin;
-            coolTimeReducer = lineIconX + imageSize + smallImageMargin;
-            spellIconX = coolTimeReducer + smallImageSize + smallImageMargin;
-        } else {
-            spellIconX = imageMargin;
-            coolTimeReducer = spellIconX + imageSize + smallImageMargin;
-            lineIconX = coolTimeReducer + smallImageSize + smallImageMargin;
-        }
-    }
 
     public static Board getInstance() {
         if (board == null) {
@@ -99,7 +80,8 @@ public class Board extends JWindow {
             contentPane.add(liner.getLineIcon());
             contentPane.add(liner.getCosmicInsightIcon());
             contentPane.add(liner.getIonianBootsIcon());
-            contentPane.add(liner.getFlash().getSpellIcon());
+            contentPane.add(liner.getSpell1().getSpellIcon());
+            contentPane.add(liner.getSpell2().getSpellIcon());
             iconPositionY += imageSize + imageMargin;
         }
         connector.setLinerList(linerList);
@@ -232,7 +214,8 @@ public class Board extends JWindow {
             contentPane.add(liner.getLineIcon());
             contentPane.add(liner.getCosmicInsightIcon());
             contentPane.add(liner.getIonianBootsIcon());
-            contentPane.add(liner.getFlash().getSpellIcon());
+            contentPane.add(liner.getSpell1().getSpellIcon());
+            contentPane.add(liner.getSpell2().getSpellIcon());
             iconPositionY += imageSize + imageMargin;
         }
         setContentPane(contentPane);
