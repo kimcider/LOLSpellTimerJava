@@ -9,6 +9,6 @@ import org.example.liner.spell.Spell;
 @Setter
 public class Teleport extends Spell {
     public Teleport() {
-        super(360, "tp.jpg");
+        super(300, "tp.jpg");
     }
 }
