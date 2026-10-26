@@ -200,6 +200,19 @@ public class Liner {
         }
     }
 
+    /**
+     * 상대가 영감 트리를 들었을 때만 우통 토글을 보여준다. 우통은 영감 트리의 룬이라 영감이 없으면 들 수 없다.
+     * 서버로 보내지 않는다.
+     */
+    public void applyGameInspiration(boolean inspiration) {
+        if (!inspiration && isCosmicInsight()) {
+            setCosmicInsight(false);
+        }
+        if (cosmicInsightIcon.isVisible() != inspiration) {
+            cosmicInsightIcon.setVisible(inspiration);
+        }
+    }
+
     public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer) {
         coolTimeReducer.setOn(!coolTimeReducer.isOn());
     }

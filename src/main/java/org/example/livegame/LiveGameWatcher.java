@@ -34,6 +34,7 @@ public class LiveGameWatcher {
 
     private static final int IONIAN_BOOTS = 3158;
     private static final int CRIMSON_LUCIDITY = 3171;
+    private static final int INSPIRATION = 8300;
 
     // 라인 순서. API의 position 값과 같은 순서로 맞춘다.
     private static final List<String> LINES = List.of("top", "jg", "mid", "bot", "sup");
@@ -60,8 +61,12 @@ public class LiveGameWatcher {
         try {
             game = fetch();
         } catch (Exception e) {
-            // 게임 중이 아니면 연결이 거부된다. 다음 게임에서 처음부터 다시 적용하도록 기록을 지운다.
-            SwingUtilities.invokeLater(appliedSpells::clear);
+            // 게임 중이 아니면 연결이 거부된다. 다음 게임에서 처음부터 다시 적용하도록 기록을 지우고,
+            // 룬을 모르는 상태이므로 우통 토글은 다시 모두 보여준다.
+            SwingUtilities.invokeLater(() -> {
+                appliedSpells.clear();
+                Board.linerList.values().forEach(liner -> liner.applyGameInspiration(true));
+            });
             return;
         }
 
@@ -174,6 +179,7 @@ public class LiveGameWatcher {
 
             // 장화는 게임 데이터가 정답이므로 매번 맞춘다. 다른 PC에서 온 메시지가 잠깐 덮어써도 다음 주기에 돌아온다.
             liner.applyGameBoots(bootsHaste(enemy));
+            liner.applyGameInspiration(hasInspiration(enemy));
         }
     }
 
@@ -211,6 +217,16 @@ public class LiveGameWatcher {
             case "SummonerBoost": return Cleanse.class;
             default: return NoSpell.class;
         }
+    }
+
+    /** 주 트리나 보조 트리가 영감(8300)인지. 룬 정보가 없으면 판단할 수 없으므로 true. */
+    private static boolean hasInspiration(JsonNode enemy) {
+        JsonNode runes = enemy.path("runes");
+        if (runes.isMissingNode()) {
+            return true;
+        }
+        return runes.path("primaryRuneTree").path("id").asInt() == INSPIRATION
+                || runes.path("secondaryRuneTree").path("id").asInt() == INSPIRATION;
     }
 
     private static int bootsHaste(JsonNode enemy) {
