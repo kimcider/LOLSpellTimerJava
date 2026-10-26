@@ -161,9 +161,12 @@ public class LiveGameWatcher {
             }
             JsonNode enemy = entry.getValue();
 
-            List<Class<? extends Spell>> spells = List.of(
-                    toSpell(enemy.path("summonerSpells").path("summonerSpellOne"), gameTime),
-                    toSpell(enemy.path("summonerSpells").path("summonerSpellTwo"), gameTime));
+            Class<? extends Spell> spellOne = toSpell(enemy.path("summonerSpells").path("summonerSpellOne"), gameTime);
+            Class<? extends Spell> spellTwo = toSpell(enemy.path("summonerSpells").path("summonerSpellTwo"), gameTime);
+            // 점멸은 D/F 어느 키에 들었든 항상 왼쪽(spell1)에 둔다
+            List<Class<? extends Spell>> spells = spellTwo == Flash.class
+                    ? List.of(spellTwo, spellOne)
+                    : List.of(spellOne, spellTwo);
             if (!spells.equals(appliedSpells.get(entry.getKey()))) {
                 liner.applyGameSpells(spells.get(0), spells.get(1));
                 appliedSpells.put(entry.getKey(), spells);
