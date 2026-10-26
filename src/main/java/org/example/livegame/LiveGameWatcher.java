@@ -42,7 +42,7 @@ public class LiveGameWatcher {
     private final ObjectMapper mapper = new ObjectMapper();
     private final SSLContext sslContext = trustAllContext();
 
-    // 라인별로 마지막에 자동 적용한 스펠. 값이 바뀔 때만 적용해서, 사용자가 우클릭으로 바꾼 스펠을 덮어쓰지 않는다.
+    // 라인별로 마지막에 자동 적용한 스펠. 값이 바뀔 때만 적용해서 2초마다 보드를 다시 그리지 않는다.
     private final Map<String, List<Class<? extends Spell>>> appliedSpells = new HashMap<>();
 
     public static void start() {

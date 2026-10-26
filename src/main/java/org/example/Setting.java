@@ -13,27 +13,20 @@ import java.util.Properties;
 public class Setting {
     public static boolean iconReverse = false;
     public static int imageSize = 40;
-    public static int reloadImageSize = 1;
 
     public static int imageMargin = 1;
     public static int smallImageMargin = 1;
     public static int smallImageSize = 1;
-    public static int reloadImageMargin = 1;
 
     public static int iconPositionX;
     public static int iconPositionY;
 
     public static int boardWidth;
     public static int boardHeight;
-    public static int reloadBoardWidth;
-    public static int reloadBoardHeight;
 
     public static int coolTimeReducer;
     public static int spell1IconX;
     public static int spell2IconX;
-
-    public static int reloadIconPositionX;
-    public static int reloadIconPositionY;
 
     /** 저장된 창 위치가 없음을 나타내는 값 */
     public static final int UNSET = Integer.MIN_VALUE;
@@ -65,13 +58,6 @@ public class Setting {
             coolTimeReducer = spell1IconX + imageSize + smallImageMargin;
             iconPositionX = coolTimeReducer + smallImageSize + smallImageMargin;
         }
-
-        reloadImageSize = imageSize * 3 / 4;
-        reloadImageMargin = reloadImageSize / 6;
-        reloadBoardWidth = reloadImageSize * 5 + reloadImageMargin * 6;
-        reloadBoardHeight = reloadImageSize * 2 + reloadImageMargin * 3;
-        reloadIconPositionX = reloadImageMargin;
-        reloadIconPositionY = reloadImageMargin;
     }
 
     /**

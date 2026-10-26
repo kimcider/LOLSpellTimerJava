@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.example.connection.AbstractWebSocketConnector;
 import org.example.connection.Connector;
 import org.example.display.Board;
-import org.example.display.ReloadSpellPage;
 import org.example.liner.spell.Spell;
 import org.example.liner.spell.impl.Flash;
 import org.example.liner.spell.impl.NoSpell;
@@ -53,10 +52,10 @@ public class Liner {
         this.connector = connector;
         this.name = name;
         spell1 = new Flash();
-        spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
+        spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1));
         spell1.getSpellIcon().setLocation(spell1IconX, iconPositionY);
         spell2 = new NoSpell();
-        spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
+        spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2));
         spell2.getSpellIcon().setLocation(spell2IconX, iconPositionY);
 
         lineIcon = getImage(name + ".jpg", imageSize, iconPositionX, iconPositionY);
@@ -88,11 +87,9 @@ public class Liner {
 
     class SpellMouseAdapter extends MouseAdapter {
         Spell spell;
-        int spellNumber;
 
-        SpellMouseAdapter(Spell spell, int spellNumber) {
+        SpellMouseAdapter(Spell spell) {
             this.spell = spell;
-            this.spellNumber = spellNumber;
         }
 
         @Override
@@ -104,33 +101,8 @@ public class Liner {
                     onSpell(spell);
                 }
                 sendLinerStatus();
-            } else if (SwingUtilities.isRightMouseButton(e)) {
-                reloadSpell(spellNumber);
             }
         }
-    }
-
-    private void reloadSpell(int spellNumber) {
-        ReloadSpellPage spellReloadWindow = ReloadSpellPage.getInstance();
-
-        spellReloadWindow.setRunnable(() -> {
-            String className = "org.example.liner.spell.impl." + spellReloadWindow.getSpellName();
-
-            if(spellNumber == 1){
-                spell1 = changeSpell(className);
-                spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
-            }else{
-                spell2 = changeSpell(className);
-                spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
-            }
-            Board.getInstance().reloadBoard();
-            sendLinerStatus();
-        });
-
-        Point boardLocation = Board.getInstance().getLocationOnScreen();
-        int dialogX = boardLocation.x - (reloadBoardWidth - boardWidth) / 2;
-        int dialogY = boardLocation.y + boardHeight;
-        spellReloadWindow.setLocation(dialogX, dialogY);
     }
 
     public Spell changeSpell(String spellName) {
@@ -193,11 +165,11 @@ public class Liner {
     public void applyGameSpells(Class<? extends Spell> spell1Class, Class<? extends Spell> spell2Class) {
         boolean changed = false;
         if (spell1.getClass() != spell1Class) {
-            spell1 = replaceSpell(spell1, spell1Class, 1);
+            spell1 = replaceSpell(spell1, spell1Class);
             changed = true;
         }
         if (spell2.getClass() != spell2Class) {
-            spell2 = replaceSpell(spell2, spell2Class, 2);
+            spell2 = replaceSpell(spell2, spell2Class);
             changed = true;
         }
         if (changed) {
@@ -205,9 +177,9 @@ public class Liner {
         }
     }
 
-    private Spell replaceSpell(Spell oldSpell, Class<? extends Spell> newClass, int spellNumber) {
+    private Spell replaceSpell(Spell oldSpell, Class<? extends Spell> newClass) {
         Spell newSpell = changeSpell(newClass.getName());
-        newSpell.getSpellIcon().addMouseListener(new SpellMouseAdapter(newSpell, spellNumber));
+        newSpell.getSpellIcon().addMouseListener(new SpellMouseAdapter(newSpell));
 
         // 순간이동이 10분에 강화 순간이동으로 바뀌어도 돌던 쿨타임은 이어진다
         if (oldSpell instanceof Teleport && newSpell instanceof UpgradeTeleport && !oldSpell.isOn()) {
@@ -254,7 +226,7 @@ public class Liner {
         if (spell1.getClass() != model.getSpell1().getClass()) {
             spell1 = model.getSpell1();
             Board.getInstance().reloadBoard();
-            spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1, 1));
+            spell1.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell1));
         } else {
             spell1.setSpell(model.getSpell1());
         }
@@ -262,7 +234,7 @@ public class Liner {
         if (spell2.getClass() != model.getSpell2().getClass()) {
             spell2 = model.getSpell2();
             Board.getInstance().reloadBoard();
-            spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2, 2));
+            spell2.getSpellIcon().addMouseListener(new SpellMouseAdapter(spell2));
         } else {
             spell2.setSpell(model.getSpell2());
         }
