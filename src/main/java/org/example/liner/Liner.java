@@ -12,6 +12,8 @@ import org.example.display.ReloadSpellPage;
 import org.example.liner.spell.Spell;
 import org.example.liner.spell.impl.Flash;
 import org.example.liner.spell.impl.NoSpell;
+import org.example.liner.spell.impl.Teleport;
+import org.example.liner.spell.impl.UpgradeTeleport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +25,7 @@ import static org.example.Setting.*;
 
 @Setter
 @Getter
-@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY"})
+@JsonIgnoreProperties({"mapper", "connector", "lineIcon", "flashIcon", "cosmicInsightIcon", "ionianBootsIcon", "positionY", "bootsHaste"})
 @JsonPropertyOrder({"name", "flash", "cosmicInsight", "ionianBoots"})
 public class Liner {
     private static ObjectMapper mapper = new ObjectMapper();
@@ -35,6 +37,10 @@ public class Liner {
     private String name;
     private Spell spell1;
     private Spell spell2;
+
+    // 장화의 소환사 주문 가속. 명석함의 아이오니아 장화는 10, 업그레이드한 진홍빛 명석함은 20.
+    // 라이브 게임 API로 읽은 로컬 값이라 서버로 보내지 않는다.
+    private int bootsHaste = 10;
 
     public Liner() {
         spell1 = new Flash();
@@ -169,7 +175,7 @@ public class Liner {
             reduction += 18;
         }
         if (isIonianBoots()) {
-            reduction += 10;
+            reduction += bootsHaste;
         }
 
         int coolTime = (int) (spell.getSpellCoolTime() * (1 - (reduction / (reduction + 100))));
@@ -178,6 +184,48 @@ public class Liner {
 
     public void onSpell(Spell spell) {
         spell.setCoolTime(0);
+    }
+
+    /**
+     * 라이브 게임 API에서 읽은 스펠로 슬롯을 바꾼다.
+     * 같은 게임의 모든 PC가 같은 데이터를 직접 읽으므로 서버로 보내지 않는다.
+     */
+    public void applyGameSpells(Class<? extends Spell> spell1Class, Class<? extends Spell> spell2Class) {
+        boolean changed = false;
+        if (spell1.getClass() != spell1Class) {
+            spell1 = replaceSpell(spell1, spell1Class, 1);
+            changed = true;
+        }
+        if (spell2.getClass() != spell2Class) {
+            spell2 = replaceSpell(spell2, spell2Class, 2);
+            changed = true;
+        }
+        if (changed) {
+            Board.getInstance().reloadBoard();
+        }
+    }
+
+    private Spell replaceSpell(Spell oldSpell, Class<? extends Spell> newClass, int spellNumber) {
+        Spell newSpell = changeSpell(newClass.getName());
+        newSpell.getSpellIcon().addMouseListener(new SpellMouseAdapter(newSpell, spellNumber));
+
+        // 순간이동이 10분에 강화 순간이동으로 바뀌어도 돌던 쿨타임은 이어진다
+        if (oldSpell instanceof Teleport && newSpell instanceof UpgradeTeleport && !oldSpell.isOn()) {
+            int remaining = oldSpell.getCoolTime();
+            oldSpell.setCoolTime(0);  // 버려지는 아이콘의 타이머를 멈춘다
+            newSpell.setCoolTime(remaining);
+        }
+        return newSpell;
+    }
+
+    /** 라이브 게임 API에서 읽은 장화 상태를 반영한다. haste가 0이면 장화 없음. 서버로 보내지 않는다. */
+    public void applyGameBoots(int haste) {
+        if (haste > 0) {
+            bootsHaste = haste;
+        }
+        if (isIonianBoots() != (haste > 0)) {
+            setIonianBoots(haste > 0);
+        }
     }
 
     public void touchCoolTimeReducer(CoolTimeReducer coolTimeReducer) {

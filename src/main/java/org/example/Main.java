@@ -3,6 +3,7 @@ package org.example;
 import org.example.connection.Connector;
 import org.example.display.Board;
 import org.example.display.StartPage;
+import org.example.livegame.LiveGameWatcher;
 
 import javax.swing.*;
 
@@ -15,6 +16,7 @@ public class Main extends JFrame {
             // 버튼 클릭 후 실행될 코드
             Connector.getInstance(); // WebSocket 연결
             Board.getInstance(); // 새로운 게임 보드 생성
+            LiveGameWatcher.start(); // 게임 중이면 상대 스펠/장화를 자동으로 채움
         });
     }
 }
