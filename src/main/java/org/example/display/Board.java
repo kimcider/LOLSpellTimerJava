@@ -3,7 +3,6 @@ package org.example.display;
 import org.example.Setting;
 import org.example.connection.Connector;
 import org.example.liner.Liner;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class Board extends JWindow {
         setLayout(null);
         setSize(boardWidth, boardHeight);
         setAlwaysOnTop(true);
-        setLocationRelativeTo(null);
+        restoreLocation();
 
         contentPane.setLayout(null);
         contentPane.setSize(boardWidth, boardHeight);
@@ -101,6 +100,14 @@ public class Board extends JWindow {
                     initialClick = e.getPoint();
                 }
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 드래그 중에는 매 이벤트마다 저장하지 않고, 손을 뗐을 때 한 번만 저장한다
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    saveLocation();
+                }
+            }
         });
 
         addMouseMotionListener(new MouseAdapter() {
@@ -123,7 +130,7 @@ public class Board extends JWindow {
         });
     }
 
-    private @NotNull TrayIcon getTrayIcon() {
+    private TrayIcon getTrayIcon() {
         ImageIcon icon = new ImageIcon(getClass().getResource("/flash.jpg"));  // 아이콘 경로
 
         Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
@@ -180,6 +187,7 @@ public class Board extends JWindow {
 
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(e -> {
+            saveLocation();
             connector.close();
             exit(0);  // 종료 메뉴
         });
@@ -192,11 +200,28 @@ public class Board extends JWindow {
     private void repositionBoard() {
         Setting.iconReverse = !Setting.iconReverse;
         reloadBoard();
+        Setting.save();
     }
 
     private void resizeBoard(int size) {
         Setting.imageSize = size;
         reloadBoard();
+        Setting.save();
+    }
+
+    /** 저장된 위치가 현재 모니터 구성에서 보이는 자리면 복원하고, 아니면 화면 중앙에 띄운다. */
+    private void restoreLocation() {
+        if (Setting.isVisibleOnScreen(Setting.windowX, Setting.windowY)) {
+            setLocation(Setting.windowX, Setting.windowY);
+        } else {
+            setLocationRelativeTo(null);
+        }
+    }
+
+    private void saveLocation() {
+        Setting.windowX = getLocation().x;
+        Setting.windowY = getLocation().y;
+        Setting.save();
     }
 
     public void reloadBoard() {
